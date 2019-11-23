@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.1.RELEASE</version>
+        <relativePath/>
+        <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.goaleaf.engine</groupId>
+    <artifactId>GoaLeaf</artifactId>
+    <version>0.8.0-SNAPSHOT</version>
+    <name>GoaLeaf</name>
+    <description>GoaLeaf</description>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <version.com.sun.mail.javax.mail>1.5.5</version.com.sun.mail.javax.mail>
+        <version.com.microsoft.sqlserver.mssql-jdbc>6.1.0.jre8</version.com.microsoft.sqlserver.mssql-jdbc>
+        <version.mysql.mysql-connector-java>8.0.15</version.mysql.mysql-connector-java>
+        <version.org.springframework.boot.spring-boot-starter-security>2.1.3.RELEASE
+        </version.org.springframework.boot.spring-boot-starter-security>
+        <version.org.springframework.boot.spring-boot-starter-data-jdbc>2.1.4.RELEASE
+        </version.org.springframework.boot.spring-boot-starter-data-jdbc>
+        <version.com.auth0.java-jwt>3.8.0</version.com.auth0.java-jwt>
+        <version.commons-io.commons-io>2.6</version.commons-io.commons-io>
+        <version.com.fasterxml.jackson.dataformat.jackson-dataformat-yaml>2.9.8
+        </version.com.fasterxml.jackson.dataformat.jackson-dataformat-yaml>
+        <version.org.postgresql.postgresql>42.2.5</version.org.postgresql.postgresql>
+        <version.io.jsonwebtoken.jjwt>0.6.0</version.io.jsonwebtoken.jjwt>
+        <version.javax.xml.bind.jaxb-api>2.3.0</version.javax.xml.bind.jaxb-api>
+        <version.javax.transaction.javax.transaction-api>1.2</version.javax.transaction.javax.transaction-api>
+        <version.org.codehaus.plexus.plexus-archiver>2.4.4</version.org.codehaus.plexus.plexus-archiver>
+        <version.io.springfox.springfox-swagger2>2.6.1</version.io.springfox.springfox-swagger2>
+        <version.io.springfox.springfox-swagger-ui>2.6.1</version.io.springfox.springfox-swagger-ui>
+        <version.org.springframework.security.spring-security-crypto>5.2.0.M1
+        </version.org.springframework.security.spring-security-crypto>
+        <version.org.springframework.security.spring-security-oauth2-core>5.0.0.M5
+        </version.org.springframework.security.spring-security-oauth2-core>
+        <version.org.springframework.spring-test>5.1.5.RELEASE</version.org.springframework.spring-test>
+        <version.com.microsoft.azure-webapp-maven-plugin>1.7.0</version.com.microsoft.azure-webapp-maven-plugin>
+        <version.org.apache.maven.plugin.maven-assembly-plugin>2.4.1
+        </version.org.apache.maven.plugin.maven-assembly-plugin>
+        <version.org.postgresql.postgresql>9.4-1201-jdbc4</version.org.postgresql.postgresql>
+        <version.joda-time.joda-time>2.10.5</version.joda-time.joda-time>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+        <!--<dependency>-->
+        <!--<groupId>javax.mail</groupId>-->
+        <!--<artifactId>javax.mail-api</artifactId>-->
+        <!--<version>1.6.2</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${version.com.sun.mail.javax.mail}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>${version.com.microsoft.sqlserver.mssql-jdbc}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${version.mysql.mysql-connector-java}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${version.org.springframework.boot.spring-boot-starter-security}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${version.com.auth0.java-jwt}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${version.commons-io.commons-io}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>${version.com.fasterxml.jackson.dataformat.jackson-dataformat-yaml}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${version.org.postgresql.postgresql}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${version.io.jsonwebtoken.jjwt}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+            <version>${version.org.springframework.boot.spring-boot-starter-data-jdbc}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${version.javax.xml.bind.jaxb-api}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>javax.transaction-api</artifactId>
+            <version>${version.javax.transaction.javax.transaction-api}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>${version.org.codehaus.plexus.plexus-archiver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${version.io.springfox.springfox-swagger2}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${version.io.springfox.springfox-swagger-ui}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+            <version>${version.org.springframework.security.spring-security-crypto}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-core</artifactId>
+            <version>${version.org.springframework.security.spring-security-oauth2-core}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${version.org.springframework.spring-test}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${version.org.postgresql.postgresql}</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${version.joda-time.joda-time}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <meminitial>1024m</meminitial>
+                    <maxmem>2024m</maxmem>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${version.org.apache.maven.plugin.maven-assembly-plugin}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-archiver</artifactId>
+                        <version>${version.org.codehaus.plexus.plexus-archiver}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-jar-plugin</artifactId>-->
+            <!--                <version>3.0.0</version>-->
+            <!--                <dependencies>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.codehaus.plexus</groupId>-->
+            <!--                        <artifactId>plexus-archiver</artifactId>-->
+            <!--                        <version>2.4.4</version>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+            <!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-war-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <attachClasses>true</attachClasses>-->
+            <!--                    &lt;!&ndash;                    <webXml>target/web.xml</webXml>&ndash;&gt;-->
+            <!--                    <webResources>-->
+            <!--                        <resource>-->
+            <!--                            <directory>src/main/java/com/goaleaf</directory>-->
+            <!--                            <filtering>true</filtering>-->
+            <!--                        </resource>-->
+            <!--                    </webResources>-->
+            <!--                    <archive>-->
+            <!--                        <manifest>-->
+            <!--                            <mainClass>com.goaleaf.GoaLeafApplication</mainClass>-->
+            <!--                        </manifest>-->
+            <!--                    </archive>-->
+            <!--                </configuration>-->
+            <!--                <version>2.4</version>-->
+            <!--                <dependencies>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.codehaus.plexus</groupId>-->
+            <!--                        <artifactId>plexus-archiver</artifactId>-->
+            <!--                        <version>2.4.4</version>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+            <!--            </plugin>-->
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <!--                <includes>-->
+                <!--                    <include>**/*.properties</include>-->
+                <!--                </includes>-->
+            </resource>
+        </resources>
+
+    </build>
+    <!-- Add Spring repositories -->
+    <!-- (you don't need this if you are using a .RELEASE version) -->
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <profiles>
+        <profile>
+            <id>offlineMode</id>
+            <properties>
+                <value.spring.datasource.url>jdbc:h2:file:./bazaDanych</value.spring.datasource.url>
+                <value.hibernate.hbm2ddl.auto>update</value.hibernate.hbm2ddl.auto>
+                <value.database.driver></value.database.driver>
+                <value.database.platform>org.hibernate.dialect.H2Dialect</value.database.platform>
+                <value.spring.datasource.username>sa</value.spring.datasource.username>
+                <value.spring.datasource.password></value.spring.datasource.password>
+                <value.database.driver>org.h2.Driver</value.database.driver>
+            </properties>
+            <activation>
+                <property>
+                    <name>offlineMode</name>
+                </property>
+            </activation>
+        </profile>
+        <profile>
+            <id>heroku-postgresql</id>
+            <properties>
+                <value.spring.datasource.url>
+                    jdbc:postgresql://ec2-107-21-126-201.compute-1.amazonaws.com:5432/d8br41v2tl8a6p
+                </value.spring.datasource.url>
+                <value.hibernate.hbm2ddl.auto>create</value.hibernate.hbm2ddl.auto>
+                <value.spring.datasource.username>cegdtcqjxqtsxp
+                </value.spring.datasource.username>
+                <value.spring.datasource.password>d9580c750a51b42aab833a8a7a43d5f9dd50e454b12d57d5d521d321026f4ba5
+                </value.spring.datasource.password>
+                <value.database.driver>org.postgresql.Driver</value.database.driver>
+                <value.database.platform>org.hibernate.dialect.PostgreSQL82Dialect</value.database.platform>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+
+</project>
