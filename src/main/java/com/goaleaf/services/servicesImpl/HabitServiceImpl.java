@@ -135,13 +135,13 @@ public class HabitServiceImpl implements HabitService {
         habitDTO.creatorLogin = creator.getLogin();
         habitDTO.membersCount = memberService.countAllHabitMembers(entry.getId());
 
-        if (entry.getPointsToWIn() != null) {
+        if (entry.getPointsToWIn() != 1001) {
             habitDTO.pointsToWin = entry.getPointsToWIn();
         } else {
             habitDTO.pointsToWin = 0;
         }
 
-        if (entry.getWinner() != "NONE") {
+        if (!entry.getWinner().equals("NONE")) {
             habitDTO.isFinished = true;
             habitDTO.winner = entry.getWinner();
         } else {
