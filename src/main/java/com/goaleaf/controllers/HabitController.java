@@ -144,7 +144,7 @@ public class HabitController {
         ntf.setRecipientID(searchingUser.getId());
         ntf.setDescription(userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to group " + habitService.findById(model.habitID).title + "!");
         ntf.setUrl((model.url.isEmpty() ? "EMPTY_URL" : model.url));
-        if (notificationService.findByDescription(ntf.getDescription()) == null) {
+        if (notificationService.findByDescription(ntf.getDescription()).equals(null)) {
             notificationService.saveNotification(ntf);
         }
 
