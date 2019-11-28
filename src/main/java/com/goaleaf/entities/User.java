@@ -42,16 +42,16 @@ public class User {
         return imageName;
     }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     public Boolean getNotifications() {
         return notifications;
     }
 
     public void setNotifications(Boolean notifications) {
         this.notifications = notifications;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
     }
 
     public Integer getId() {

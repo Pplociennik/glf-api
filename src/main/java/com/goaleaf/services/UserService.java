@@ -2,13 +2,12 @@ package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.User;
-
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditImageViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditUserViewModel;
+import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentialsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,4 +43,4 @@ public interface UserService {
 
     Iterable<HabitDTO> getAllMyUnfinishedHabits(Integer userID);
 
-    }
+}

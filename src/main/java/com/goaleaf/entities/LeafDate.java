@@ -2,7 +2,6 @@ package com.goaleaf.entities;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Table(name = "done_dates")

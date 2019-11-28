@@ -140,16 +140,16 @@ public class Post {
         return postText;
     }
 
+    public void setPostText(String postText) {
+        this.postText = postText;
+    }
+
     public Date getDateOfAddition() {
         return dateOfAddition;
     }
 
     public void setDateOfAddition(Date dateOfAddition) {
         this.dateOfAddition = dateOfAddition;
-    }
-
-    public void setPostText(String postText) {
-        this.postText = postText;
     }
 
     public String getUserComment() {

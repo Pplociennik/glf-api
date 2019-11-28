@@ -19,16 +19,10 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 
 @EnableJpaRepositories("com.goaleaf.repositories")
@@ -38,11 +32,19 @@ import java.util.Collections;
 })
 @SpringBootApplication
 public class GoaLeafApplication extends SpringBootServletInitializer {
+    public static void main(String[] args) throws Exception {
+        ExceptionHandler exceptionHandler = new ExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
+        SpringApplication.run(GoaLeafApplication.class, args);
+    }
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(GoaLeafApplication.class);
     }
-
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -74,13 +76,6 @@ public class GoaLeafApplication extends SpringBootServletInitializer {
         return new CommentServiceImpl();
     }
 
-    @Bean
-    public Docket productApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select().apis(RequestHandlerSelectors.basePackage("com.goaleaf.controllers"))
-                .build();
-    }
-
 //    @Bean
 //    public WebMvcConfigurer corsConfigurer() {
 //        return new WebMvcConfigurerAdapter() {
@@ -104,14 +99,11 @@ public class GoaLeafApplication extends SpringBootServletInitializer {
 //        return new CorsFilter(source);
 //    }
 
-
-    public static void main(String[] args) throws Exception {
-        ExceptionHandler exceptionHandler = new ExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
-        SpringApplication.run(GoaLeafApplication.class, args);
+    @Bean
+    public Docket productApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select().apis(RequestHandlerSelectors.basePackage("com.goaleaf.controllers"))
+                .build();
     }
 
 }

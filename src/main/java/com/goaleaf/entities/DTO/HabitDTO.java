@@ -1,6 +1,5 @@
 package com.goaleaf.entities.DTO;
 
-import com.goaleaf.entities.Member;
 import com.goaleaf.entities.enums.Category;
 import com.goaleaf.entities.enums.Frequency;
 

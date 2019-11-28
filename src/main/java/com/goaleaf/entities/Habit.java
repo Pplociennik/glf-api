@@ -26,10 +26,6 @@ public class Habit {
     @Column
     private Frequency frequency;
 
-//    @Column
-//    @OneToMany(mappedBy = "habits")
-//    private Set<Member> members;
-
     @Column
     private Boolean isPrivate;
 

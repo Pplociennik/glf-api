@@ -7,7 +7,6 @@ import com.goaleaf.entities.enums.Frequency;
 import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.entities.viewModels.TaskViewModel;
 import com.goaleaf.repositories.*;
-import com.goaleaf.security.SecurityConstants;
 import com.goaleaf.services.JwtService;
 import com.goaleaf.services.TaskService;
 import com.goaleaf.validators.exceptions.habitsProcessing.PointsNotSetException;

@@ -1,9 +1,7 @@
 package com.goaleaf.services;
 
-import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 

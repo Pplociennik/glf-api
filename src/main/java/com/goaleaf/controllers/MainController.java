@@ -1,9 +1,5 @@
 package com.goaleaf.controllers;
 
-import com.goaleaf.entities.DTO.TaskDTO;
-import com.goaleaf.entities.Habit;
-import com.goaleaf.entities.User;
-import com.goaleaf.entities.enums.Category;
 import com.goaleaf.services.HabitService;
 import com.goaleaf.services.TaskService;
 import com.goaleaf.services.UserService;

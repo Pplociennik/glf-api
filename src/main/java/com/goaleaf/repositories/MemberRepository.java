@@ -1,8 +1,6 @@
 package com.goaleaf.repositories;
 
-import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 

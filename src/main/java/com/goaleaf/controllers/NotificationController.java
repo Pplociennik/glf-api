@@ -5,7 +5,10 @@ import com.goaleaf.services.NotificationService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/notifications")

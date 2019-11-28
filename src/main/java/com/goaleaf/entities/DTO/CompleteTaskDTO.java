@@ -25,28 +25,28 @@ public class CompleteTaskDTO {
         return habitID;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public Integer getTaskID() {
-        return taskID;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
     public void setHabitID(Integer habitID) {
         this.habitID = habitID;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public void setToken(String token) {
         this.token = token;
     }
 
+    public Integer getTaskID() {
+        return taskID;
+    }
+
     public void setTaskID(Integer taskID) {
         this.taskID = taskID;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     public void setComment(String comment) {

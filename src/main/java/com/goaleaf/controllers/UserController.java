@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.UserDto;
-import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.repositories.UserRepository;
@@ -26,7 +25,6 @@ import javax.annotation.security.PermitAll;
 import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Optional;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static com.goaleaf.security.SecurityConstants.*;

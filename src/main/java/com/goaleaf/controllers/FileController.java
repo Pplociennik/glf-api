@@ -36,17 +36,14 @@ import static com.goaleaf.security.SecurityConstants.SECRET;
 @RestController
 public class FileController {
 
+    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
     @Autowired
     private JwtService jwtService;
     @Autowired
     private UserService userService;
     @Autowired
     private PostService postService;
-
     private FileStorageProperties fileStorageProperties = new FileStorageProperties();
-
-    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
-
     @Autowired
     private FileStorageService fileStorageService;
 

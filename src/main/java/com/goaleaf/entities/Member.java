@@ -25,14 +25,6 @@ public class Member {
     @Column
     private Integer points;
 
-//    @Column
-//    @ManyToMany
-//    private Set<Habit> habits;
-
-//    @OneToMany(mappedBy = "members")
-//    @Column
-//    private Set<LeafDate> doneDates;
-
     public Member(Integer userID /*, Set<LeafDate> doneDates*/) {
         this.userID = userID;
 //        this.doneDates = doneDates;
