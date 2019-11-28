@@ -31,7 +31,7 @@ public class CommentController {
 
         if (postService.findOneByID(model.postID) == null)
             throw new PostNotFoundException("Post not found");
-        if (model.text.isEmpty())
+        if (model.text.trim().isEmpty())
             throw new EmptyCommentException("Comment cannot be empty!");
 
         Comment comment = new Comment();

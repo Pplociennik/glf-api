@@ -57,10 +57,10 @@ public class UserController {
     }
 
     //to listing all users paging
-    @RequestMapping(value = "/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Iterable<User> list(@PathVariable("page") Integer pageNr, @RequestParam("size") Optional<Integer> howManyOnPage) {
-        return userService.listAllUsersPaging(pageNr, howManyOnPage.orElse(2));
-    }
+//    @RequestMapping(value = "/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public Iterable<User> list(@PathVariable("page") Integer pageNr, @RequestParam("size") Optional<Integer> howManyOnPage) {
+//        return userService.listAllUsersPaging(pageNr, howManyOnPage.orElse(2));
+//    }
 
     //to getting one specified user by id
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -151,7 +151,6 @@ public class UserController {
         userDto.userID = user.getId();
         userDto.emailAddress = user.getEmailAddress();
         userDto.login = user.getLogin();
-        userDto.userName = user.getUserName();
 
         return userDto;
     }

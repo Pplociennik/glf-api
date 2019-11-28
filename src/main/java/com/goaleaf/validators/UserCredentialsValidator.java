@@ -27,6 +27,13 @@ public class UserCredentialsValidator {
 
     }
 
+    public boolean isLoginLengthValid(String login) {
+        if (login.length() > 20) {
+            return false;
+        }
+        return true;
+    }
+
 //    public boolean isEmailFormatValid(RegisterViewModel model) {
 //        Pattern passwordPattern = Pattern.compile("([\\w\\.\\-]+)@([\\w\\-]+)((\\.(\\w){2,3})+)$");
 //        Matcher matcher = passwordPattern.matcher(model.emailAddress);

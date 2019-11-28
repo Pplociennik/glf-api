@@ -75,7 +75,7 @@ public class PostController {
             throw new TokenExpiredException("You have to be logged in!");
         if (memberService.findSpecifiedMember(model.habitID, Integer.parseInt(claims.getSubject())) == null)
             throw new MemberDoesNotExistException("You are not a member!");
-        if (model.postText.isEmpty())
+        if (model.postText.trim().isEmpty())
             throw new EmptyPostException("Post cannot be empty!");
 
         Post newPost = new Post();
@@ -115,7 +115,7 @@ public class PostController {
             throw new TokenExpiredException("You have to be logged in!");
         if (memberService.findSpecifiedMember(model.habitID, Integer.parseInt(claims.getSubject())) == null)
             throw new MemberDoesNotExistException("You are not a member!");
-        if (postService.findOneByID(model.postID).getCreatorLogin() != tempUser.getLogin())
+        if (!postService.findOneByID(model.postID).getCreatorLogin().equals(tempUser.getLogin()))
             throw new UserIsNotCreatorException("You cannot delete posts which were not posted by you");
 
         postService.removePostFromDatabase(model.postID);

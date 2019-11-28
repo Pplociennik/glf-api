@@ -74,9 +74,9 @@ public class HabitServiceImpl implements HabitService {
         newHabit.setPrivate(model.isPrivate);
         newHabit.setCreatorID(creatorID);
         newHabit.setCreatorLogin(userService.findById(creatorID).getLogin());
-        newHabit.setFinished(false);
         newHabit.setWinner("NONE");
         newHabit.setPointsToWIn(1001);
+        newHabit.setCanUsersInvite(model.canUsersInvite);
         newHabit.setFinished(false);
 
         Habit added = new Habit();
@@ -134,6 +134,7 @@ public class HabitServiceImpl implements HabitService {
         habitDTO.creatorID = entry.getCreatorID();
         habitDTO.creatorLogin = creator.getLogin();
         habitDTO.membersCount = memberService.countAllHabitMembers(entry.getId());
+        habitDTO.canUsersInvite = entry.getCanUsersInvite();
 
         if (entry.getPointsToWIn() != 1001) {
             habitDTO.pointsToWin = entry.getPointsToWIn();
@@ -179,5 +180,15 @@ public class HabitServiceImpl implements HabitService {
         HabitDTO result = new HabitDTO();
         result = convertToDTO(habitRepository.save(habit));
         return result;
+    }
+
+    @Override
+    public Boolean setInvitingPermissions(Boolean allowed, Integer habitID) {
+        Habit habit = habitRepository.findById(habitID);
+
+        habit.setCanUsersInvite(allowed);
+
+        Habit response = habitRepository.save(habit);
+        return response.getCanUsersInvite();
     }
 }

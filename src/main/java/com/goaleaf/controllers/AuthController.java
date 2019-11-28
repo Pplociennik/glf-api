@@ -4,16 +4,16 @@ import com.auth0.jwt.JWT;
 import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.AuthorizeViewModel;
+import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
+import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
 import com.goaleaf.security.EmailNotificationsSender;
-import com.goaleaf.services.servicesImpl.JwtServiceImpl;
 import com.goaleaf.services.UserService;
+import com.goaleaf.services.servicesImpl.JwtServiceImpl;
 import com.goaleaf.validators.UserCredentialsValidator;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentialsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -50,7 +50,9 @@ public class AuthController {
         if (userService.findByEmailAddress(register.emailAddress) != null)
             throw new BadCredentialsException("Account with email " + register.emailAddress + " address already exists!");
         if (userService.findByLogin(register.login) != null)
-            throw new LoginExistsException("Account with login " + register.emailAddress + " already exists!");
+            throw new LoginExistsException("Account with login " + register.login + " already exists!");
+        if (!userCredentialsValidator.isLoginLengthValid(register.login))
+            throw new BadCredentialsException("Login cannot be longer than 20 characters!");
         if (!userCredentialsValidator.isPasswordFormatValid(register.password))
             throw new BadCredentialsException("Password must be at least 6 characters long and cannot contain spaces!");
         if (!userCredentialsValidator.arePasswordsEquals(register))
@@ -58,15 +60,14 @@ public class AuthController {
 
         register.password = (bCryptPasswordEncoder.encode(register.password));
 
-        //EmailNotificationsSender sender = new EmailNotificationsSender();
+        EmailNotificationsSender sender = new EmailNotificationsSender();
 
         User user = userService.registerNewUserAccount(register);
-        //sender.sayHello(register.emailAddress, register.login);
+        sender.sayHello(register.emailAddress, register.login);
 
         UserDto userDto = new UserDto();
         userDto.login = user.getLogin();
         userDto.emailAddress = user.getEmailAddress();
-        userDto.userName = user.getUserName();
         userDto.imageName = user.getImageName();
         return userDto;
 

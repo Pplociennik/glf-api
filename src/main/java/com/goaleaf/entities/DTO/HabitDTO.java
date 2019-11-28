@@ -33,4 +33,6 @@ public class HabitDTO {
     public String creatorLogin;
 
     public Integer membersCount;
+
+    public Boolean canUsersInvite;
 }

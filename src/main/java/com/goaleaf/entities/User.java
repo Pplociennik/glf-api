@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,
         property = "refId", scope = User.class)
@@ -16,34 +15,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column
-    private String userName;
-
-    @Column
     private String login;
 
-    @Column
     private String password;
 
-    @Column
     private String emailAddress;
 
-    @Column
     private String imageName;
 
-    @Column
-    private boolean notifications;
-
-    @ManyToMany
-    private Set<Role> roles;
+    private Boolean notifications;
 
     public User() {
-        notifications = true;
     }
 
-    public User(Integer id, String userName, String login, String password, String emailAddress, String imageName) {
+    public User(Integer id, String login, String password, String emailAddress, String imageName) {
         this.id = id;
-        this.userName = userName;
         this.login = login;
         this.password = password;
         this.emailAddress = emailAddress;
@@ -56,11 +42,11 @@ public class User {
         return imageName;
     }
 
-    public boolean getNotifications() {
+    public Boolean getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(boolean notifications) {
+    public void setNotifications(Boolean notifications) {
         this.notifications = notifications;
     }
 
@@ -74,14 +60,6 @@ public class User {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getLogin() {
@@ -108,11 +86,4 @@ public class User {
         this.emailAddress = emailAddress;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 }

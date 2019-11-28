@@ -37,4 +37,9 @@ public class NotificationServiceImpl implements NotificationService {
     public Notification findSpecifiedNtf(Integer userID, String url) {
         return notificationRepository.getByRecipientIDAndUrl(userID, url);
     }
+
+    @Override
+    public Notification findByDescription(String description) {
+        return notificationRepository.findByDescription(description);
+    }
 }

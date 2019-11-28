@@ -23,4 +23,6 @@ public class HabitViewModel {
 
     public String token;
 
+    public Boolean canUsersInvite;
+
 }

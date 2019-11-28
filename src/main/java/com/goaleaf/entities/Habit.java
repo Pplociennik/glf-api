@@ -48,6 +48,8 @@ public class Habit {
     @Column
     private Boolean finished;
 
+    private Boolean canUsersInvite;
+
     public Habit() {
     }
 
@@ -150,5 +152,13 @@ public class Habit {
 
     public void setFinished(Boolean finished) {
         this.finished = finished;
+    }
+
+    public Boolean getCanUsersInvite() {
+        return canUsersInvite;
+    }
+
+    public void setCanUsersInvite(Boolean canUsersInvite) {
+        this.canUsersInvite = canUsersInvite;
     }
 }

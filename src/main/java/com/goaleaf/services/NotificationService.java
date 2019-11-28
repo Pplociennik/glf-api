@@ -16,4 +16,6 @@ public interface NotificationService {
 
     Notification findSpecifiedNtf(Integer userID, String url);
 
+    Notification findByDescription(String description);
+
 }

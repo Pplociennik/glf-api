@@ -41,4 +41,6 @@ public interface HabitService {
     HabitDTO setPointsToWin(Integer habitID, Integer pointsToWin);
 
     Iterable<HabitDTO> convertManyToDTOs(Iterable<Habit> habits);
+
+    Boolean setInvitingPermissions(Boolean allowed, Integer habitID);
 }

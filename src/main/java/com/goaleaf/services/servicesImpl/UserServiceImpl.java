@@ -8,7 +8,6 @@ import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditImageViewMod
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditUserViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
 import com.goaleaf.repositories.MemberRepository;
-import com.goaleaf.repositories.RoleRepository;
 import com.goaleaf.repositories.UserRepository;
 import com.goaleaf.services.HabitService;
 import com.goaleaf.services.MemberService;
@@ -17,14 +16,18 @@ import com.goaleaf.validators.UserCredentialsValidator;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentialsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.goaleaf.security.SecurityConstants.SECRET;
 
 
 @Service
@@ -32,8 +35,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
     @Autowired
     private HabitService habitService;
     @Autowired
@@ -46,10 +47,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Override
-    public Iterable<User> listAllUsersPaging(Integer pageNr, Integer howManyOnPage) {
-        return userRepository.findAll(new PageRequest(pageNr, howManyOnPage));
-    }
+//    @Override
+//    public Iterable<User> listAllUsersPaging(Integer pageNr, Integer howManyOnPage) {
+//        return userRepository.findAll(new PageRequest(pageNr, howManyOnPage));
+//    }
 
     @Override
     public Iterable<User> listAllUsers() {
@@ -95,7 +96,6 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
         user.setLogin(register.login);
-        user.setUserName(register.userName);
         user.setPassword(register.password);
         user.setEmailAddress(register.emailAddress);
         user.setImageName("def_goaleaf_avatar.png");
@@ -103,18 +103,23 @@ public class UserServiceImpl implements UserService {
     }
 
     public void updateUser(EditUserViewModel model) throws BadCredentialsException {
-        if (findById(model.id) != null) {
-            User updatingUser = findById(model.id);
+
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(model.token).getBody();
+
+        if (findById(Integer.parseInt(claims.getSubject())) != null) {
+            User updatingUser = findById(Integer.parseInt(claims.getSubject()));
 
 
-            if (bCryptPasswordEncoder.matches(model.oldPassword, userRepository.findById(model.id).getPassword())) {
-                if (!model.emailAddress.isEmpty()) {
-                    if (!userCredentialsValidator.isValidEmail(model.emailAddress)) {
-                        throw new BadCredentialsException("Wrong email format!");
-                    } else {
-                        updatingUser.setEmailAddress(model.emailAddress);
-                    }
-                }
+            if (bCryptPasswordEncoder.matches(model.oldPassword, userRepository.findById(Integer.parseInt(claims.getSubject())).getPassword())) {
+//                if (!model.emailAddress.isEmpty()) {
+//                    if (!userCredentialsValidator.isValidEmail(model.emailAddress)) {
+//                        throw new BadCredentialsException("Wrong email format!");
+//                    } else {
+//                        updatingUser.setEmailAddress(model.emailAddress);
+//                    }
+//                }
                 if (model.newPassword.equals(model.matchingNewPassword)) {
                     if (!userCredentialsValidator.isPasswordFormatValid(model.newPassword)) {
                         throw new BadCredentialsException("Password must be at least 6 characters long and cannot contain spaces!");
@@ -157,12 +162,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Iterable<HabitDTO> getUserFinishedHabits(Integer userID) {
         Iterable<Member> memberList = memberRepository.findAllByUserID(userID);
+        User user = userRepository.findById(userID);
         List<Habit> habits = new ArrayList<>(0);
 
         for (Member m : memberList) {
             Habit h = new Habit();
             h = habitService.getHabitById(m.getHabitID());
-            if (h.getFinished()) {
+            if (h.getFinished() && !h.getWinner().equals(user.getLogin())) {
                 habits.add(h);
             }
         }

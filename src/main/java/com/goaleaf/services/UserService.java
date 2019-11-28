@@ -24,7 +24,7 @@ public interface UserService {
 
     Boolean checkIfExists(Integer id);
 
-    Iterable<User> listAllUsersPaging(Integer pageNr, Integer howManyOnPage);
+//    Iterable<User> listAllUsersPaging(Integer pageNr, Integer howManyOnPage);
 
     User registerNewUserAccount(RegisterViewModel register) throws EmailExistsException, LoginExistsException;
 

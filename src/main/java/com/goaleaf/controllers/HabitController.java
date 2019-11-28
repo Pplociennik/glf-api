@@ -24,7 +24,6 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -80,6 +79,7 @@ public class HabitController {
         habitDTO.isPrivate = model.isPrivate;
         habitDTO.title = model.title;
         habitDTO.creatorID = Integer.parseInt(claims.getSubject());
+        habitDTO.canUsersInvite = model.canUsersInvite;
 
         Habit resHabit = new Habit();
         resHabit = habitService.registerNewHabit(model, Integer.parseInt(claims.getSubject()));
@@ -144,7 +144,9 @@ public class HabitController {
         ntf.setRecipientID(searchingUser.getId());
         ntf.setDescription(userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to group " + habitService.findById(model.habitID).title + "!");
         ntf.setUrl((model.url.isEmpty() ? "EMPTY_URL" : model.url));
-        notificationService.saveNotification(ntf);
+        if (notificationService.findByDescription(ntf.getDescription()) == null) {
+            notificationService.saveNotification(ntf);
+        }
 
         if (searchingUser.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
@@ -233,7 +235,12 @@ public class HabitController {
 
     @RequestMapping(value = "/habit/setPointsToWIn", method = RequestMethod.POST)
     public HabitDTO setPointsToWin(@RequestParam Integer habitID, Integer pointsToWin) {
-        return habitService.setPointsToWin(habitID,pointsToWin);
+        return habitService.setPointsToWin(habitID, pointsToWin);
+    }
+
+    @RequestMapping(value = "/habit/setInvitingPermissions", method = RequestMethod.POST)
+    public Boolean setInvitingPermissions(@RequestParam Boolean allowed, Integer habitID) {
+        return habitService.setInvitingPermissions(allowed, habitID);
     }
 
 }
