@@ -2,6 +2,7 @@ package com.goaleaf.controllers;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
 import com.goaleaf.entities.Notification;
@@ -126,34 +127,8 @@ public class HabitController {
         if (userService.findByLogin(model.userLogin) == null)
             throw new AccountNotExistsException("User with this login does not exist!");
 
-        User searchingUser = userService.findByLogin(model.userLogin);
+        return habitService.inviteNewMember(model);
 
-        Member newMember = new Member();
-        newMember.setUserID(searchingUser.getId());
-        newMember.setHabitID(model.habitID);
-        newMember.setImgName(searchingUser.getImageName());
-        newMember.setUserLogin(searchingUser.getLogin());
-
-        if (memberService.checkIfExist(newMember))
-            throw new UserAlreadyInHabitException("User already participating!");
-
-//        memberService.saveMember(newMember);
-
-        Notification ntf = new Notification();
-        ntf.setDate(new Date());
-        ntf.setRecipientID(searchingUser.getId());
-        ntf.setDescription(userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to group " + habitService.findById(model.habitID).title + "!");
-        ntf.setUrl((model.url.isEmpty() ? "EMPTY_URL" : model.url));
-        if (notificationService.findByDescription(ntf.getDescription()).equals(null)) {
-            notificationService.saveNotification(ntf);
-        }
-
-        if (searchingUser.getNotifications()) {
-            EmailNotificationsSender sender = new EmailNotificationsSender();
-            sender.sendInvitationNotification(searchingUser.getEmailAddress(), searchingUser.getLogin(), userService.findById(Integer.parseInt(claims.getSubject())).getLogin(), habitService.findById(model.habitID).title);
-        }
-
-        return HttpStatus.OK;
     }
 
     @RequestMapping(value = "/removemember", method = RequestMethod.DELETE)
@@ -215,7 +190,7 @@ public class HabitController {
         if (memberService.findSpecifiedMember(model.habitID, model.userID) != null)
             throw new MemberExistsException("You cannot join habit you are already involved in!");
 
-        User tempUser = userService.getUserById(model.userID);
+        UserDto tempUser = userService.findById(model.userID);
 
         Member newMember = new Member();
         newMember.setHabitID(model.habitID);

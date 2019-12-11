@@ -3,8 +3,10 @@ package com.goaleaf.services;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
+import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
 import com.goaleaf.validators.exceptions.habitsCreating.WrongTitleException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -43,4 +45,6 @@ public interface HabitService {
     Iterable<HabitDTO> convertManyToDTOs(Iterable<Habit> habits);
 
     Boolean setInvitingPermissions(Boolean allowed, Integer habitID);
+
+    HttpStatus inviteNewMember(AddMemberViewModel model);
 }

@@ -1,24 +1,36 @@
 package com.goaleaf.services.servicesImpl;
 
 import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
-import com.goaleaf.entities.User;
+import com.goaleaf.entities.Notification;
+import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
 import com.goaleaf.repositories.HabitRepository;
+import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.HabitService;
 import com.goaleaf.services.MemberService;
+import com.goaleaf.services.NotificationService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.validators.exceptions.habitsCreating.WrongTitleException;
 import com.goaleaf.validators.exceptions.habitsProcessing.BadGoalValueException;
+import com.goaleaf.validators.exceptions.habitsProcessing.UserAlreadyInHabitException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.goaleaf.security.SecurityConstants.SECRET;
 
 @Service
 public class HabitServiceImpl implements HabitService {
@@ -29,6 +41,8 @@ public class HabitServiceImpl implements HabitService {
     private MemberService memberService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private NotificationService notificationService;
 
 
     @Override
@@ -85,8 +99,8 @@ public class HabitServiceImpl implements HabitService {
         Member creator = new Member();
         creator.setUserID(creatorID);
         creator.setHabitID(added.getId());
-        creator.setUserLogin(userService.getUserById(creatorID).getLogin());
-        creator.setImgName(userService.getUserById(creatorID).getImageName());
+        creator.setUserLogin(userService.findById(creatorID).getLogin());
+        creator.setImgName(userService.findById(creatorID).getImageName());
         creator.setPoints(0);
 
         memberService.saveMember(creator);
@@ -121,7 +135,7 @@ public class HabitServiceImpl implements HabitService {
 
     private HabitDTO convertToDTO(Habit entry) {
 
-        User creator = userService.findById(entry.getCreatorID());
+        UserDto creator = userService.findById(entry.getCreatorID());
 
         HabitDTO habitDTO = new HabitDTO();
         habitDTO.id = entry.getId();
@@ -191,4 +205,47 @@ public class HabitServiceImpl implements HabitService {
         Habit response = habitRepository.save(habit);
         return response.getCanUsersInvite();
     }
+
+    @Override
+    public HttpStatus inviteNewMember(AddMemberViewModel model) {
+
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(model.token).getBody();
+
+        UserDto searchingUser = userService.findByLogin(model.userLogin);
+
+        Member newMember = new Member();
+        newMember.setUserID(searchingUser.getUserID());
+        newMember.setHabitID(model.habitID);
+        newMember.setImgName(searchingUser.getImageName());
+        newMember.setUserLogin(searchingUser.getLogin());
+        newMember.setPoints(0);
+
+        if (memberService.checkIfExist(newMember)) {
+            throw new UserAlreadyInHabitException("User already participating!"); }
+
+//        memberService.saveMember(newMember);
+
+        Notification ntf = new Notification();
+        ntf.setDate(new Date());
+        ntf.setRecipientID(searchingUser.getUserID());
+        ntf.setDescription(userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to group " + findById(model.habitID).title + "!");
+        ntf.setUrl((model.url.isEmpty() ? "EMPTY_URL" : model.url));
+        if (notificationService.findByDescription(ntf.getDescription()) == null) {
+            notificationService.saveNotification(ntf);
+        }
+
+        if (searchingUser.getNotifications()) {
+            EmailNotificationsSender sender = new EmailNotificationsSender();
+            try {
+                sender.sendInvitationNotification(searchingUser.getEmailAddress(), searchingUser.getLogin(), userService.findById(Integer.parseInt(claims.getSubject())).getLogin(), findById(model.habitID).title);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return HttpStatus.OK;
+    }
+
 }

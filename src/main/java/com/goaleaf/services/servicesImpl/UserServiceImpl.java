@@ -1,32 +1,36 @@
 package com.goaleaf.services.servicesImpl;
 
 import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
 import com.goaleaf.entities.User;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditImageViewModel;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditUserViewModel;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
+import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.repositories.MemberRepository;
 import com.goaleaf.repositories.UserRepository;
+import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.HabitService;
 import com.goaleaf.services.MemberService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.validators.UserCredentialsValidator;
+import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentialsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.goaleaf.security.SecurityConstants.PASSWORD_RECOVERY_SECRET;
 import static com.goaleaf.security.SecurityConstants.SECRET;
 
 
@@ -47,19 +51,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-//    @Override
-//    public Iterable<User> listAllUsersPaging(Integer pageNr, Integer howManyOnPage) {
-//        return userRepository.findAll(new PageRequest(pageNr, howManyOnPage));
-//    }
-
     @Override
-    public Iterable<User> listAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User getUserById(Integer id) {
-        return userRepository.findById(id);
+    public Iterable<UserDto> listAllUsers() {
+        return convertManyToDTOs(userRepository.findAll());
     }
 
     @Override
@@ -90,26 +84,47 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User registerNewUserAccount(RegisterViewModel register)
-            throws EmailExistsException, LoginExistsException {
+    public UserDto registerNewUserAccount(RegisterViewModel register)
+            throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException {
 
+        if (!userCredentialsValidator.isValidEmail(register.emailAddress))
+            throw new BadCredentialsException("Wrong email format!");
+        if (userRepository.findByEmailAddress(register.emailAddress) != null)
+            throw new BadCredentialsException("Account with email " + register.emailAddress + " address already exists!");
+        if (userRepository.findByLogin(register.login) != null)
+            throw new LoginExistsException("Account with login " + register.login + " already exists!");
+        if (!userCredentialsValidator.isLoginLengthValid(register.login))
+            throw new BadCredentialsException("Login cannot be longer than 20 characters!");
+        if (!userCredentialsValidator.isPasswordFormatValid(register.password))
+            throw new BadCredentialsException("Password must be at least 6 characters long and cannot contain spaces!");
+        if (!userCredentialsValidator.arePasswordsEquals(register))
+            throw new BadCredentialsException("Passwords are not equal!");
+
+        register.password = (bCryptPasswordEncoder.encode(register.password));
+
+        EmailNotificationsSender sender = new EmailNotificationsSender();
+
+        sender.sayHello(register.emailAddress, register.login);
 
         User user = new User();
         user.setLogin(register.login);
         user.setPassword(register.password);
         user.setEmailAddress(register.emailAddress);
         user.setImageName("def_goaleaf_avatar.png");
-        return userRepository.save(user);
+        user.setNotifications(true);
+        return convertToDTO(userRepository.save(user));
     }
 
-    public void updateUser(EditUserViewModel model) throws BadCredentialsException {
+    public UserDto updateUser(EditUserViewModel model) throws BadCredentialsException {
+
+        User updated = new User();
 
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
 
         if (findById(Integer.parseInt(claims.getSubject())) != null) {
-            User updatingUser = findById(Integer.parseInt(claims.getSubject()));
+            User updatingUser = userRepository.findById(Integer.parseInt(claims.getSubject()));
 
 
             if (bCryptPasswordEncoder.matches(model.oldPassword, userRepository.findById(Integer.parseInt(claims.getSubject())).getPassword())) {
@@ -132,12 +147,13 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentialsException("Wrong Password!");
             }
 
-            userRepository.save(updatingUser);
+            updated = userRepository.save(updatingUser);
         }
+        return convertToDTO(updated);
     }
 
     public void updateUserImage(EditImageViewModel model) {
-        User updatedUser = findById(model.id);
+        User updatedUser = userRepository.findById(model.id);
 
         updatedUser.setImageName(model.imageName);
 
@@ -145,18 +161,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByLogin(String login) {
-        return userRepository.findByLogin(login);
+    public UserDto findByLogin(String login) {
+        return convertToDTO(userRepository.findByLogin(login));
     }
 
     @Override
-    public User findById(Integer id) {
-        return userRepository.findById(id);
+    public UserDto findById(Integer id) {
+        return convertToDTO(userRepository.findById(id));
     }
 
     @Override
-    public User findByEmailAddress(String email) {
-        return userRepository.findByEmailAddress(email);
+    public UserDto findByEmailAddress(String email) {
+        return convertToDTO(userRepository.findByEmailAddress(email));
     }
 
     @Override
@@ -209,6 +225,74 @@ public class UserServiceImpl implements UserService {
         }
 
         Iterable<HabitDTO> result = habitService.convertManyToDTOs(habits);
+        return result;
+    }
+
+    @Override
+    public void setNewPassword(PasswordViewModel newPasswords) throws BadCredentialsException {
+
+        Claims claims = Jwts.parser()
+                .setSigningKey(PASSWORD_RECOVERY_SECRET.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(newPasswords.token).getBody();
+
+        User user = userRepository.findById(Integer.parseInt(claims.getSubject()));
+
+        if (!userCredentialsValidator.isPasswordFormatValid(newPasswords.password))
+            throw new BadCredentialsException("Password must be at least 6 characters long and cannot contain spaces!");
+        if (!(newPasswords.password.equals(newPasswords.matchingPassword)))
+            throw new BadCredentialsException("Passwords are not equal!");
+
+        user.setPassword(bCryptPasswordEncoder.encode(newPasswords.password));
+        saveUser(user);
+    }
+
+    @Override
+    public HttpStatus disableNotifications(ChangeNotificationsViewModel model) {
+
+        User temp = userRepository.findById(model.userID);
+        temp.setNotifications(!temp.getNotifications());
+        userRepository.save(temp);
+
+        return HttpStatus.OK;
+    }
+
+    @Override
+    public UserDto setEmailNotifications(SetEmailNotificationsViewModel model) {
+        User temp = userRepository.findById(model.userID);
+        temp.setNotifications(model.newNotificationsStatus);
+        return convertToDTO(userRepository.save(temp));
+    }
+
+    @Override
+    public void checkUserCredentials(LoginViewModel userModel) throws AccountNotExistsException, BadCredentialsException {
+        if (userRepository.findByLogin(userModel.login) == null) {
+            throw new AccountNotExistsException("Account with this login not exists!");
+        }
+        if (!bCryptPasswordEncoder.matches(userModel.password, userRepository.findByLogin(userModel.login).getPassword())) {
+            throw new BadCredentialsException("Wrong Password!!");
+        }
+    }
+
+    private UserDto convertToDTO(User user) {
+        UserDto dto = new UserDto();
+
+        dto.setEmailAddress(user.getEmailAddress());
+        dto.setImageName(user.getImageName());
+        dto.setLogin(user.getLogin());
+        dto.setNotifications(user.getNotifications());
+        dto.setUserID(user.getId());
+
+        return dto;
+    }
+
+    private Iterable<UserDto> convertManyToDTOs(Iterable<User> input) {
+        List<UserDto> out = new ArrayList<>(0);
+
+        for (User u : input) {
+            out.add(convertToDTO(u));
+        }
+
+        Iterable result = out;
         return result;
     }
 }

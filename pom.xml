@@ -330,7 +330,7 @@
                 <value.spring.datasource.url>
                     jdbc:postgresql://ec2-107-21-126-201.compute-1.amazonaws.com:5432/d8br41v2tl8a6p
                 </value.spring.datasource.url>
-                <value.hibernate.hbm2ddl.auto>create-drop</value.hibernate.hbm2ddl.auto>
+                <value.hibernate.hbm2ddl.auto>update</value.hibernate.hbm2ddl.auto>
                 <value.spring.datasource.username>cegdtcqjxqtsxp
                 </value.spring.datasource.username>
                 <value.spring.datasource.password>d9580c750a51b42aab833a8a7a43d5f9dd50e454b12d57d5d521d321026f4ba5

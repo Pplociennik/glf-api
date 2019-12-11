@@ -3,6 +3,7 @@ package com.goaleaf.controllers;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.PostReactionsNrDTO;
+import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.PostReaction;
 import com.goaleaf.entities.User;
@@ -69,7 +70,7 @@ public class PostController {
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
 
-        User tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
+        UserDto tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");
@@ -109,7 +110,7 @@ public class PostController {
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
 
-        User tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
+        UserDto tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");
@@ -130,7 +131,7 @@ public class PostController {
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
 
-        User tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
+        UserDto tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");
@@ -163,7 +164,7 @@ public class PostController {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
-        User tempUser = userService.getUserById(Integer.parseInt(claims.getSubject()));
+        UserDto tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");

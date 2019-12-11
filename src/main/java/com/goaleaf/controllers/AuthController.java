@@ -2,11 +2,9 @@ package com.goaleaf.controllers;
 
 import com.auth0.jwt.JWT;
 import com.goaleaf.entities.DTO.UserDto;
-import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.AuthorizeViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
-import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.UserService;
 import com.goaleaf.services.servicesImpl.JwtServiceImpl;
 import com.goaleaf.validators.UserCredentialsValidator;
@@ -44,32 +42,7 @@ public class AuthController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public UserDto registerUserAccount(@RequestBody RegisterViewModel register) throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException {
 
-
-        if (!userCredentialsValidator.isValidEmail(register.emailAddress))
-            throw new BadCredentialsException("Wrong email format!");
-        if (userService.findByEmailAddress(register.emailAddress) != null)
-            throw new BadCredentialsException("Account with email " + register.emailAddress + " address already exists!");
-        if (userService.findByLogin(register.login) != null)
-            throw new LoginExistsException("Account with login " + register.login + " already exists!");
-        if (!userCredentialsValidator.isLoginLengthValid(register.login))
-            throw new BadCredentialsException("Login cannot be longer than 20 characters!");
-        if (!userCredentialsValidator.isPasswordFormatValid(register.password))
-            throw new BadCredentialsException("Password must be at least 6 characters long and cannot contain spaces!");
-        if (!userCredentialsValidator.arePasswordsEquals(register))
-            throw new BadCredentialsException("Passwords are not equal!");
-
-        register.password = (bCryptPasswordEncoder.encode(register.password));
-
-        EmailNotificationsSender sender = new EmailNotificationsSender();
-
-        User user = userService.registerNewUserAccount(register);
-        sender.sayHello(register.emailAddress, register.login);
-
-        UserDto userDto = new UserDto();
-        userDto.login = user.getLogin();
-        userDto.emailAddress = user.getEmailAddress();
-        userDto.imageName = user.getImageName();
-        return userDto;
+        return userService.registerNewUserAccount(register);
 
     }
 
@@ -77,14 +50,10 @@ public class AuthController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(@RequestBody LoginViewModel userModel) throws AccountNotExistsException, BadCredentialsException {
 
-        if (userService.findByLogin(userModel.login) == null) {
-            throw new AccountNotExistsException("Account with this login not exists!");
-        }
-        if (!bCryptPasswordEncoder.matches(userModel.password, userService.findByLogin(userModel.login).getPassword())) {
-            throw new BadCredentialsException("Wrong Password!!");
-        }
+        userService.checkUserCredentials(userModel);
+
         String token = JWT.create()
-                .withSubject(String.valueOf(userService.findByLogin(userModel.login).getId()))
+                .withSubject(String.valueOf(userService.findByLogin(userModel.login).getUserID()))
 //                .withSubject(userService.findByLogin(userModel.login).getLogin())
                 .withClaim("Login", userService.findByLogin(userModel.login).getLogin())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

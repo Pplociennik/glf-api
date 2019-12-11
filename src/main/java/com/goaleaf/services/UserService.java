@@ -1,21 +1,21 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.User;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditImageViewModel;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditUserViewModel;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
+import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
+import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentialsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-@Service
+import javax.mail.MessagingException;
+
 public interface UserService {
 
-    Iterable<User> listAllUsers();
-
-    User getUserById(Integer id);
+    Iterable<UserDto> listAllUsers();
 
     User saveUser(User user);
 
@@ -23,24 +23,30 @@ public interface UserService {
 
     Boolean checkIfExists(Integer id);
 
-//    Iterable<User> listAllUsersPaging(Integer pageNr, Integer howManyOnPage);
+    UserDto registerNewUserAccount(RegisterViewModel register) throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException;
 
-    User registerNewUserAccount(RegisterViewModel register) throws EmailExistsException, LoginExistsException;
+    UserDto findByLogin(String user);
 
-    User findByLogin(String user);
+    UserDto findById(Integer id);
 
-    User findById(Integer id);
-
-    void updateUser(EditUserViewModel model) throws BadCredentialsException;
+    UserDto updateUser(EditUserViewModel model) throws BadCredentialsException;
 
     void updateUserImage(EditImageViewModel model);
 
-    User findByEmailAddress(String email);
+    UserDto findByEmailAddress(String email);
 
     Iterable<HabitDTO> getUserFinishedHabits(Integer userID);
 
     Iterable<HabitDTO> getAllMyWonHabits(Integer userID);
 
     Iterable<HabitDTO> getAllMyUnfinishedHabits(Integer userID);
+
+    void setNewPassword(PasswordViewModel newPasswords) throws BadCredentialsException;
+
+    HttpStatus disableNotifications(ChangeNotificationsViewModel model) throws AccountNotExistsException;
+
+    UserDto setEmailNotifications(SetEmailNotificationsViewModel model);
+
+    void checkUserCredentials(LoginViewModel userModel) throws AccountNotExistsException, BadCredentialsException;
 
 }
