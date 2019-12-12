@@ -1,6 +1,9 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.Post;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 public interface PostService {
 
@@ -15,4 +18,6 @@ public interface PostService {
     void save(Post post);
 
     void updatePostImage(Integer postID, String imgName);
+
+    File getPostPicture(Integer postID);
 }

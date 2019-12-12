@@ -11,4 +11,6 @@ public class NewPostViewModel {
     public Integer habitID;
 
     public String postText;
+
+    public String imageCode;
 }

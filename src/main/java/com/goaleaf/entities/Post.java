@@ -31,7 +31,7 @@ public class Post {
     private String postText;
 
     @Column
-    private String imgName;
+    private String imageCode;
 
     @Column
     private Integer counter_CLAPPING;
@@ -128,12 +128,12 @@ public class Post {
         this.counter_TTD = counter_TTD;
     }
 
-    public String getImgName() {
-        return imgName;
+    public String getImageCode() {
+        return imageCode;
     }
 
-    public void setImgName(String imgName) {
-        this.imgName = imgName;
+    public void setImageCode(String imageCode) {
+        this.imageCode = imageCode;
     }
 
     public String getPostText() {

@@ -90,6 +90,10 @@ public class PostController {
         newPost.setPostText(model.postText);
         newPost.setDateOfAddition(new Date());
 
+        if (model.type.equals(PostTypes.JustPhoto) || model.type.equals(PostTypes.TextAndPhoto)) {
+            newPost.setImageCode(model.imageCode);
+        }
+
         postService.save(newPost);
 
 //        PostDTO dataToResponse = new PostDTO();

@@ -9,7 +9,10 @@ import com.goaleaf.repositories.MemberRepository;
 import com.goaleaf.repositories.PostRepository;
 import com.goaleaf.repositories.TaskRepository;
 import com.goaleaf.services.PostService;
+import com.goaleaf.validators.FileConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.File;
 
 public class PostServiceImpl implements PostService {
 
@@ -64,11 +67,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public void updatePostImage(Integer postID, String imgName) {
         Post post = postRepository.findById(postID);
-        post.setImgName(imgName);
+        post.setImageCode(imgName);
         if (post.getPostText().isEmpty())
             post.setPostType(PostTypes.JustPhoto);
         else
             post.setPostType(PostTypes.TextAndPhoto);
         postRepository.save(post);
+    }
+
+    @Override
+    public File getPostPicture(Integer postID) {
+        Post post = postRepository.findById(postID);
+        if (post.getImageCode() == null || post.getImageCode().trim().isEmpty()) {
+            throw new RuntimeException("This post has no image!");
+        }
+        return FileConverter.decodeFileFromBase64Binary(post.getImageCode());
     }
 }

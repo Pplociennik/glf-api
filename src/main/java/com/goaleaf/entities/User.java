@@ -21,29 +21,30 @@ public class User {
 
     private String emailAddress;
 
-    private String imageName;
+    @Lob
+    private String imageCode;
 
     private Boolean notifications;
 
     public User() {
     }
 
-    public User(Integer id, String login, String password, String emailAddress, String imageName) {
+    public User(Integer id, String login, String password, String emailAddress, String imageCode) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.emailAddress = emailAddress;
-        this.imageName = imageName;
+        this.imageCode = imageCode;
         notifications = true;
     }
 
 
-    public String getImageName() {
-        return imageName;
+    public String getImageCode() {
+        return imageCode;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageCode(String imageCode) {
+        this.imageCode = imageCode;
     }
 
     public Boolean getNotifications() {

@@ -144,6 +144,10 @@ public class HabitServiceImpl implements HabitService {
 
     private HabitDTO convertToDTO(Habit entry) {
 
+        if (entry == null) {
+            return null;
+        }
+
         UserDto creator = userService.findById(entry.getCreatorID());
 
         HabitDTO habitDTO = new HabitDTO();
@@ -225,8 +229,10 @@ public class HabitServiceImpl implements HabitService {
         UserDto inviter = userService.findById(Integer.parseInt(claims.getSubject()));
         Habit habit = habitRepository.findById(model.habitID);
 
-        if (habit.getCreatorLogin().equals(inviter.getLogin())) {
-            throw new RuntimeException("You are not allowed to invite members!");
+        if (!habit.getCanUsersInvite()) {
+            if (!habit.getCreatorLogin().equals(inviter.getLogin())) {
+                throw new RuntimeException("You are not allowed to invite members!");
+            }
         }
 
         UserDto searchingUser = userService.findByLogin(model.userLogin);

@@ -9,8 +9,10 @@ import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentials
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import java.io.File;
 
 public interface UserService {
 
@@ -47,5 +49,9 @@ public interface UserService {
     UserDto setEmailNotifications(SetEmailNotificationsViewModel model);
 
     void checkUserCredentials(LoginViewModel userModel) throws AccountNotExistsException, BadCredentialsException;
+
+    File uploadProfileImage(MultipartFile multipartFile, String token);
+
+    File getProfilePicture(Integer userID);
 
 }
