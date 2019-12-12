@@ -24,4 +24,7 @@ public interface TaskRepository extends CrudRepository<Task, Integer> {
     Iterable<Task> findAllByIsCompleted(Boolean isCompleted);
 
     Iterable<Task> getAllByHabitIDAndExecutorID(Integer habitID, Integer executorID);
+
+    @Override
+    void delete(Iterable<? extends Task> entities);
 }

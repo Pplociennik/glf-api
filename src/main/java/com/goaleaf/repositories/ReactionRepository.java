@@ -17,4 +17,6 @@ public interface ReactionRepository extends CrudRepository<PostReaction, Integer
 
     void removeByPostIDAndUserLogin(Integer postID, String userLogin);
 
+    @Override
+    void delete(Iterable<? extends PostReaction> entities);
 }

@@ -6,7 +6,6 @@ import com.goaleaf.entities.DTO.PostReactionsNrDTO;
 import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.PostReaction;
-import com.goaleaf.entities.User;
 import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.entities.viewModels.habitsManaging.postsCreating.NewPostViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.AddReactionViewModel;

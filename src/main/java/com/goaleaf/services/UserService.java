@@ -9,7 +9,6 @@ import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentials
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 

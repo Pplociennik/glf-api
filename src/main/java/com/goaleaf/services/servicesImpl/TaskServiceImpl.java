@@ -171,7 +171,7 @@ public class TaskServiceImpl implements TaskService {
 
     private Post setTaskAsCompleted(Task task, User user, CompleteTaskDTO cmp, PostTypes type, Habit habit, Member member) {
 
-        if (task.getFrequency().equals(Frequency.Daily)) {
+        if (task.getFrequency().equals(Frequency.Daily) || task.getFrequency().equals(Frequency.Once4All)) {
             task.setCompleted(false);
         } else {
             task.setCompleted(true);
@@ -229,6 +229,14 @@ public class TaskServiceImpl implements TaskService {
         Iterable<TasksHistoryEntity> historyList = taskHistoryRepository.findAllByTaskIDAndUserID(task.getId(), id);
         DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
         Date currentDate = new Date();
+
+        if (task.getFrequency().equals(Frequency.Once4All)) {
+            if (!historyList.iterator().hasNext()) {
+                return new TaskViewModel(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), null, null, true, null);
+            } else {
+                tempHistoryEntity = historyList.iterator().next();
+            }
+        }
 
         for (TasksHistoryEntity h : historyList) {
             if (dateTimeComparator.compare(currentDate, h.getExecutionDate()) == 0) {

@@ -15,4 +15,7 @@ public interface TaskHistoryRepository extends CrudRepository<TasksHistoryEntity
     Iterable<TasksHistoryEntity> findAllByTaskID(Integer taskID);
 
     Iterable<TasksHistoryEntity> findAllByTaskIDAndUserID(Integer taskID, Integer userID);
+
+    @Override
+    void delete(Iterable<? extends TasksHistoryEntity> entities);
 }

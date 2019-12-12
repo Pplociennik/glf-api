@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
         for (Member m : memberList) {
             Habit h = new Habit();
             h = habitService.getHabitById(m.getHabitID());
-            if (h.getFinished() && !h.getWinner().equals(user.getLogin())) {
+            if (h.getFinished() && h.getWinner().equals("NONE")) {
                 habits.add(h);
             }
         }

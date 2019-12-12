@@ -6,12 +6,12 @@ import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
 import com.goaleaf.entities.Notification;
-import com.goaleaf.entities.User;
+import com.goaleaf.entities.enums.Category;
+import com.goaleaf.entities.enums.Sorting;
 import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.DeleteMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.JoinHabitViewModel;
-import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.*;
 import com.goaleaf.validators.HabitTitleValidator;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -19,7 +19,10 @@ import com.goaleaf.validators.exceptions.habitsCreating.NoCategoryException;
 import com.goaleaf.validators.exceptions.habitsCreating.NoFrequencyException;
 import com.goaleaf.validators.exceptions.habitsCreating.NoPrivacyException;
 import com.goaleaf.validators.exceptions.habitsCreating.WrongTitleException;
-import com.goaleaf.validators.exceptions.habitsProcessing.*;
+import com.goaleaf.validators.exceptions.habitsProcessing.HabitNotExistsException;
+import com.goaleaf.validators.exceptions.habitsProcessing.MemberDoesNotExistException;
+import com.goaleaf.validators.exceptions.habitsProcessing.MemberExistsException;
+import com.goaleaf.validators.exceptions.habitsProcessing.UserNotInHabitException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.PermitAll;
 import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.Map;
 
 import static com.goaleaf.security.SecurityConstants.SECRET;
@@ -143,7 +145,7 @@ public class HabitController {
         memberService.removeSpecifiedMember(model.habitID, model.userID);
 
         if (memberService.countAllHabitMembers(model.habitID) == 0)
-            habitService.removeHabit(model.habitID);
+            habitService.deleteHabit(model.habitID, model.token);
 
         return HttpStatus.OK;
     }
@@ -216,6 +218,21 @@ public class HabitController {
     @RequestMapping(value = "/habit/setInvitingPermissions", method = RequestMethod.POST)
     public Boolean setInvitingPermissions(@RequestParam Boolean allowed, Integer habitID) {
         return habitService.setInvitingPermissions(allowed, habitID);
+    }
+
+    @RequestMapping(value = "/habit/remove", method = RequestMethod.DELETE)
+    public HttpStatus deleteHabit(@RequestParam Integer habitID, String token) {
+        return habitService.deleteHabit(habitID, token);
+    }
+
+    @RequestMapping(value = "/all/by-category", method = RequestMethod.GET)
+    public Iterable<HabitDTO> getAllHabitsSortedByCategory(@RequestParam Category category) {
+        return habitService.getAllHabitsByCategory(category);
+    }
+
+    @RequestMapping(value = "/all/sorted", method = RequestMethod.GET)
+    public Iterable<HabitDTO> getAllHabitsByDateOrPopularity(@RequestParam Sorting sorting) {
+        return habitService.getAllHabitsBySorting(sorting);
     }
 
 }

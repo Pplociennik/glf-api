@@ -8,4 +8,7 @@ public interface PostRepository extends CrudRepository<Post, Integer> {
     Iterable<Post> getAllByHabitIDOrderByDateOfAdditionDesc(Integer habitID);
 
     Post findById(Integer id);
+
+    @Override
+    void delete(Iterable<? extends Post> entities);
 }

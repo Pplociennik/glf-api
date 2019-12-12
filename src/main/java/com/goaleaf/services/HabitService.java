@@ -3,6 +3,8 @@ package com.goaleaf.services;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
+import com.goaleaf.entities.enums.Category;
+import com.goaleaf.entities.enums.Sorting;
 import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
 import com.goaleaf.validators.exceptions.habitsCreating.WrongTitleException;
@@ -47,4 +49,10 @@ public interface HabitService {
     Boolean setInvitingPermissions(Boolean allowed, Integer habitID);
 
     HttpStatus inviteNewMember(AddMemberViewModel model);
+
+    HttpStatus deleteHabit(Integer habitID, String token);
+
+    Iterable<HabitDTO> getAllHabitsByCategory(Category category);
+
+    Iterable<HabitDTO> getAllHabitsBySorting(Sorting sorting);
 }

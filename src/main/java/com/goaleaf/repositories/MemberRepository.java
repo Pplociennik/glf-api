@@ -27,4 +27,6 @@ public interface MemberRepository extends CrudRepository<Member, Integer> {
 
     Member getByUserID(Integer userID);
 
+    @Override
+    void delete(Iterable<? extends Member> entities);
 }

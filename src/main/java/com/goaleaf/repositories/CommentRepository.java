@@ -11,5 +11,8 @@ public interface CommentRepository extends CrudRepository<Comment, Integer> {
 
     Comment findById(Integer commentID);
 
-//    Comment save(Comment comment);
+    @Override
+    void delete(Iterable<? extends Comment> entities);
+
+    //    Comment save(Comment comment);
 }
