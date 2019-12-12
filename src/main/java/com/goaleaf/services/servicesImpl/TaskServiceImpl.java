@@ -99,7 +99,10 @@ public class TaskServiceImpl implements TaskService {
 
         for (Task t : input) {
             if (!t.getCompleted()) {
-                output.add(convertToViewModel(t, userID));
+                TaskViewModel model = convertToViewModel(t, userID);
+                if (model != null) {
+                    output.add(model);
+                }
             }
         }
         Iterable<TaskViewModel> result = output;
@@ -234,7 +237,7 @@ public class TaskServiceImpl implements TaskService {
             if (!historyList.iterator().hasNext()) {
                 return new TaskViewModel(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), null, null, true, null);
             } else {
-                tempHistoryEntity = historyList.iterator().next();
+                return null;
             }
         }
 
