@@ -19,8 +19,8 @@ public class Member {
     @Column
     private String userLogin;
 
-    @Column
-    private String imgName;
+    @Lob
+    private String imageCode;
 
     @Column
     private Integer points;
@@ -83,12 +83,12 @@ public class Member {
         this.userLogin = userLogin;
     }
 
-    public String getImgName() {
-        return imgName;
+    public String getImageCode() {
+        return imageCode;
     }
 
-    public void setImgName(String imgName) {
-        this.imgName = imgName;
+    public void setImageCode(String imageCode) {
+        this.imageCode = imageCode;
     }
 
     public Integer getPoints() {
