@@ -197,7 +197,7 @@ public class HabitController {
         Member newMember = new Member();
         newMember.setHabitID(model.habitID);
         newMember.setUserID(model.userID);
-        newMember.setImageCode(tempUser.getImageName());
+        newMember.setImageCode(tempUser.getImageCode());
         newMember.setUserLogin(tempUser.getLogin());
         newMember.setPoints(0);
 

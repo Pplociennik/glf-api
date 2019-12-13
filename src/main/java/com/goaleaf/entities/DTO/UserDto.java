@@ -8,7 +8,7 @@ public class UserDto {
 
     private String emailAddress;
 
-    private String imageName;
+    private String imageCode;
 
     private Boolean notifications;
 
@@ -39,12 +39,12 @@ public class UserDto {
         this.emailAddress = emailAddress;
     }
 
-    public String getImageName() {
-        return imageName;
+    public String getImageCode() {
+        return imageCode;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageCode(String imageCode) {
+        this.imageCode = imageCode;
     }
 
     public Boolean getNotifications() {

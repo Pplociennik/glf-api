@@ -20,4 +20,6 @@ public interface PostService {
     void updatePostImage(Integer postID, String imgName);
 
     File getPostPicture(Integer postID);
+
+    String getPostImageCode(Integer postID);
 }

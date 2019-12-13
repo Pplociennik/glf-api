@@ -83,4 +83,17 @@ public class PostServiceImpl implements PostService {
         }
         return FileConverter.decodeFileFromBase64Binary(post.getImageCode());
     }
+
+    @Override
+    public String getPostImageCode(Integer postID) {
+        if (postRepository.findById(postID) == null) {
+            throw new RuntimeException("Post does not exist!");
+        }
+        if (postRepository.findById(postID).getPostType().equals(PostTypes.JustText) || postRepository.findById(postID).getPostType().equals(PostTypes.HabitFinished) || postRepository.findById(postID).getPostType().equals(PostTypes.Task)) {
+            throw new RuntimeException("This post does not contain any photo!");
+        }
+
+        Post post = postRepository.findById(postID);
+        return post.getImageCode();
+    }
 }

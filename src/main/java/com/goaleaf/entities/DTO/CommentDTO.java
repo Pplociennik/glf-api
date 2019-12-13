@@ -13,4 +13,6 @@ public class CommentDTO {
     public String creatorLogin;
 
     public Date creationDate;
+
+    public String creatorImage;
 }

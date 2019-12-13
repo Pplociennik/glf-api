@@ -40,6 +40,7 @@ public class CommentController {
         comment.setUserID(model.creatorID);
         comment.setUserLogin(userService.findById(model.creatorID).getLogin());
         comment.setCreationDate(new Date());
+        comment.setCreatorImage(userService.findById(model.creatorID).getImageCode());
 
         Comment returned = commentService.addNewComment(comment);
 
@@ -49,6 +50,7 @@ public class CommentController {
         commentDTO.text = returned.getCommentText();
         commentDTO.creatorLogin = returned.getUserLogin();
         commentDTO.creationDate = returned.getCreationDate();
+        commentDTO.creatorImage = returned.getCreatorImage();
 
         return commentDTO;
     }

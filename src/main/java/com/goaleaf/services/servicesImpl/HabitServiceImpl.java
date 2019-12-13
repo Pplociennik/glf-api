@@ -109,7 +109,7 @@ public class HabitServiceImpl implements HabitService {
         creator.setUserID(creatorID);
         creator.setHabitID(added.getId());
         creator.setUserLogin(userService.findById(creatorID).getLogin());
-        creator.setImageCode(userService.findById(creatorID).getImageName());
+        creator.setImageCode(userService.findById(creatorID).getImageCode());
         creator.setPoints(0);
 
         memberService.saveMember(creator);
@@ -240,7 +240,7 @@ public class HabitServiceImpl implements HabitService {
         Member newMember = new Member();
         newMember.setUserID(searchingUser.getUserID());
         newMember.setHabitID(model.habitID);
-        newMember.setImageCode(searchingUser.getImageName());
+        newMember.setImageCode(searchingUser.getImageCode());
         newMember.setUserLogin(searchingUser.getLogin());
         newMember.setPoints(0);
 

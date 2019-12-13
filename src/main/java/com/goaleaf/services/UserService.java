@@ -54,4 +54,6 @@ public interface UserService {
 
     File getProfilePicture(Integer userID);
 
+    String getUserImageCode(Integer userID);
+
 }

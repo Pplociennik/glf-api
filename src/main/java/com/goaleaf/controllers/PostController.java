@@ -89,6 +89,7 @@ public class PostController {
         newPost.setCreatorLogin(tempUser.getLogin());
         newPost.setPostText(model.postText);
         newPost.setDateOfAddition(new Date());
+        newPost.setCreatorImage(tempUser.getImageCode());
 
         if (model.type.equals(PostTypes.JustPhoto) || model.type.equals(PostTypes.TextAndPhoto)) {
             newPost.setImageCode(model.imageCode);

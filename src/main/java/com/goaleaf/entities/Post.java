@@ -33,6 +33,8 @@ public class Post {
     @Column
     private String imageCode;
 
+    private String creatorImage;
+
     @Column
     private Integer counter_CLAPPING;
 
@@ -174,5 +176,13 @@ public class Post {
 
     public void setTaskID(Integer taskID) {
         this.taskID = taskID;
+    }
+
+    public String getCreatorImage() {
+        return creatorImage;
+    }
+
+    public void setCreatorImage(String creatorImage) {
+        this.creatorImage = creatorImage;
     }
 }

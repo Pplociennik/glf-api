@@ -32,6 +32,8 @@ public class Comment {
     @Column
     private String commentText;
 
+    private String creatorImage;
+
     public Integer getId() {
         return id;
     }
@@ -78,5 +80,13 @@ public class Comment {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getCreatorImage() {
+        return creatorImage;
+    }
+
+    public void setCreatorImage(String creatorImage) {
+        this.creatorImage = creatorImage;
     }
 }

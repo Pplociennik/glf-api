@@ -167,6 +167,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         Post result = setTaskAsCompleted(task, user, cmp, PostTypes.Task, habit, member);
+        result.setCreatorImage(user.getImageCode());
 
         //PostDTO dto = new PostDTO(aS.getCreatorLogin(), aS.getPostText(), aS.getPostType(), aS.getDateOfAddition());
         return result;
