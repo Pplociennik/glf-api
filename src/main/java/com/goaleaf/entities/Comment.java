@@ -33,6 +33,7 @@ public class Comment {
     @Lob
     private String commentText;
 
+    @Lob
     private String creatorImage;
 
     public Integer getId() {
