@@ -1,13 +1,11 @@
 package com.goaleaf.services.servicesImpl;
 
+import com.goaleaf.entities.Comment;
 import com.goaleaf.entities.Member;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.Task;
 import com.goaleaf.entities.enums.PostTypes;
-import com.goaleaf.repositories.HabitRepository;
-import com.goaleaf.repositories.MemberRepository;
-import com.goaleaf.repositories.PostRepository;
-import com.goaleaf.repositories.TaskRepository;
+import com.goaleaf.repositories.*;
 import com.goaleaf.services.PostService;
 import com.goaleaf.validators.FileConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private HabitRepository habitRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Override
     public Iterable<Post> getAllHabitPosts(Integer habitID) {
@@ -49,6 +50,14 @@ public class PostServiceImpl implements PostService {
             member.decreasePoints(task.getPoints());
 
             memberRepository.save(member);
+        }
+
+        if (commentRepository.getAllByPostIDOrderByCreationDateDesc(id).iterator().hasNext()) {
+            Iterable<Comment> comments = commentRepository.getAllByPostIDOrderByCreationDateDesc(id);
+            commentRepository.delete(comments);
+            if (commentRepository.getAllByPostIDOrderByCreationDateDesc(id).iterator().hasNext()) {
+                throw new RuntimeException("Comments were not deleted properly!");
+            }
         }
 
         postRepository.delete(id);

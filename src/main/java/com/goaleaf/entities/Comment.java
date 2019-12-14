@@ -30,6 +30,7 @@ public class Comment {
     private Date creationDate;
 
     @Column
+    @Lob
     private String commentText;
 
     private String creatorImage;

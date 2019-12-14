@@ -12,7 +12,7 @@
     </parent>
     <groupId>com.goaleaf.engine</groupId>
     <artifactId>GoaLeaf</artifactId>
-    <version>0.9.0_3</version>
+    <version>0.9.0_4</version>
     <name>GoaLeaf</name>
     <description>GoaLeaf</description>
     <packaging>jar</packaging>
@@ -42,7 +42,6 @@
         </version.org.springframework.security.spring-security-crypto>
         <version.org.springframework.security.spring-security-oauth2-core>5.0.0.M5
         </version.org.springframework.security.spring-security-oauth2-core>
-        <version.org.springframework.spring-test>5.1.5.RELEASE</version.org.springframework.spring-test>
         <version.com.microsoft.azure-webapp-maven-plugin>1.7.0</version.com.microsoft.azure-webapp-maven-plugin>
         <version.org.apache.maven.plugin.maven-assembly-plugin>2.4.1
         </version.org.apache.maven.plugin.maven-assembly-plugin>
@@ -186,11 +185,6 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${version.org.springframework.spring-test}</version>
-        </dependency>
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${version.org.postgresql.postgresql}</version>
@@ -199,6 +193,11 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${version.joda-time.joda-time}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>2.1.5.RELEASE</version>
         </dependency>
     </dependencies>
     <build>

@@ -28,6 +28,7 @@ public class Post {
     private PostTypes postType;
 
     @Column
+    @Lob
     private String postText;
 
     @Column
