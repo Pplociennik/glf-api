@@ -1,13 +1,12 @@
 package com.goaleaf.services.servicesImpl;
 
+import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.UserDto;
-import com.goaleaf.entities.Habit;
-import com.goaleaf.entities.Member;
-import com.goaleaf.entities.Stats;
-import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
+import com.goaleaf.repositories.CommentRepository;
 import com.goaleaf.repositories.MemberRepository;
+import com.goaleaf.repositories.PostRepository;
 import com.goaleaf.repositories.UserRepository;
 import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.HabitService;
@@ -55,6 +54,10 @@ public class UserServiceImpl implements UserService {
     private MemberRepository memberRepository;
     @Autowired
     private StatsService statsService;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     private UserCredentialsValidator userCredentialsValidator = new UserCredentialsValidator();
 
@@ -320,7 +323,21 @@ public class UserServiceImpl implements UserService {
         user.setImageCode(fileCode);
         User response = userRepository.save(user);
 
-        return FileConverter.decodeFileFromBase64Binary(response.getImageCode());
+        File resultFile = FileConverter.decodeFileFromBase64Binary(response.getImageCode());
+
+        Iterable<Post> posts = postRepository.findAllByCreatorLogin(user.getLogin());
+        Iterable<Comment> comments = commentRepository.findAllByUserID(user.getId());
+
+        for (Post p : posts) {
+            p.setCreatorImage(fileCode);
+            postRepository.save(p);
+        }
+        for (Comment c : comments) {
+            c.setCreatorImage(fileCode);
+            commentRepository.save(c);
+        }
+
+        return resultFile;
 
     }
 

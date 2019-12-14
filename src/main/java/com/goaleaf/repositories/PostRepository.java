@@ -15,4 +15,6 @@ public interface PostRepository extends CrudRepository<Post, Integer> {
 
     @Override
     void delete(Iterable<? extends Post> entities);
+
+    Iterable<Post> findAllByCreatorLogin(String creatorLogin);
 }

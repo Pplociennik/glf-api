@@ -80,6 +80,9 @@ public class PostController {
             throw new MemberDoesNotExistException("You are not a member!");
         if (model.postText.trim().isEmpty())
             throw new EmptyPostException("Post cannot be empty!");
+        if (model.postText.length() > 300) {
+            throw new RuntimeException("Post cannot be longer than 300 characters!");
+        }
 
         Post newPost = new Post();
         newPost.setHabitID(model.habitID);
