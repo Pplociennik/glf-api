@@ -2,10 +2,12 @@ package com.goaleaf.controllers;
 
 import com.goaleaf.entities.Comment;
 import com.goaleaf.entities.DTO.CommentDTO;
+import com.goaleaf.entities.Stats;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsManaging.EditCommentViewModel;
 import com.goaleaf.services.CommentService;
 import com.goaleaf.services.PostService;
+import com.goaleaf.services.StatsService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.validators.exceptions.habitsProcessing.postsProcessing.PostNotFoundException;
 import com.goaleaf.validators.exceptions.habitsProcessing.postsProcessing.commentsProcessing.CommentNotFoundException;
@@ -25,6 +27,8 @@ public class CommentController {
     private PostService postService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private StatsService statsService;
 
     @RequestMapping(value = "/addcomment", method = RequestMethod.POST)
     public CommentDTO addComment(@RequestBody AddCommentViewModel model) {
@@ -51,6 +55,13 @@ public class CommentController {
         commentDTO.creatorLogin = returned.getUserLogin();
         commentDTO.creationDate = returned.getCreationDate();
         commentDTO.creatorImage = returned.getCreatorImage();
+
+        Stats stats = statsService.findStatsByDate(new Date());
+        if (stats == null) {
+            stats = new Stats();
+        }
+        stats.increaseCommentedPosts();
+        statsService.save(stats);
 
         return commentDTO;
     }

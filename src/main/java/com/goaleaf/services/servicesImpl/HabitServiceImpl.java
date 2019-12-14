@@ -9,10 +9,7 @@ import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
 import com.goaleaf.repositories.*;
 import com.goaleaf.security.EmailNotificationsSender;
-import com.goaleaf.services.HabitService;
-import com.goaleaf.services.MemberService;
-import com.goaleaf.services.NotificationService;
-import com.goaleaf.services.UserService;
+import com.goaleaf.services.*;
 import com.goaleaf.validators.exceptions.habitsCreating.WrongTitleException;
 import com.goaleaf.validators.exceptions.habitsProcessing.BadGoalValueException;
 import com.goaleaf.validators.exceptions.habitsProcessing.UserAlreadyInHabitException;
@@ -52,6 +49,8 @@ public class HabitServiceImpl implements HabitService {
     private TaskHistoryRepository taskHistoryRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private StatsService statsService;
 
 
     @Override
@@ -111,6 +110,13 @@ public class HabitServiceImpl implements HabitService {
         creator.setUserLogin(userService.findById(creatorID).getLogin());
         creator.setImageCode(userService.findById(creatorID).getImageCode());
         creator.setPoints(0);
+
+        Stats stats = statsService.findStatsByDate(new Date());
+        if (stats == null) {
+            stats = new Stats();
+        }
+        stats.increaseCreatedChallenges();
+        statsService.save(stats);
 
         memberService.saveMember(creator);
 
@@ -206,6 +212,14 @@ public class HabitServiceImpl implements HabitService {
 
         HabitDTO result = new HabitDTO();
         result = convertToDTO(habitRepository.save(habit));
+
+        Stats stats = statsService.findStatsByDate(new Date());
+        if (stats == null) {
+            stats = new Stats();
+        }
+        stats.increaseSetGoals();
+        statsService.save(stats);
+
         return result;
     }
 
@@ -267,6 +281,13 @@ public class HabitServiceImpl implements HabitService {
                 e.printStackTrace();
             }
         }
+
+        Stats stats = statsService.findStatsByDate(new Date());
+        if (stats == null) {
+            stats = new Stats();
+        }
+        stats.increaseInvitedMembers();
+        statsService.save(stats);
 
         return HttpStatus.OK;
     }

@@ -6,6 +6,7 @@ import com.goaleaf.entities.DTO.PostReactionsNrDTO;
 import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.PostReaction;
+import com.goaleaf.entities.Stats;
 import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.entities.viewModels.habitsManaging.postsCreating.NewPostViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.AddReactionViewModel;
@@ -46,6 +47,8 @@ public class PostController {
     private UserService userService;
     @Autowired
     private ReactionService reactionService;
+    @Autowired
+    private StatsService statsService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Iterable<Post> getAllHabitPosts(@RequestParam String token, Integer habitID) {
@@ -96,6 +99,13 @@ public class PostController {
         }
 
         postService.save(newPost);
+
+        Stats stats = statsService.findStatsByDate(new Date());
+        if (stats == null) {
+            stats = new Stats();
+        }
+        stats.increaseCreatedPosts();
+        statsService.save(stats);
 
 //        PostDTO dataToResponse = new PostDTO();
 //        dataToResponse.creator = tempUser.getLogin();

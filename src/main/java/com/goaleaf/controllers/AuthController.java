@@ -2,9 +2,11 @@ package com.goaleaf.controllers;
 
 import com.auth0.jwt.JWT;
 import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.Stats;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.AuthorizeViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
+import com.goaleaf.services.StatsService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.services.servicesImpl.JwtServiceImpl;
 import com.goaleaf.validators.UserCredentialsValidator;
@@ -37,6 +39,8 @@ public class AuthController {
     private UserCredentialsValidator userCredentialsValidator;
     @Autowired
     private JwtServiceImpl jwtService;
+    @Autowired
+    private StatsService statsService;
 
     @PermitAll
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -59,6 +63,13 @@ public class AuthController {
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
         jwtService.Validate(token, SECRET);
+
+        Stats stats = statsService.findStatsByDate(new Date());
+        if (stats == null) {
+            stats = new Stats();
+        }
+        stats.increaseLoggedUsers();
+        statsService.save(stats);
 
         return token;
     }

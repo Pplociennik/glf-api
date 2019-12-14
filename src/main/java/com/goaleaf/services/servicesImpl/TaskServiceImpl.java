@@ -8,6 +8,7 @@ import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.entities.viewModels.TaskViewModel;
 import com.goaleaf.repositories.*;
 import com.goaleaf.services.JwtService;
+import com.goaleaf.services.StatsService;
 import com.goaleaf.services.TaskService;
 import com.goaleaf.validators.exceptions.habitsProcessing.PointsNotSetException;
 import io.jsonwebtoken.Claims;
@@ -49,6 +50,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private StatsService statsService;
 
 
     @Override
@@ -127,6 +131,13 @@ public class TaskServiceImpl implements TaskService {
 
         Task newT = new Task(Integer.parseInt(claims.getSubject()), newTask.getHabitID(), newTask.getDescription(), newTask.getPoints(), false, newTask.getFrequency(), Integer.parseInt(claims.getSubject()), newTask.getDaysInterval());
 
+        Stats stats = statsService.findStatsByDate(new Date());
+        if (stats == null) {
+            stats = new Stats();
+        }
+        stats.increaseCreatedTasks();
+        statsService.save(stats);
+
         Task returned = taskRepository.save(newT);
 
         return convertToViewModel(returned, null);
@@ -149,6 +160,13 @@ public class TaskServiceImpl implements TaskService {
             throw new PointsNotSetException("Points to win have never been set!");
         }
 
+        Stats stats = statsService.findStatsByDate(new Date());
+        if (stats == null) {
+            stats = new Stats();
+        }
+        stats.increaseCompletedTasks();
+        statsService.save(stats);
+
         member.addPoints(task.getPoints());
         memberRepository.save(member);
 
@@ -161,6 +179,13 @@ public class TaskServiceImpl implements TaskService {
             Post post = setTaskAsCompleted(task, user, cmp, PostTypes.Task, habit, member);
 
             Post result = setTaskAsCompleted(task, user, cmp, PostTypes.HabitFinished, habit, member);
+
+            Stats statss = statsService.findStatsByDate(new Date());
+            if (statss == null) {
+                statss = new Stats();
+            }
+            statss.increaseFinishedChallenges();
+            statsService.save(statss);
 
             //PostDTO dto = new PostDTO(aS.getCreatorLogin(), aS.getPostText(), aS.getPostType(), aS.getDateOfAddition());
             return result;
