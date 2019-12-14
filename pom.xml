@@ -12,7 +12,7 @@
     </parent>
     <groupId>com.goaleaf.engine</groupId>
     <artifactId>GoaLeaf</artifactId>
-    <version>0.9.0_6</version>
+    <version>0.9.0_7</version>
     <name>GoaLeaf</name>
     <description>GoaLeaf</description>
     <packaging>jar</packaging>
@@ -47,13 +47,18 @@
         </version.org.apache.maven.plugin.maven-assembly-plugin>
         <version.org.postgresql.postgresql>9.4-1201-jdbc4</version.org.postgresql.postgresql>
         <version.joda-time.joda-time>2.10.5</version.joda-time.joda-time>
-        <version.org.springframework.boot-spring-boot>2.1.5.RELEASE</version.org.springframework.boot-spring-boot>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+        <!--<dependency>-->
+        <!--<groupId>javax.mail</groupId>-->
+        <!--<artifactId>javax.mail-api</artifactId>-->
+        <!--<version>1.6.2</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
@@ -188,11 +193,6 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${version.joda-time.joda-time}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
-            <version>${version.org.springframework.boot-spring-boot}</version>
         </dependency>
     </dependencies>
     <build>
