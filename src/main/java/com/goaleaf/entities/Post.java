@@ -32,6 +32,7 @@ public class Post {
     private String postText;
 
     @Column
+    @Lob
     private String imageCode;
 
     private String creatorImage;
