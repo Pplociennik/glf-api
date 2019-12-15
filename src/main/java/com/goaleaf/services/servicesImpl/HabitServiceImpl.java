@@ -114,7 +114,7 @@ public class HabitServiceImpl implements HabitService {
         creator.setPoints(0);
 
         String ntfDesc = "Challenge: \"" + newHabit.getHabitTitle() + "\" has been created";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(creatorID, ntfDesc, "http://www.goaleaf.com/habit/" + newHabit.getId(), false);
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(creatorID, ntfDesc, "http://www.goaleaf.com/habit/" + added.getId(), false);
         if (creatorUser.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {

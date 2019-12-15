@@ -6,8 +6,10 @@ import com.goaleaf.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
 public class NotificationServiceImpl implements NotificationService {
+
+    public NotificationServiceImpl() {
+    }
 
     @Autowired
     private NotificationRepository notificationRepository;

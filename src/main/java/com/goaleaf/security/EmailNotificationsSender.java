@@ -7,15 +7,14 @@ import com.goaleaf.entities.Notification;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.services.NotificationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.goaleaf.services.servicesImpl.BeanUtil;
 
 import javax.mail.MessagingException;
 import java.util.Date;
 
 public class EmailNotificationsSender {
 
-    @Autowired
-    private NotificationService notificationService;
+    private NotificationService notificationService = BeanUtil.getBean(NotificationService.class);
 
     private EmailSender sender;
     private String senderAddress;
