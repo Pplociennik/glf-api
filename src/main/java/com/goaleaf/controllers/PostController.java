@@ -2,8 +2,10 @@ package com.goaleaf.controllers;
 
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.PostReactionsNrDTO;
 import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.Notification;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.PostReaction;
 import com.goaleaf.entities.Stats;
@@ -12,6 +14,7 @@ import com.goaleaf.entities.viewModels.habitsManaging.postsCreating.NewPostViewM
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.AddReactionViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.EditPostViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.RemovePostViewModel;
+import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.*;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
 import com.goaleaf.validators.exceptions.habitsProcessing.MemberDoesNotExistException;
@@ -24,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
@@ -49,6 +53,8 @@ public class PostController {
     private ReactionService reactionService;
     @Autowired
     private StatsService statsService;
+    @Autowired
+    private HabitService habitService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Iterable<Post> getAllHabitPosts(@RequestParam String token, Integer habitID) {
@@ -177,6 +183,8 @@ public class PostController {
 
         Post post = postService.findOneByID(model.postID);
         String pastType = "";
+        HabitDTO habit = habitService.findById(post.getHabitID());
+        UserDto postCreator = userService.findByLogin(post.getCreatorLogin());
 
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
@@ -189,6 +197,17 @@ public class PostController {
             throw new MemberDoesNotExistException("You are not a member!");
         if (postService.findOneByID(model.postID) == null)
             throw new PostNotFoundException("Post not found");
+
+        String ntfDesc = tempUser.getLogin() + " reacted to your post!";
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(tempUser.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
+        if (tempUser.getNotifications()) {
+            EmailNotificationsSender sender = new EmailNotificationsSender();
+            try {
+                sender.postReacted(postCreator.getEmailAddress(), postCreator.getLogin(), tempUser.getLogin(), post);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (!(reactionService.getReactionByPostIdAndUserLogin(model.postID, tempUser.getLogin()) == null)) {
             PostReaction reaction = reactionService.getReactionByPostIdAndUserLogin(model.postID, tempUser.getLogin());

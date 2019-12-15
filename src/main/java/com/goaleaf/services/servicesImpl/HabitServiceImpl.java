@@ -104,12 +104,25 @@ public class HabitServiceImpl implements HabitService {
         Habit added = new Habit();
         added = habitRepository.save(newHabit);
 
+        UserDto creatorUser = userService.findById(creatorID);
+
         Member creator = new Member();
         creator.setUserID(creatorID);
         creator.setHabitID(added.getId());
-        creator.setUserLogin(userService.findById(creatorID).getLogin());
-        creator.setImageCode(userService.findById(creatorID).getImageCode());
+        creator.setUserLogin(creatorUser.getLogin());
+        creator.setImageCode(creatorUser.getImageCode());
         creator.setPoints(0);
+
+        String ntfDesc = "Challenge: \"" + newHabit.getHabitTitle() + "\" has been created";
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(creatorID, ntfDesc, "http://www.goaleaf.com/habit/" + newHabit.getId(), false);
+        if (creatorUser.getNotifications()) {
+            EmailNotificationsSender sender = new EmailNotificationsSender();
+            try {
+                sender.challengeCreated(creatorUser.getEmailAddress(), creatorUser.getLogin(), added);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
 
         Stats stats = statsService.findStatsByDate(new Date());
         if (stats == null) {
@@ -264,15 +277,8 @@ public class HabitServiceImpl implements HabitService {
 
 //        memberService.saveMember(newMember);
 
-        Notification ntf = new Notification();
-        ntf.setDate(new Date());
-        ntf.setRecipientID(searchingUser.getUserID());
-        ntf.setDescription(userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to group " + findById(model.habitID).title + "!");
-        ntf.setUrl((model.url.isEmpty() ? "EMPTY_URL" : model.url));
-        if (notificationService.findByDescription(ntf.getDescription()) == null) {
-            notificationService.saveNotification(ntf);
-        }
-
+        String ntfDesc = userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to challenge " + findById(model.habitID).title + "!";
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(searchingUser.getUserID(), ntfDesc, (model.url.isEmpty() ? "EMPTY_URL" : model.url), true);
         if (searchingUser.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {

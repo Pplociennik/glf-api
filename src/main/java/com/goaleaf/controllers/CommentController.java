@@ -2,9 +2,13 @@ package com.goaleaf.controllers;
 
 import com.goaleaf.entities.Comment;
 import com.goaleaf.entities.DTO.CommentDTO;
+import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.Notification;
+import com.goaleaf.entities.Post;
 import com.goaleaf.entities.Stats;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsManaging.EditCommentViewModel;
+import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.CommentService;
 import com.goaleaf.services.PostService;
 import com.goaleaf.services.StatsService;
@@ -15,6 +19,7 @@ import com.goaleaf.validators.exceptions.habitsProcessing.postsProcessing.commen
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.Date;
 
 @RestController
@@ -38,6 +43,10 @@ public class CommentController {
         if (model.text.trim().isEmpty())
             throw new EmptyCommentException("Comment cannot be empty!");
 
+        UserDto commenter = userService.findById(model.creatorID);
+        Post post = postService.findOneByID(model.postID);
+        UserDto postCreator = userService.findByLogin(post.getCreatorLogin());
+
         Comment comment = new Comment();
         comment.setCommentText(model.text);
         comment.setPostID(model.postID);
@@ -55,6 +64,17 @@ public class CommentController {
         commentDTO.creatorLogin = returned.getUserLogin();
         commentDTO.creationDate = returned.getCreationDate();
         commentDTO.creatorImage = returned.getCreatorImage();
+
+        String ntfDesc = commenter.getLogin() + " commented on your post!";
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
+        if (postCreator.getNotifications()) {
+            EmailNotificationsSender sender = new EmailNotificationsSender();
+            try {
+                sender.postCommented(postCreator.getEmailAddress(), postCreator.getLogin(), comment.getUserLogin(), post, comment);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
 
         Stats stats = statsService.findStatsByDate(new Date());
         if (stats == null) {

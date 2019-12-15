@@ -7,6 +7,7 @@ import com.goaleaf.entities.enums.Frequency;
 import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.entities.viewModels.TaskViewModel;
 import com.goaleaf.repositories.*;
+import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.JwtService;
 import com.goaleaf.services.StatsService;
 import com.goaleaf.services.TaskService;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -139,6 +141,24 @@ public class TaskServiceImpl implements TaskService {
         statsService.save(stats);
 
         Task returned = taskRepository.save(newT);
+        Habit habit = habitRepository.findById(newTask.getHabitID());
+
+        Iterable<Member> members = memberRepository.findAllByHabitID(returned.getHabitID());
+
+        String ntfDesc = "New task is available in habit: " + habitRepository.findById(newTask.getHabitID()).getHabitTitle();
+        EmailNotificationsSender sender = new EmailNotificationsSender();
+        for (Member m : members) {
+            User user = userRepository.findById(m.getUserID());
+            if (user.getNotifications()) {
+                try {
+                    Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + newTask.getHabitID(), false);
+                    sender.taskCreated(user.getEmailAddress(), user.getLogin(), habit);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
         return convertToViewModel(returned, null);
 
@@ -186,6 +206,21 @@ public class TaskServiceImpl implements TaskService {
             }
             statss.increaseFinishedChallenges();
             statsService.save(statss);
+
+            String ntfDesc = "Challenge: " + habit.getHabitTitle() + " has ended!";
+            Iterable<Member> members = memberRepository.findAllByHabitID(habit.getId());
+            for (Member m : members) {
+                User u = userRepository.findById(m.getUserID());
+                Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habit.getId(), false);
+                if (u.getNotifications()) {
+                    EmailNotificationsSender sender = new EmailNotificationsSender();
+                    try {
+                        sender.challengeEnded(u.getEmailAddress(), u.getLogin(), user.getLogin(), habit);
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
             //PostDTO dto = new PostDTO(aS.getCreatorLogin(), aS.getPostText(), aS.getPostType(), aS.getDateOfAddition());
             return result;

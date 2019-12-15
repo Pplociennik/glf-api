@@ -12,6 +12,7 @@ import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.DeleteMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.JoinHabitViewModel;
+import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.*;
 import com.goaleaf.validators.HabitTitleValidator;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -193,6 +194,8 @@ public class HabitController {
             throw new MemberExistsException("You cannot join habit you are already involved in!");
 
         UserDto tempUser = userService.findById(model.userID);
+        HabitDTO habit = habitService.findById(model.habitID);
+        UserDto creator = userService.findById(habit.creatorID);
 
         Member newMember = new Member();
         newMember.setHabitID(model.habitID);
@@ -200,6 +203,17 @@ public class HabitController {
         newMember.setImageCode(tempUser.getImageCode());
         newMember.setUserLogin(tempUser.getLogin());
         newMember.setPoints(0);
+
+        String ntfDesc = newMember.getUserLogin() + " joined to your challenge: " + habit.title;
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(habit.creatorID, ntfDesc, "http://www.goaleaf.com/habit/" + model.habitID, false);
+        if (creator.getNotifications()) {
+            EmailNotificationsSender sender = new EmailNotificationsSender();
+            try {
+                sender.newMemberJoined(creator.getEmailAddress(), creator.getLogin(), tempUser.getLogin(), habit);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
 
         memberService.saveMember(newMember);
         return HttpStatus.OK;
