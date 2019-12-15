@@ -48,7 +48,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject("You have a new invitation!");
         sender.setBody("Hello " + recipientName + "!\n\n" +
-                "User " + inviterName + " invited you to joining a new contest: " + habitTitle + " \n\n" +
+                "User " + inviterName + " invited you to joining a new contest \"" + habitTitle + "\" \n\n" +
                 "If you want to take a challenge just log in to your GoaLeaf account: " + "http://www.goaleaf.com/login" + "\n\n" +
                 "We wish you great results! :)\n\n" +
                 "Your Sincerely\n" +
@@ -79,7 +79,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject("Challenge " + newHabit.getHabitTitle() + " has been created!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "Your challenge: " + newHabit.getHabitTitle() + " has been created!" + "\n\n" +
+                "Your challenge \"" + newHabit.getHabitTitle() + "\" has been created!" + "\n\n" +
                 "It is high time now to start inviting some members!\n" +
                 "But! Don't forget to add some first tasks!\n\n" +
                 "You don't want them to be lazy, aren't you? ;)\n\n" +
@@ -95,7 +95,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject("New task has been added in habit: " + newHabit.getHabitTitle() + "!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "There are new tasks available in challenge: " + newHabit.getHabitTitle() + "\n\n" +
+                "There are new tasks available in challenge \"" + newHabit.getHabitTitle() + "\"\n\n" +
                 "If you don't want to get messages like this just uncheck this option in you profile.\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
@@ -109,7 +109,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject("New member joined to your challenge!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "User " + userName + " joined to your habit: " + newHabit.title + "!\n\n" +
+                "User " + userName + " joined to your habit \"" + newHabit.title + "\"!\n\n" +
                 "If you don't want to get messages like this just uncheck this option in you profile.\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
@@ -123,7 +123,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject("Challenge has ended!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "User " + userName + " won the challenge: " + newHabit.getHabitTitle() + "!\n\n" +
+                "User " + userName + " won the challenge \"" + newHabit.getHabitTitle() + "\"!\n\n" +
                 "You cannot complete tasks in this challenge anymore. However you are still able to write posts and comments.\n\n" +
                 "If you don't want to get messages like this just uncheck this option in you profile.\n\n" +
                 "Your Sincerely\n" +
@@ -138,7 +138,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject(userName + " commented your post!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "User " + userName + " commented your post: " + (post.getPostType().equals(PostTypes.JustText) || post.getPostType().equals(PostTypes.Task) || post.getPostType().equals(PostTypes.HabitFinished) ? post.getPostText() : "<image>") + "!\n\n" +
+                "User " + userName + " commented your post: \"" + (post.getPostType().equals(PostTypes.JustText) || post.getPostType().equals(PostTypes.Task) || post.getPostType().equals(PostTypes.HabitFinished) ? post.getPostText() : "<image>") + "\"!\n\n" +
                 "Comment:\n\n" +
                 "\"" + comment.getCommentText() + "\"" + "\n\n" +
                 "Your Sincerely\n" +
@@ -153,7 +153,54 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject(userName + " reacted to your post!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "User " + userName + " reacted to your post: " + (post.getPostType().equals(PostTypes.JustText) || post.getPostType().equals(PostTypes.Task) || post.getPostType().equals(PostTypes.HabitFinished) ? post.getPostText() : "<image>") + "!\n\n" +
+                "User " + userName + " reacted to your post: \"" + (post.getPostType().equals(PostTypes.JustText) || post.getPostType().equals(PostTypes.Task) || post.getPostType().equals(PostTypes.HabitFinished) ? post.getPostText() : "<image>") + "\"!\n\n" +
+                "Your Sincerely\n" +
+                "GoaLeaf group");
+//        sender.addAttachment("TestFile.txt");
+        sender.send();
+    }
+
+    public void postAdded(String recipientEmail, String recipientName, String userName, HabitDTO habit, Post post) throws MessagingException {
+
+        sender.setSender(senderAddress, senderPassword);
+        sender.addRecipient(recipientEmail);
+        sender.setSubject(userName + " added a new post!");
+        sender.setBody("Welcome " + recipientName + "!\n\n" +
+                "User " + userName + " added a new post in challenge \"" + habit.title + "\"!\n\n" +
+                "Post:\n" +
+                "\"" + (post.getPostType().equals(PostTypes.JustText) || post.getPostType().equals(PostTypes.Task) || post.getPostType().equals(PostTypes.HabitFinished) ? post.getPostText() : "<image>") + "\"" + "\n\n" +
+                "Your Sincerely\n" +
+                "GoaLeaf group");
+//        sender.addAttachment("TestFile.txt");
+        sender.send();
+    }
+
+    public void challengeDeleted(String recipientEmail, String recipientName, Habit habit) throws MessagingException {
+
+        sender.setSender(senderAddress, senderPassword);
+        sender.addRecipient(recipientEmail);
+        sender.setSubject("Challenge \"" + habit.getHabitTitle() + "\" has been deleted!");
+        sender.setBody("Welcome " + recipientName + "!\n\n" +
+                "Challenge \"" + habit.getHabitTitle() + "\" has been deleted!\n\n" +
+                "It is no longer available to any user.\n " +
+                "Any data like posts, reactions or comments has been also deleted permanently.\n" +
+                "For more details, please, contact the challenge administrator.\n\n" +
+                "Your Sincerely\n" +
+                "GoaLeaf group");
+//        sender.addAttachment("TestFile.txt");
+        sender.send();
+    }
+
+    public void goalUpdated(String recipientEmail, String recipientName, Habit habit) throws MessagingException {
+
+        sender.setSender(senderAddress, senderPassword);
+        sender.addRecipient(recipientEmail);
+        sender.setSubject("The goal in \"" + habit.getHabitTitle() + "\" has been updated!");
+        sender.setBody("Welcome " + recipientName + "!\n\n" +
+                "Administrator of the challenge \"" + habit.getHabitTitle() + "\" has set a new goal!\n\n" +
+                "It seems you've got more work to do :)\n " +
+                "The challenge is available at:\n" +
+                "http://www/goaleaf.com/habit" + habit.getId() + "\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
 //        sender.addAttachment("TestFile.txt");

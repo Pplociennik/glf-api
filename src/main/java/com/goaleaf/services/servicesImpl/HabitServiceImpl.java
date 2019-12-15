@@ -226,6 +226,22 @@ public class HabitServiceImpl implements HabitService {
         HabitDTO result = new HabitDTO();
         result = convertToDTO(habitRepository.save(habit));
 
+        Iterable<Member> members = memberRepository.findAllByHabitID(habitID);
+
+        String ntfDesc = "The goal in the challenge \"" + habit.getHabitTitle() + "\" has been updated!";
+        for (Member m : members) {
+            UserDto u = userService.findById(m.getUserID());
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habitID, false);
+            if (u.getNotifications()) {
+                EmailNotificationsSender sender = new EmailNotificationsSender();
+                try {
+                    sender.goalUpdated(u.getEmailAddress(), u.getLogin(), habit);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         Stats stats = statsService.findStatsByDate(new Date());
         if (stats == null) {
             stats = new Stats();
@@ -335,6 +351,20 @@ public class HabitServiceImpl implements HabitService {
         Iterable<TasksHistoryEntity> tasksHistoryEntities = taskHistoryRepository.findAllByHabitID(habitID);
         Iterable<Task> tasksList = taskRepository.getAllByHabitID(habitID);
         Iterable<Member> membersList = memberRepository.findAllByHabitID(habitID);
+
+        String ntfDesc = "Challenge \"" + toDelete.getHabitTitle() + "\" is no longer available!";
+        for (Member m : membersList) {
+            UserDto u = userService.findById(m.getUserID());
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, null, false);
+            if (u.getNotifications()) {
+                EmailNotificationsSender sender = new EmailNotificationsSender();
+                try {
+                    sender.challengeDeleted(u.getEmailAddress(), u.getLogin(), toDelete);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         if (commentsList.iterator().hasNext()) {
             commentRepository.delete(commentsList);

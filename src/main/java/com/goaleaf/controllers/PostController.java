@@ -5,10 +5,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.PostReactionsNrDTO;
 import com.goaleaf.entities.DTO.UserDto;
-import com.goaleaf.entities.Notification;
-import com.goaleaf.entities.Post;
-import com.goaleaf.entities.PostReaction;
-import com.goaleaf.entities.Stats;
+import com.goaleaf.entities.*;
 import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.entities.viewModels.habitsManaging.postsCreating.NewPostViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.AddReactionViewModel;
@@ -108,6 +105,25 @@ public class PostController {
         }
 
         postService.save(newPost);
+
+        Iterable<Member> members = memberService.getAllByHabitID(model.habitID);
+        HabitDTO habit = habitService.findById(model.habitID);
+
+        String ntfDesc = newPost.getCreatorLogin() + " added a new post!";
+        for (Member m : members) {
+            UserDto u = userService.findById(m.getUserID());
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habit.id, false);
+            if (u.getNotifications()) {
+                EmailNotificationsSender sender = new EmailNotificationsSender();
+                try {
+                    sender.postAdded(u.getEmailAddress(), u.getLogin(), newPost.getCreatorLogin(), habit, newPost);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
 
         Stats stats = statsService.findStatsByDate(new Date());
         if (stats == null) {
