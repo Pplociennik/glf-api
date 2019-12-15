@@ -327,6 +327,7 @@ public class UserServiceImpl implements UserService {
 
         Iterable<Post> posts = postRepository.findAllByCreatorLogin(user.getLogin());
         Iterable<Comment> comments = commentRepository.findAllByUserID(user.getId());
+        Iterable<Member> members = memberRepository.findAllByUserID(user.getId());
 
         for (Post p : posts) {
             p.setCreatorImage(fileCode);
@@ -335,6 +336,10 @@ public class UserServiceImpl implements UserService {
         for (Comment c : comments) {
             c.setCreatorImage(fileCode);
             commentRepository.save(c);
+        }
+        for (Member m : members) {
+            m.setImageCode(fileCode);
+            memberRepository.save(m);
         }
 
         return resultFile;
