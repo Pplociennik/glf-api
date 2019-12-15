@@ -113,7 +113,7 @@ public class PostController {
         for (Member m : members) {
             UserDto u = userService.findById(m.getUserID());
             Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habit.id, false);
-            if (u.getNotifications()) {
+            if (u.getNotifications() && !u.getLogin().equals(tempUser.getLogin())) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
                 try {
                     sender.postAdded(u.getEmailAddress(), u.getLogin(), newPost.getCreatorLogin(), habit, newPost);

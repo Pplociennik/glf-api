@@ -149,7 +149,7 @@ public class TaskServiceImpl implements TaskService {
         EmailNotificationsSender sender = new EmailNotificationsSender();
         for (Member m : members) {
             User user = userRepository.findById(m.getUserID());
-            if (user.getNotifications()) {
+            if (user.getNotifications() && user.getId() != returned.getCreatorID()) {
                 try {
                     Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + newTask.getHabitID(), false);
                     sender.taskCreated(user.getEmailAddress(), user.getLogin(), habit);
@@ -255,6 +255,7 @@ public class TaskServiceImpl implements TaskService {
         newPost.setUserComment(cmp.getComment());
         newPost.setTaskPoints(task.getPoints());
         newPost.setTaskID(task.getId());
+        newPost.setCreatorImage(user.getImageCode());
         return postRepository.save(newPost);
     }
 

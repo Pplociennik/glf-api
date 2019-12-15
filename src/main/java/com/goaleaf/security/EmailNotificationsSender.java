@@ -183,7 +183,7 @@ public class EmailNotificationsSender {
         sender.setBody("Welcome " + recipientName + "!\n\n" +
                 "Challenge \"" + habit.getHabitTitle() + "\" has been deleted!\n\n" +
                 "It is no longer available to any user.\n " +
-                "Any data like posts, reactions or comments has been also deleted permanently.\n" +
+                "All the data like posts, reactions or comments has been also deleted permanently.\n" +
                 "For more details, please, contact the challenge administrator.\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
@@ -200,7 +200,7 @@ public class EmailNotificationsSender {
                 "Administrator of the challenge \"" + habit.getHabitTitle() + "\" has set a new goal!\n\n" +
                 "It seems you've got more work to do :)\n " +
                 "The challenge is available at:\n" +
-                "http://www/goaleaf.com/habit" + habit.getId() + "\n\n" +
+                "http://www.goaleaf.com.habit/" + habit.getId() + "\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
 //        sender.addAttachment("TestFile.txt");
