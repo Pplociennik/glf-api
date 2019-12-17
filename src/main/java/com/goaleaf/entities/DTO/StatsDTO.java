@@ -100,7 +100,7 @@ public class StatsDTO {
         private Integer finishedChallenges;
 
         public StatsBuilder setDay(Date day) {
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             this.day = df.format(day);
             return this;
         }
