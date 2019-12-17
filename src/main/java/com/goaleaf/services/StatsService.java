@@ -1,5 +1,6 @@
 package com.goaleaf.services;
 
+import com.goaleaf.entities.DTO.StatsDTO;
 import com.goaleaf.entities.Stats;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +13,5 @@ public interface StatsService {
 
     Stats save(Stats stats);
 
-    Iterable<Stats> findAllStats();
+    Iterable<StatsDTO> findAllStats();
 }

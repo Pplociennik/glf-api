@@ -109,7 +109,7 @@ public class PostController {
         Iterable<Member> members = memberService.getAllByHabitID(model.habitID);
         HabitDTO habit = habitService.findById(model.habitID);
 
-        String ntfDesc = newPost.getCreatorLogin() + " added a new post!";
+        String ntfDesc = newPost.getCreatorLogin() + " added a new post in challenge \"" + habit.title + "\"";
         for (Member m : members) {
             UserDto u = userService.findById(m.getUserID());
             Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habit.id, false);
@@ -214,9 +214,9 @@ public class PostController {
         if (postService.findOneByID(model.postID) == null)
             throw new PostNotFoundException("Post not found");
 
-        String ntfDesc = tempUser.getLogin() + " reacted to your post!";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(tempUser.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
-        if (tempUser.getNotifications()) {
+        String ntfDesc = tempUser.getLogin() + " reacted to your post in challenge \"" + habit.title + "\"";
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
+        if (postCreator.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
                 sender.postReacted(postCreator.getEmailAddress(), postCreator.getLogin(), tempUser.getLogin(), post);

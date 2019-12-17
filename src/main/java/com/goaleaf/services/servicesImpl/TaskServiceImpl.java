@@ -145,7 +145,7 @@ public class TaskServiceImpl implements TaskService {
 
         Iterable<Member> members = memberRepository.findAllByHabitID(returned.getHabitID());
 
-        String ntfDesc = "New task is available in habit: " + habitRepository.findById(newTask.getHabitID()).getHabitTitle();
+        String ntfDesc = "New task is available in habit \"" + habitRepository.findById(newTask.getHabitID()).getHabitTitle() + "\"";
         EmailNotificationsSender sender = new EmailNotificationsSender();
         for (Member m : members) {
             User user = userRepository.findById(m.getUserID());

@@ -1,40 +1,54 @@
 package com.goaleaf.engine;
 
-import com.goaleaf.GoaLeafApplication;
+import com.goaleaf.controllers.AuthController;
 import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.User;
+import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
+import com.goaleaf.entities.viewModels.accountsAndAuthorization.PasswordViewModel;
+import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
+import com.goaleaf.repositories.UserRepository;
 import com.goaleaf.services.UserService;
+import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
+import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentialsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentialsException;
-import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
-import com.goaleaf.services.servicesImpl.UserServiceImpl;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockRestServiceServer;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import javax.mail.MessagingException;
+import java.util.HashSet;
+import java.util.Set;
 
-@RunWith(SpringRunner.class)
+@SpringBootTest
 @WebAppConfiguration
+@AutoConfigureMockMvc
+@AutoConfigureMockRestServiceServer
+@RunWith(SpringJUnit4ClassRunner.class)
 public class UserServiceTests {
 
-    private MockMvc mvc;
-
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    private AuthController authController;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+
+    private Set<User> toClean;
 
     @Before
-    public void setup() throws Exception {
-        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    public void prepare() {
+        this.toClean = new HashSet<>(0);
+    }
+
+    @After
+    public void clean() {
+        this.toClean.forEach(user -> userRepository.delete(user));
     }
 
     @Test(expected = BadCredentialsException.class)
@@ -42,13 +56,13 @@ public class UserServiceTests {
 
         RegisterViewModel model = new RegisterViewModel();
         model.login = "tester";
-        model.userName = "tester";
         model.emailAddress = "email";
         model.password = "password";
         model.matchingPassword = "password";
 
-        UserService userServiceImpl = new UserServiceImpl();
-        UserDto dto = userServiceImpl.registerNewUserAccount(model);
+        UserDto dto = userService.registerNewUserAccount(model);
+
+        this.toClean.add(userRepository.findByLogin(model.login));
 
     }
 
@@ -57,21 +71,48 @@ public class UserServiceTests {
 
         RegisterViewModel model = new RegisterViewModel();
         model.login = "tester";
-        model.userName = "tester";
         model.emailAddress = "email@email.com";
         model.password = "password";
         model.matchingPassword = "password";
 
         RegisterViewModel model_new = new RegisterViewModel();
-        model_new.login = "tester";
-        model_new.userName = "user";
-        model_new.emailAddress = "mail@mail.com";
+        model_new.login = model.login;
+        model_new.emailAddress = "2mail@2mail.com";
         model_new.password = "password";
         model_new.matchingPassword = "password";
 
-        UserService userServiceImpl = new UserServiceImpl();
-        UserDto dto = userServiceImpl.registerNewUserAccount(model);
-        UserDto dto_new = userServiceImpl.registerNewUserAccount(model_new);
+        UserDto dto = userService.registerNewUserAccount(model);
+
+        this.toClean.add(userRepository.findByLogin(dto.getLogin()));
+
+        UserDto dto_new = userService.registerNewUserAccount(model_new);
+
+    }
+
+    @Test(expected = BadCredentialsException.class)
+    public void whenChangedPasswordsNotEqual_thenBadCredentialsException() throws BadCredentialsException, MessagingException, AccountNotExistsException {
+
+        RegisterViewModel model = new RegisterViewModel();
+        model.login = "tester";
+        model.emailAddress = "email@email.com";
+        model.password = "password";
+        model.matchingPassword = "password";
+
+        UserDto dto = userService.registerNewUserAccount(model);
+
+        this.toClean.add(userRepository.findByLogin(model.login));
+
+        LoginViewModel loginViewModel = new LoginViewModel();
+        loginViewModel.login = model.login;
+        loginViewModel.password = model.password;
+
+        String token = authController.login(loginViewModel);
+
+        PasswordViewModel passwordViewModel = new PasswordViewModel();
+        passwordViewModel.password = "mypassword";
+        passwordViewModel.matchingPassword = "password";
+
+        userService.setNewPassword(passwordViewModel);
 
     }
 

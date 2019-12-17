@@ -204,7 +204,7 @@ public class HabitController {
         newMember.setUserLogin(tempUser.getLogin());
         newMember.setPoints(0);
 
-        String ntfDesc = newMember.getUserLogin() + " joined to your challenge: " + habit.title;
+        String ntfDesc = newMember.getUserLogin() + " joined to your challenge \"" + habit.title + "\"";
         Notification ntf = new EmailNotificationsSender().createInAppNotification(habit.creatorID, ntfDesc, "http://www.goaleaf.com/habit/" + model.habitID, false);
         if (creator.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();

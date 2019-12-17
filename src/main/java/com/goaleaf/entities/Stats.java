@@ -38,8 +38,6 @@ public class Stats {
 
     private Integer finishedChallenges;
 
-    private Integer wonChallenges;
-
 
     public Stats() {
         this.day = new Date();

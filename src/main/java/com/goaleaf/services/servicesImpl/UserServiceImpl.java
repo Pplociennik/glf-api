@@ -102,9 +102,9 @@ public class UserServiceImpl implements UserService {
 
         if (!userCredentialsValidator.isValidEmail(register.emailAddress))
             throw new BadCredentialsException("Wrong email format!");
-        if (userRepository.findByEmailAddress(register.emailAddress) != null)
+        if (userRepository.existsByEmailAddress(register.emailAddress))
             throw new BadCredentialsException("Account with email " + register.emailAddress + " address already exists!");
-        if (userRepository.findByLogin(register.login) != null)
+        if (userRepository.existsByLogin(register.login))
             throw new LoginExistsException("Account with login " + register.login + " already exists!");
         if (!userCredentialsValidator.isLoginLengthValid(register.login))
             throw new BadCredentialsException("Login cannot be longer than 20 characters!");

@@ -293,7 +293,7 @@ public class HabitServiceImpl implements HabitService {
 
 //        memberService.saveMember(newMember);
 
-        String ntfDesc = userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to challenge " + findById(model.habitID).title + "!";
+        String ntfDesc = userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to challenge \"" + findById(model.habitID).title + "\"!";
         Notification ntf = new EmailNotificationsSender().createInAppNotification(searchingUser.getUserID(), ntfDesc, (model.url.isEmpty() ? "EMPTY_URL" : model.url), true);
         if (searchingUser.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();

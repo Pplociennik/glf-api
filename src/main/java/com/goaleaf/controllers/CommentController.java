@@ -2,6 +2,7 @@ package com.goaleaf.controllers;
 
 import com.goaleaf.entities.Comment;
 import com.goaleaf.entities.DTO.CommentDTO;
+import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.UserDto;
 import com.goaleaf.entities.Notification;
 import com.goaleaf.entities.Post;
@@ -9,10 +10,7 @@ import com.goaleaf.entities.Stats;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsManaging.EditCommentViewModel;
 import com.goaleaf.security.EmailNotificationsSender;
-import com.goaleaf.services.CommentService;
-import com.goaleaf.services.PostService;
-import com.goaleaf.services.StatsService;
-import com.goaleaf.services.UserService;
+import com.goaleaf.services.*;
 import com.goaleaf.validators.exceptions.habitsProcessing.postsProcessing.PostNotFoundException;
 import com.goaleaf.validators.exceptions.habitsProcessing.postsProcessing.commentsProcessing.CommentNotFoundException;
 import com.goaleaf.validators.exceptions.habitsProcessing.postsProcessing.commentsProcessing.EmptyCommentException;
@@ -34,6 +32,8 @@ public class CommentController {
     private UserService userService;
     @Autowired
     private StatsService statsService;
+    @Autowired
+    private HabitService habitService;
 
     @RequestMapping(value = "/addcomment", method = RequestMethod.POST)
     public CommentDTO addComment(@RequestBody AddCommentViewModel model) {
@@ -46,6 +46,7 @@ public class CommentController {
         UserDto commenter = userService.findById(model.creatorID);
         Post post = postService.findOneByID(model.postID);
         UserDto postCreator = userService.findByLogin(post.getCreatorLogin());
+        HabitDTO habitDTO = habitService.findById(post.getHabitID());
 
         Comment comment = new Comment();
         comment.setCommentText(model.text);
@@ -65,9 +66,9 @@ public class CommentController {
         commentDTO.creationDate = returned.getCreationDate();
         commentDTO.creatorImage = returned.getCreatorImage();
 
-        String ntfDesc = commenter.getLogin() + " commented on your post!";
+        String ntfDesc = commenter.getLogin() + " commented on your post in challenge \"" + habitDTO.title + "\"";
         Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
-        if (postCreator.getNotifications()) {
+        if (postCreator.getNotifications() && postCreator.getUserID() != returned.getUserID()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
                 sender.postCommented(postCreator.getEmailAddress(), postCreator.getLogin(), comment.getUserLogin(), post, comment);
