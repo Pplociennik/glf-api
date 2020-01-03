@@ -1,19 +1,9 @@
-package com.goaleaf.entities;
+package com.goaleaf.entities.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import javax.persistence.*;
 import java.util.Date;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,
-        property = "refId", scope = Notification.class)
-@Entity
-@Table(name = "notifications")
-public class Notification {
+public class NotificationDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private Integer recipientID;
@@ -24,14 +14,7 @@ public class Notification {
 
     private String url;
 
-    public Notification(Integer recipientID, String description, Date date, String url) {
-        this.recipientID = recipientID;
-        this.description = description;
-        this.date = date;
-        this.url = url;
-    }
-
-    public Notification() {
+    public NotificationDTO() {
     }
 
     public Integer getId() {

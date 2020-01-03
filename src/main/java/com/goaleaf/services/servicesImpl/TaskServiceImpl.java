@@ -5,7 +5,7 @@ import com.goaleaf.entities.DTO.TaskDTO;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.enums.Frequency;
 import com.goaleaf.entities.enums.PostTypes;
-import com.goaleaf.entities.viewModels.TaskViewModel;
+import com.goaleaf.entities.viewModels.NewTaskViewModel;
 import com.goaleaf.repositories.*;
 import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.JwtService;
@@ -58,12 +58,12 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public Iterable<TaskViewModel> getAllTasks() {
+    public Iterable<TaskDTO> getAllTasks() {
         return convertToViewModel(taskRepository.findAll());
     }
 
     @Override
-    public Iterable<TaskViewModel> getAllByCreatorID(Integer creatorID) {
+    public Iterable<TaskDTO> getAllByCreatorID(Integer creatorID) {
         if (taskRepository.getAllByCreatorID(creatorID) == null) {
             try {
                 throw new NotFoundException("The user have created no task");
@@ -75,7 +75,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Iterable<TaskViewModel> getAllByHabitID(Integer habitID) {
+    public Iterable<TaskDTO> getAllByHabitID(Integer habitID) {
         if (taskRepository.getAllByHabitID(habitID) == null) {
             try {
                 throw new NotFoundException("No such tasks!");
@@ -87,7 +87,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Iterable<TaskViewModel> getAllByCreatorIDAndHabitID(Integer creatorID, Integer habitID) {
+    public Iterable<TaskDTO> getAllByCreatorIDAndHabitID(Integer creatorID, Integer habitID) {
         if (taskRepository.getAllByCreatorIDAndHabitID(creatorID, habitID) == null) {
             try {
                 throw new NotFoundException("No such tasks!");
@@ -99,19 +99,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Iterable<TaskViewModel> getAvailableTasks(Integer habitID, Integer userID) {
+    public Iterable<TaskDTO> getAvailableTasks(Integer habitID, Integer userID) {
         Iterable<Task> input = taskRepository.getAllByHabitID(habitID);
-        List<TaskViewModel> output = new ArrayList<>(0);
+        List<TaskDTO> output = new ArrayList<>(0);
 
         for (Task t : input) {
             if (!t.getCompleted()) {
-                TaskViewModel model = convertToViewModel(t, userID);
+                TaskDTO model = convertToViewModel(t, userID);
                 if (model != null) {
                     output.add(model);
                 }
             }
         }
-        Iterable<TaskViewModel> result = output;
+        Iterable<TaskDTO> result = output;
         return result;
     }
 
@@ -126,7 +126,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskViewModel saveTask(TaskDTO newTask) {
+    public TaskDTO saveTask(NewTaskViewModel newTask) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(newTask.getToken()).getBody();
@@ -250,7 +250,7 @@ public class TaskServiceImpl implements TaskService {
         newPost.setCreatorLogin(user.getLogin());
         newPost.setDateOfAddition(new Date());
         newPost.setHabitID(cmp.getHabitID());
-        newPost.setPostText((type.equals(PostTypes.Task) ? task.getDescription() : "User " + user.getLogin() + " has won the competition " + habit.getHabitTitle() + " gaining " + member.getPoints() + " points! Congratulations!"));
+        newPost.setPostText((type.equals(PostTypes.Task) ? task.getDescription() : "User " + user.getLogin() + " has won the challenge \"" + habit.getHabitTitle() + "\" gaining " + member.getPoints() + " points! Congratulations!"));
         newPost.setUserComment(cmp.getComment());
         newPost.setUserComment(cmp.getComment());
         newPost.setTaskPoints(task.getPoints());
@@ -272,22 +272,22 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskViewModel getTaskByID(Integer taskID) {
+    public TaskDTO getTaskByID(Integer taskID) {
         return convertToViewModel(taskRepository.getById(taskID), null);
     }
 
-    Iterable<TaskViewModel> convertToViewModel(Iterable<Task> input) {
-        List resultList = new ArrayList<TaskViewModel>(0);
+    Iterable<TaskDTO> convertToViewModel(Iterable<Task> input) {
+        List resultList = new ArrayList<TaskDTO>(0);
         for (Task t : input) {
-            TaskViewModel model = convertToViewModel(t, null);
-            //TaskViewModel model = new TaskViewModel(t.getId(), u.getLogin(), t.getDescription(), t.getPoints(), t.getFrequency(), t.getDaysInterval(), refreshDate, active, t.getExecutor());
+            TaskDTO model = convertToViewModel(t, null);
+            //TaskDTO model = new TaskDTO(t.getId(), u.getLogin(), t.getDescription(), t.getPoints(), t.getFrequency(), t.getDaysInterval(), refreshDate, active, t.getExecutor());
             resultList.add(model);
         }
-        Iterable<TaskViewModel> outputList = resultList;
+        Iterable<TaskDTO> outputList = resultList;
         return outputList;
     }
 
-    public TaskViewModel convertToViewModel(Task task, Integer id) {
+    public TaskDTO convertToViewModel(Task task, Integer id) {
 
         User u = userRepository.findById(task.getCreatorID());
         TasksHistoryEntity tempHistoryEntity = null;
@@ -297,7 +297,7 @@ public class TaskServiceImpl implements TaskService {
 
         if (task.getFrequency().equals(Frequency.Once4All)) {
             if (!historyList.iterator().hasNext()) {
-                return new TaskViewModel(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), null, null, true, null);
+                return new TaskDTO(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), null, null, true, null);
             } else {
                 return null;
             }
@@ -318,7 +318,7 @@ public class TaskServiceImpl implements TaskService {
         Boolean active = false;
         active = (tempHistoryEntity == null ? true : false);
 
-        return new TaskViewModel(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), task.getDaysInterval(), refreshDate, active, task.getExecutor());
+        return new TaskDTO(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), task.getDaysInterval(), refreshDate, active, task.getExecutor());
     }
 
     @Override

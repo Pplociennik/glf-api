@@ -6,9 +6,9 @@ import java.util.Date;
 
 public class TaskDTO {
 
-    private String token;
+    private Integer id;
 
-    private Integer habitID;
+    private String creator;
 
     private String description;
 
@@ -16,48 +16,95 @@ public class TaskDTO {
 
     private Frequency frequency;
 
-    private Date lastDone;
-
     private Integer daysInterval;
 
-    public TaskDTO() {
-    }
+    private Date refreshDate;
 
-    public TaskDTO(String token, Integer habitID, String description, Integer points, Frequency frequency, Date lastDone, Integer daysInterval) {
-        this.token = token;
-        this.habitID = habitID;
+    private Boolean active;
+
+    private String executor;
+
+    public TaskDTO(Integer id, String creator, String description, Integer points, Frequency frequency, Integer daysInterval, Date refreshDate, Boolean active, String executor) {
+        this.id = id;
+        this.creator = creator;
         this.description = description;
         this.points = points;
         this.frequency = frequency;
-        this.lastDone = lastDone;
         this.daysInterval = daysInterval;
+        this.refreshDate = refreshDate;
+        this.active = active;
+        this.executor = executor;
     }
 
-    public String getToken() {
-        return token;
+    public Integer getId() {
+        return id;
     }
 
-    public Integer getHabitID() {
-        return habitID;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Integer getPoints() {
         return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 
     public Frequency getFrequency() {
         return frequency;
     }
 
-    public Date getLastDone() {
-        return lastDone;
+    public void setFrequency(Frequency frequency) {
+        this.frequency = frequency;
     }
 
     public Integer getDaysInterval() {
         return daysInterval;
+    }
+
+    public void setDaysInterval(Integer daysInterval) {
+        this.daysInterval = daysInterval;
+    }
+
+    public Date getRefreshDate() {
+        return refreshDate;
+    }
+
+    public void setRefreshDate(Date refreshDate) {
+        this.refreshDate = refreshDate;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getExecutor() {
+        return executor;
+    }
+
+    public void setExecutor(String executor) {
+        this.executor = executor;
     }
 }

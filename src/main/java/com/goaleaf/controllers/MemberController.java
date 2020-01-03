@@ -1,6 +1,6 @@
 package com.goaleaf.controllers;
 
-import com.goaleaf.entities.Member;
+import com.goaleaf.entities.DTO.MemberDTO;
 import com.goaleaf.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ public class MemberController {
     private MemberService memberService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Iterable<Member> getWholeMembersTable() {
+    public Iterable<MemberDTO> getWholeMembersTable() {
         return memberService.getAll();
     }
 

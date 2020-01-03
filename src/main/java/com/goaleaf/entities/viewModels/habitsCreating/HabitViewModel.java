@@ -7,20 +7,78 @@ import java.util.Date;
 
 public class HabitViewModel {
 
-    public String title;
+    private String title;
 
-    public Category category;
+    private Category category;
 
-    public Boolean isPrivate;
+    private Boolean isPrivate;
 
 //    public Set<Member> members;
 
-    public Frequency frequency;
+    private Frequency frequency;
 
-    public Date startDate;
+    private Date startDate;
 
-    public String token;
+    private String token;
 
-    public Boolean canUsersInvite;
+    private Boolean canUsersInvite;
 
+    public HabitViewModel() {
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Boolean getPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public Frequency getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Frequency frequency) {
+        this.frequency = frequency;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Boolean getCanUsersInvite() {
+        return canUsersInvite;
+    }
+
+    public void setCanUsersInvite(Boolean canUsersInvite) {
+        this.canUsersInvite = canUsersInvite;
+    }
 }

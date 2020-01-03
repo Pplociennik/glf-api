@@ -1,7 +1,7 @@
 package com.goaleaf.engine;
 
 import com.goaleaf.controllers.AuthController;
-import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.PasswordViewModel;
@@ -12,9 +12,12 @@ import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExis
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.BadCredentialsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsException;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockRestServiceServer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +31,7 @@ import java.util.Set;
 @SpringBootTest
 @WebAppConfiguration
 @AutoConfigureMockMvc
+@AutoConfigureTestDatabase
 @AutoConfigureMockRestServiceServer
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserServiceTests {
@@ -60,7 +64,7 @@ public class UserServiceTests {
         model.password = "password";
         model.matchingPassword = "password";
 
-        UserDto dto = userService.registerNewUserAccount(model);
+        UserDTO dto = userService.registerNewUserAccount(model);
 
         this.toClean.add(userRepository.findByLogin(model.login));
 
@@ -81,11 +85,11 @@ public class UserServiceTests {
         model_new.password = "password";
         model_new.matchingPassword = "password";
 
-        UserDto dto = userService.registerNewUserAccount(model);
+        UserDTO dto = userService.registerNewUserAccount(model);
 
         this.toClean.add(userRepository.findByLogin(dto.getLogin()));
 
-        UserDto dto_new = userService.registerNewUserAccount(model_new);
+        UserDTO dto_new = userService.registerNewUserAccount(model_new);
 
     }
 
@@ -98,7 +102,7 @@ public class UserServiceTests {
         model.password = "password";
         model.matchingPassword = "password";
 
-        UserDto dto = userService.registerNewUserAccount(model);
+        UserDTO dto = userService.registerNewUserAccount(model);
 
         this.toClean.add(userRepository.findByLogin(model.login));
 

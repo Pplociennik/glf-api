@@ -1,13 +1,8 @@
-package com.goaleaf.entities;
+package com.goaleaf.entities.DTO;
 
-import javax.persistence.*;
 
-@Entity
-@Table(name = "members")
-public class Member {
+public class MemberDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private Integer userID;
@@ -16,22 +11,11 @@ public class Member {
 
     private String userLogin;
 
-    @Lob
     private String imageCode;
 
     private Integer points;
 
-    public Member(Integer userID /*, Set<LeafDate> doneDates*/) {
-        this.userID = userID;
-//        this.doneDates = doneDates;
-    }
-
-    public Member() {
-    }
-
-    public Member(Integer userID, Integer habitID) {
-        this.userID = userID;
-        this.habitID = habitID;
+    public MemberDTO() {
     }
 
     public Integer getId() {
@@ -58,19 +42,6 @@ public class Member {
         this.habitID = habitID;
     }
 
-    //    public Set<LeafDate> getDoneDates() {
-//        return doneDates;
-//    }
-//
-//    public void setDoneDates(Set<LeafDate> doneDates) {
-//        this.doneDates = doneDates;
-//    }
-//
-//    public void addDate(Date date) {
-//        this.doneDates.add(new LeafDate(id, new Date()));
-//    }
-
-
     public String getUserLogin() {
         return userLogin;
     }
@@ -93,13 +64,5 @@ public class Member {
 
     public void setPoints(Integer points) {
         this.points = points;
-    }
-
-    public void addPoints(Integer increaseNr) {
-        this.points += increaseNr;
-    }
-
-    public void decreasePoints(Integer decreaseNr) {
-        this.points -= decreaseNr;
     }
 }

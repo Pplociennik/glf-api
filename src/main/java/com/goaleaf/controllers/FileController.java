@@ -1,7 +1,7 @@
 package com.goaleaf.controllers;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditImageViewModel;
 import com.goaleaf.security.uploadingFiles.FileStorageProperties;
 import com.goaleaf.services.JwtService;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.goaleaf.entities.User;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -67,7 +66,7 @@ public class FileController {
 //        return Response.ok(result, MediaType.APPLICATION_OCTET_STREAM)
 //                .header("Content-Disposition", "attachment; filename=\"" + result.getName() + "\"") //optional
 //                .build();
-        UserDto user = userService.findById(Integer.parseInt(claims.getSubject()));
+        UserDTO user = userService.findById(Integer.parseInt(claims.getSubject()));
         return user.getImageCode();
 
     }

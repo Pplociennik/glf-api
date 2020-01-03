@@ -2,9 +2,36 @@ package com.goaleaf.entities.viewModels.habitsManaging;
 
 public class JoinHabitViewModel {
 
-    public String token;
+    private String token;
 
-    public Integer userID;
+    private Integer userID;
 
-    public Integer habitID;
+    private Integer habitID;
+
+    public JoinHabitViewModel() {
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Integer getUserID() {
+        return userID;
+    }
+
+    public void setUserID(Integer userID) {
+        this.userID = userID;
+    }
+
+    public Integer getHabitID() {
+        return habitID;
+    }
+
+    public void setHabitID(Integer habitID) {
+        this.habitID = habitID;
+    }
 }

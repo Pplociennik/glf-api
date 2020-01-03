@@ -4,7 +4,7 @@ import com.goaleaf.entities.DTO.CompleteTaskDTO;
 import com.goaleaf.entities.DTO.TaskDTO;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.TasksHistoryEntity;
-import com.goaleaf.entities.viewModels.TaskViewModel;
+import com.goaleaf.entities.viewModels.NewTaskViewModel;
 import com.goaleaf.services.TaskService;
 import com.goaleaf.services.TasksHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,27 +22,27 @@ public class TaskController {
     private TasksHistoryService tasksHistoryService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Iterable<TaskViewModel> getAll() {
+    public Iterable<TaskDTO> getAll() {
         return taskService.getAllTasks();
     }
 
     @RequestMapping(value = "/habit", method = RequestMethod.GET)
-    public Iterable<TaskViewModel> getAllFromHabit(@RequestParam Integer habitID) {
+    public Iterable<TaskDTO> getAllFromHabit(@RequestParam Integer habitID) {
         return taskService.getAllByHabitID(habitID);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public Iterable<TaskViewModel> getAllFromUser(@RequestParam Integer userID) {
+    public Iterable<TaskDTO> getAllFromUser(@RequestParam Integer userID) {
         return taskService.getAllByCreatorID(userID);
     }
 
     @RequestMapping(value = "/user&habit", method = RequestMethod.GET)
-    public Iterable<TaskViewModel> getAllByUserFromHabit(@RequestParam Integer userID, Integer habiID) {
+    public Iterable<TaskDTO> getAllByUserFromHabit(@RequestParam Integer userID, Integer habiID) {
         return taskService.getAllByCreatorIDAndHabitID(userID, habiID);
     }
 
     @RequestMapping(value = "/task", method = RequestMethod.GET)
-    public TaskViewModel getOneByID(@RequestParam Integer taskID) {
+    public TaskDTO getOneByID(@RequestParam Integer taskID) {
         return taskService.getTaskByID(taskID);
     }
 
@@ -57,8 +57,8 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public TaskViewModel addTask(@RequestBody TaskDTO newTaskDTO) {
-        return taskService.saveTask(newTaskDTO);
+    public TaskDTO addTask(@RequestBody NewTaskViewModel newNewTaskViewModel) {
+        return taskService.saveTask(newNewTaskViewModel);
     }
 
     @RequestMapping(value = "/complete", method = RequestMethod.POST)
@@ -82,7 +82,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/list/available", method = RequestMethod.GET)
-    public Iterable<TaskViewModel> getAvailableTasks(@RequestParam Integer habitID, Integer userID) {
+    public Iterable<TaskDTO> getAvailableTasks(@RequestParam Integer habitID, Integer userID) {
         return taskService.getAvailableTasks(habitID, userID);
     }
 

@@ -1,20 +1,41 @@
 package com.goaleaf.services.servicesImpl;
 
 import com.goaleaf.entities.Comment;
+import com.goaleaf.entities.DTO.CommentDTO;
+import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.PostDTO;
+import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.Notification;
+import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import com.goaleaf.repositories.CommentRepository;
+import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.CommentService;
+import com.goaleaf.services.HabitService;
+import com.goaleaf.services.PostService;
+import com.goaleaf.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private HabitService habitService;
 
     @Override
-    public Iterable<Comment> listAllByPostID(Integer postID) {
-        return commentRepository.getAllByPostIDOrderByCreationDateDesc(postID);
+    public Iterable<CommentDTO> listAllByPostID(Integer postID) {
+        return convertManyToDTOs(commentRepository.getAllByPostIDOrderByCreationDateDesc(postID));
     }
 
     @Override
@@ -23,8 +44,36 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment addNewComment(Comment comment) {
-        return commentRepository.save(comment);
+    public CommentDTO addNewComment(AddCommentViewModel model) {
+
+        UserDTO commenter = userService.findById(model.getCreatorID());
+        PostDTO post = postService.findOneByID(model.getPostID());
+        UserDTO postCreator = userService.findByLogin(post.getCreatorLogin());
+        HabitDTO habitDTO = habitService.findById(post.getHabitID());
+
+        Comment comment = new Comment();
+        comment.setCommentText(model.getText());
+        comment.setPostID(model.getPostID());
+        comment.setUserID(model.getCreatorID());
+        comment.setUserLogin(userService.findById(model.getCreatorID()).getLogin());
+        comment.setCreationDate(new Date());
+        comment.setCreatorImage(userService.findById(model.getCreatorID()).getImageCode());
+
+        Comment returned = commentRepository.save(comment);
+
+        CommentDTO commentDTO = convertOneToDTO(comment);
+
+        String ntfDesc = commenter.getLogin() + " commented on your post in challenge \"" + habitDTO.getTitle() + "\"";
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
+        if (postCreator.getNotifications() && postCreator.getUserID() != returned.getUserID()) {
+            EmailNotificationsSender sender = new EmailNotificationsSender();
+            try {
+                sender.postCommented(postCreator.getEmailAddress(), postCreator.getLogin(), comment.getUserLogin(), post, comment);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        return commentDTO;
     }
 
     @Override
@@ -35,5 +84,27 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void updateComment(Comment comment) {
         commentRepository.save(comment);
+    }
+
+    private CommentDTO convertOneToDTO(Comment comment) {
+        CommentDTO commentDTO = new CommentDTO();
+
+        commentDTO.setCreatorID(comment.getUserID());
+        commentDTO.setPostID(comment.getPostID());
+        commentDTO.setText(comment.getCommentText());
+        commentDTO.setCreatorLogin(comment.getUserLogin());
+        commentDTO.setCreationDate(comment.getCreationDate());
+        commentDTO.setCreatorImage(comment.getCreatorImage());
+
+        return commentDTO;
+    }
+
+    private Iterable<CommentDTO> convertManyToDTOs(Iterable<Comment> input) {
+        List<CommentDTO> output = new ArrayList<>(0);
+
+        for (Comment c : input) {
+            output.add(convertOneToDTO(c));
+        }
+        return output;
     }
 }

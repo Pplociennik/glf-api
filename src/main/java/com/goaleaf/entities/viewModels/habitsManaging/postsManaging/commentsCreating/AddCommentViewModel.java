@@ -2,9 +2,36 @@ package com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCre
 
 public class AddCommentViewModel {
 
-    public Integer postID;
+    private Integer postID;
 
-    public Integer creatorID;
+    private Integer creatorID;
 
-    public String text;
+    private String text;
+
+    public AddCommentViewModel() {
+    }
+
+    public Integer getPostID() {
+        return postID;
+    }
+
+    public void setPostID(Integer postID) {
+        this.postID = postID;
+    }
+
+    public Integer getCreatorID() {
+        return creatorID;
+    }
+
+    public void setCreatorID(Integer creatorID) {
+        this.creatorID = creatorID;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

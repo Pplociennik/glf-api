@@ -1,5 +1,6 @@
 package com.goaleaf.services;
 
+import com.goaleaf.entities.DTO.MemberDTO;
 import com.goaleaf.entities.Member;
 import org.springframework.stereotype.Service;
 
@@ -8,23 +9,23 @@ import java.util.Map;
 @Service
 public interface MemberService {
 
-    Member getByUserID(Integer id);
+    MemberDTO getByUserID(Integer id);
 
-    Member saveMember(Member member);
+    MemberDTO saveMember(Member member);
 
     Boolean checkIfExist(Member member);
 
-    Iterable<Member> getAllByHabitID(Integer habitID);
+    Iterable<MemberDTO> getAllByHabitID(Integer habitID);
 
-    Iterable<Member> getAll();
+    Iterable<MemberDTO> getAll();
 
     Integer countAllHabitMembers(Integer habitID);
 
     void removeSpecifiedMember(Integer habitID, Integer userID);
 
-    Member findSpecifiedMember(Integer habitID, Integer userID);
+    MemberDTO findSpecifiedMember(Integer habitID, Integer userID);
 
-    Map<Integer, Member> getRank(Integer habitID);
+    Map<Integer, MemberDTO> getRank(Integer habitID);
 
     Integer getUserPoints(Integer habitID, Integer userID);
 

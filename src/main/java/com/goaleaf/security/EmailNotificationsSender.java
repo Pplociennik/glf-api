@@ -2,6 +2,7 @@ package com.goaleaf.security;
 
 import com.goaleaf.entities.Comment;
 import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.PostDTO;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Notification;
 import com.goaleaf.entities.Post;
@@ -109,7 +110,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject("New member joined to your challenge!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "User " + userName + " joined to your habit \"" + newHabit.title + "\"!\n\n" +
+                "User " + userName + " joined to your habit \"" + newHabit.getTitle() + "\"!\n\n" +
                 "If you don't want to get messages like this just uncheck this option in you profile.\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
@@ -132,7 +133,7 @@ public class EmailNotificationsSender {
         sender.send();
     }
 
-    public void postCommented(String recipientEmail, String recipientName, String userName, Post post, Comment comment) throws MessagingException {
+    public void postCommented(String recipientEmail, String recipientName, String userName, PostDTO post, Comment comment) throws MessagingException {
 
         sender.setSender(senderAddress, senderPassword);
         sender.addRecipient(recipientEmail);
@@ -166,7 +167,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject(userName + " added a new post!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "User " + userName + " added a new post in challenge \"" + habit.title + "\"!\n\n" +
+                "User " + userName + " added a new post in challenge \"" + habit.getTitle() + "\"!\n\n" +
                 "Post:\n" +
                 "\"" + (post.getPostType().equals(PostTypes.JustText) || post.getPostType().equals(PostTypes.Task) || post.getPostType().equals(PostTypes.HabitFinished) ? post.getPostText() : "<image>") + "\"" + "\n\n" +
                 "Your Sincerely\n" +

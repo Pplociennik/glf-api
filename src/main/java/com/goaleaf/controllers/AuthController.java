@@ -1,7 +1,7 @@
 package com.goaleaf.controllers;
 
 import com.auth0.jwt.JWT;
-import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.Stats;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.AuthorizeViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
@@ -44,7 +44,7 @@ public class AuthController {
 
     @PermitAll
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public UserDto registerUserAccount(@RequestBody RegisterViewModel register) throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException {
+    public UserDTO registerUserAccount(@RequestBody RegisterViewModel register) throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException {
 
         return userService.registerNewUserAccount(register);
 

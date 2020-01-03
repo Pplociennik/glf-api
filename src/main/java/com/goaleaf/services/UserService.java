@@ -1,7 +1,7 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -16,7 +16,7 @@ import java.io.File;
 
 public interface UserService {
 
-    Iterable<UserDto> listAllUsers();
+    Iterable<UserDTO> listAllUsers();
 
     User saveUser(User user);
 
@@ -24,17 +24,17 @@ public interface UserService {
 
     Boolean checkIfExists(Integer id);
 
-    UserDto registerNewUserAccount(RegisterViewModel register) throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException;
+    UserDTO registerNewUserAccount(RegisterViewModel register) throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException;
 
-    UserDto findByLogin(String user);
+    UserDTO findByLogin(String user);
 
-    UserDto findById(Integer id);
+    UserDTO findById(Integer id);
 
-    UserDto updateUser(EditUserViewModel model) throws BadCredentialsException;
+    UserDTO updateUser(EditUserViewModel model) throws BadCredentialsException;
 
     void updateUserImage(EditImageViewModel model);
 
-    UserDto findByEmailAddress(String email);
+    UserDTO findByEmailAddress(String email);
 
     Iterable<HabitDTO> getUserFinishedHabits(Integer userID);
 
@@ -46,7 +46,7 @@ public interface UserService {
 
     HttpStatus disableNotifications(ChangeNotificationsViewModel model) throws AccountNotExistsException;
 
-    UserDto setEmailNotifications(SetEmailNotificationsViewModel model);
+    UserDTO setEmailNotifications(SetEmailNotificationsViewModel model);
 
     void checkUserCredentials(LoginViewModel userModel) throws AccountNotExistsException, BadCredentialsException;
 
@@ -56,4 +56,5 @@ public interface UserService {
 
     String getUserImageCode(Integer userID);
 
+    void resetPassword(EmailViewModel model) throws AccountNotExistsException, MessagingException;
 }

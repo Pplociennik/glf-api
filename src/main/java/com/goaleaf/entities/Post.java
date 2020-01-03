@@ -18,45 +18,32 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column
     private Integer habitID;
 
-    @Column
     private String creatorLogin;
 
-    @Column
     private PostTypes postType;
 
-    @Column
     @Lob
     private String postText;
 
-    @Column
     @Lob
     private String imageCode;
 
-    @Lob
     private String creatorImage;
 
-    @Column
     private Integer counter_CLAPPING;
 
-    @Column
     private Integer counter_WOW;
 
-    @Column
     private Integer counter_NS;
 
-    @Column
     private Integer counter_TTD;
 
-    @Column
     private Date dateOfAddition;
 
-    @Column
     private String userComment;
 
-    @Column
     private Integer taskPoints;
 
     private Integer taskID;

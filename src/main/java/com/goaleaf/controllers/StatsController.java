@@ -1,7 +1,6 @@
 package com.goaleaf.controllers;
 
 import com.goaleaf.entities.DTO.StatsDTO;
-import com.goaleaf.entities.Stats;
 import com.goaleaf.services.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

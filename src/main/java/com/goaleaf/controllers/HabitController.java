@@ -2,17 +2,15 @@ package com.goaleaf.controllers;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.UserDto;
-import com.goaleaf.entities.Habit;
+import com.goaleaf.entities.DTO.MemberDTO;
+import com.goaleaf.entities.DTO.NotificationDTO;
 import com.goaleaf.entities.Member;
-import com.goaleaf.entities.Notification;
 import com.goaleaf.entities.enums.Category;
 import com.goaleaf.entities.enums.Sorting;
 import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.DeleteMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.JoinHabitViewModel;
-import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.*;
 import com.goaleaf.validators.HabitTitleValidator;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -60,43 +58,18 @@ public class HabitController {
     @RequestMapping(method = RequestMethod.POST, value = "/new-habit")
     public HabitDTO createNewHabit(@RequestBody HabitViewModel model) throws WrongTitleException, NoPrivacyException, NoFrequencyException, NoCategoryException {
 
-        if (!habitTitleValidator.isValid(model.title))
+        if (!habitTitleValidator.isValid(model.getTitle()))
             throw new WrongTitleException("Habit's title must be at least 5 and no more than 50 characters long!");
-        if (model.category == null)
+        if (model.getCategory() == null)
             throw new NoCategoryException("You have to choose category!");
-        if (model.frequency == null)
+        if (model.getFrequency() == null)
             throw new NoFrequencyException("You have to choose frequency!");
-        if (model.isPrivate == null)
+        if (model.getPrivate() == null)
             throw new NoPrivacyException("You have to choose privacy!");
-        if (!jwtService.Validate(model.token, SECRET))
+        if (!jwtService.Validate(model.getToken(), SECRET))
             throw new TokenExpiredException("You have to be logged in to create a habit!");
 
-        Claims claims = Jwts.parser()
-                .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
-                .parseClaimsJws(model.token).getBody();
-
-        HabitDTO habitDTO = new HabitDTO();
-        habitDTO.category = model.category;
-        habitDTO.frequency = model.frequency;
-//        habitDTO.members = model.members;
-        habitDTO.startDate = model.startDate;
-        habitDTO.isPrivate = model.isPrivate;
-        habitDTO.title = model.title;
-        habitDTO.creatorID = Integer.parseInt(claims.getSubject());
-        habitDTO.canUsersInvite = model.canUsersInvite;
-
-        Habit resHabit = new Habit();
-        resHabit = habitService.registerNewHabit(model, Integer.parseInt(claims.getSubject()));
-
-        if (resHabit.getWinner() != "NONE") {
-            habitDTO.isFinished = true;
-            habitDTO.winner = resHabit.getWinner();
-        } else {
-            habitDTO.isFinished = false;
-            habitDTO.winner = "No one yet! :)";
-        }
-
-        return habitDTO;
+        return habitService.createNewHabit(model);
     }
 
     @PermitAll
@@ -119,15 +92,15 @@ public class HabitController {
     public HttpStatus inviteMemberByLogin(@RequestBody AddMemberViewModel model) throws AccountNotExistsException, MessagingException {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
-                .parseClaimsJws(model.token).getBody();
+                .parseClaimsJws(model.getToken()).getBody();
 
-        if (!jwtService.Validate(model.token, SECRET))
+        if (!jwtService.Validate(model.getToken(), SECRET))
             throw new TokenExpiredException("You have to be logged in to invite users!");
-        if (!memberService.checkIfExist(new Member(Integer.parseInt(claims.getSubject()), model.habitID)))
+        if (!memberService.checkIfExist(new Member(Integer.parseInt(claims.getSubject()), model.getHabitID())))
             throw new UserNotInHabitException("You are only allowed to invite users to habits you are involved in!");
-        if (habitService.findById(model.habitID) == null)
+        if (habitService.findById(model.getHabitID()) == null)
             throw new HabitNotExistsException("Habit with this id does not exist!");
-        if (userService.findByLogin(model.userLogin) == null)
+        if (userService.findByLogin(model.getUserLogin()) == null)
             throw new AccountNotExistsException("User with this login does not exist!");
 
         return habitService.inviteNewMember(model);
@@ -136,27 +109,27 @@ public class HabitController {
 
     @RequestMapping(value = "/removemember", method = RequestMethod.DELETE)
     public HttpStatus removeMemberFromDatabase(@RequestBody DeleteMemberViewModel model) {
-        if (habitService.findById(model.habitID) == null)
+        if (habitService.findById(model.getHabitID()) == null)
             throw new HabitNotExistsException("Habit does not exist!");
-        if (memberService.findSpecifiedMember(model.habitID, model.userID) == null)
+        if (memberService.findSpecifiedMember(model.getHabitID(), model.getUserID()) == null)
             throw new MemberDoesNotExistException("Member does not exist!");
-        if (!jwtService.Validate(model.token, SECRET))
+        if (!jwtService.Validate(model.getToken(), SECRET))
             throw new TokenExpiredException("You have to be logged in!");
 
-        memberService.removeSpecifiedMember(model.habitID, model.userID);
+        memberService.removeSpecifiedMember(model.getHabitID(), model.getUserID());
 
-        if (memberService.countAllHabitMembers(model.habitID) == 0)
-            habitService.deleteHabit(model.habitID, model.token);
+        if (memberService.countAllHabitMembers(model.getHabitID()) == 0)
+            habitService.deleteHabit(model.getHabitID(), model.getToken());
 
         return HttpStatus.OK;
     }
 
     @RequestMapping(value = "/habit/checkPermissions", method = RequestMethod.GET)
     public boolean checkIfAccessAllowed(@RequestParam Integer userID, @RequestParam Integer habitID) {
-        Member memberToCheck = memberService.findSpecifiedMember(habitID, userID);
-        Notification notificationToCheck = notificationService.findSpecifiedNtf(userID, "*/habit/" + habitID);
+        MemberDTO memberToCheck = memberService.findSpecifiedMember(habitID, userID);
+        NotificationDTO notificationToCheck = notificationService.findSpecifiedNtf(userID, "*/habit/" + habitID);
 
-        if (!habitService.findById(habitID).isPrivate)
+        if (!habitService.findById(habitID).getPrivate())
             return true;
 
         return memberToCheck != null || notificationToCheck != null;
@@ -165,7 +138,7 @@ public class HabitController {
 
 
     @RequestMapping(value = "/habit/members", method = RequestMethod.GET)
-    public Iterable<Member> getAllHabitMembers(Integer habitID) {
+    public Iterable<MemberDTO> getAllHabitMembers(Integer habitID) {
         if (!habitService.checkIfExists(habitID))
             throw new HabitNotExistsException("Habit does not exist!");
 
@@ -182,45 +155,22 @@ public class HabitController {
 
     @RequestMapping(value = "/habit/join", method = RequestMethod.POST)
     public HttpStatus joinHabit(@RequestBody JoinHabitViewModel model) throws AccountNotExistsException {
-        if (habitService.findById(model.habitID) == null)
+        if (habitService.findById(model.getHabitID()) == null)
             throw new HabitNotExistsException("Habit does not exist!");
-        if (!jwtService.Validate(model.token, SECRET))
+        if (!jwtService.Validate(model.getToken(), SECRET))
             throw new TokenExpiredException("You have to be logged in!");
-        if (userService.findById(model.userID) == null)
+        if (userService.findById(model.getUserID()) == null)
             throw new AccountNotExistsException("Account does not exist!");
 //        if (habitService.findById(model.habitID).getPrivate())
 //            throw new HabitNotPublicException("You cannot join private habits!");
-        if (memberService.findSpecifiedMember(model.habitID, model.userID) != null)
+        if (memberService.findSpecifiedMember(model.getHabitID(), model.getUserID()) != null)
             throw new MemberExistsException("You cannot join habit you are already involved in!");
 
-        UserDto tempUser = userService.findById(model.userID);
-        HabitDTO habit = habitService.findById(model.habitID);
-        UserDto creator = userService.findById(habit.creatorID);
-
-        Member newMember = new Member();
-        newMember.setHabitID(model.habitID);
-        newMember.setUserID(model.userID);
-        newMember.setImageCode(tempUser.getImageCode());
-        newMember.setUserLogin(tempUser.getLogin());
-        newMember.setPoints(0);
-
-        String ntfDesc = newMember.getUserLogin() + " joined to your challenge \"" + habit.title + "\"";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(habit.creatorID, ntfDesc, "http://www.goaleaf.com/habit/" + model.habitID, false);
-        if (creator.getNotifications()) {
-            EmailNotificationsSender sender = new EmailNotificationsSender();
-            try {
-                sender.newMemberJoined(creator.getEmailAddress(), creator.getLogin(), tempUser.getLogin(), habit);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
-        }
-
-        memberService.saveMember(newMember);
-        return HttpStatus.OK;
+        return habitService.joinHabit(model);
     }
 
     @RequestMapping(value = "/rank", method = RequestMethod.GET)
-    public Map<Integer, Member> getHabitMembersRank(@RequestParam Integer habitID) {
+    public Map<Integer, MemberDTO> getHabitMembersRank(@RequestParam Integer habitID) {
         return habitService.getRank(habitID);
     }
 

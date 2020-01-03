@@ -28,6 +28,20 @@ public class StatsDTO {
 
     private Integer finishedChallenges;
 
+    public StatsDTO(StatsBuilder builder) {
+        this.day = builder.day;
+        this.createdAccounts = builder.createdAccounts;
+        this.loggedUsers = builder.loggedUsers;
+        this.createdChallenges = builder.createdChallenges;
+        this.setGoals = builder.setGoals;
+        this.createdTasks = builder.createdTasks;
+        this.completedTasks = builder.completedTasks;
+        this.createdPosts = builder.createdPosts;
+        this.commentedPosts = builder.commentedPosts;
+        this.invitedMembers = builder.invitedMembers;
+        this.finishedChallenges = builder.finishedChallenges;
+    }
+
     public String getDay() {
         return day;
     }
@@ -70,20 +84,6 @@ public class StatsDTO {
 
     public Integer getFinishedChallenges() {
         return finishedChallenges;
-    }
-
-    public StatsDTO(StatsBuilder builder) {
-        this.day = builder.day;
-        this.createdAccounts = builder.createdAccounts;
-        this.loggedUsers = builder.loggedUsers;
-        this.createdChallenges = builder.createdChallenges;
-        this.setGoals = builder.setGoals;
-        this.createdTasks = builder.createdTasks;
-        this.completedTasks = builder.completedTasks;
-        this.createdPosts = builder.createdPosts;
-        this.commentedPosts = builder.commentedPosts;
-        this.invitedMembers = builder.invitedMembers;
-        this.finishedChallenges = builder.finishedChallenges;
     }
 
     public static class StatsBuilder {

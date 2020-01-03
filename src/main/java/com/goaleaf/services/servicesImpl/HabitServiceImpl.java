@@ -2,11 +2,13 @@ package com.goaleaf.services.servicesImpl;
 
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.DTO.MemberDTO;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.enums.Category;
 import com.goaleaf.entities.enums.Sorting;
 import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
+import com.goaleaf.entities.viewModels.habitsManaging.JoinHabitViewModel;
 import com.goaleaf.repositories.*;
 import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.*;
@@ -89,22 +91,22 @@ public class HabitServiceImpl implements HabitService {
 
         Habit newHabit = new Habit();
 
-        newHabit.setHabitStartDate(model.startDate == null ? new Date() : model.startDate);
-        newHabit.setFrequency(model.frequency);
-        newHabit.setHabitTitle(model.title);
-        newHabit.setCategory(model.category);
-        newHabit.setPrivate(model.isPrivate);
+        newHabit.setHabitStartDate(model.getStartDate() == null ? new Date() : model.getStartDate());
+        newHabit.setFrequency(model.getFrequency());
+        newHabit.setHabitTitle(model.getTitle());
+        newHabit.setCategory(model.getCategory());
+        newHabit.setPrivate(model.getPrivate());
         newHabit.setCreatorID(creatorID);
         newHabit.setCreatorLogin(userService.findById(creatorID).getLogin());
         newHabit.setWinner("NONE");
         newHabit.setPointsToWIn(1001);
-        newHabit.setCanUsersInvite(model.canUsersInvite == null ? true : model.canUsersInvite);
+        newHabit.setCanUsersInvite(model.getCanUsersInvite() == null ? true : model.getCanUsersInvite());
         newHabit.setFinished(false);
 
         Habit added = new Habit();
         added = habitRepository.save(newHabit);
 
-        UserDto creatorUser = userService.findById(creatorID);
+        UserDTO creatorUser = userService.findById(creatorID);
 
         Member creator = new Member();
         creator.setUserID(creatorID);
@@ -157,7 +159,7 @@ public class HabitServiceImpl implements HabitService {
     }
 
     @Override
-    public Map<Integer, Member> getRank(Integer habitID) {
+    public Map<Integer, MemberDTO> getRank(Integer habitID) {
         return memberService.getRank(habitID);
     }
 
@@ -167,33 +169,33 @@ public class HabitServiceImpl implements HabitService {
             return null;
         }
 
-        UserDto creator = userService.findById(entry.getCreatorID());
+        UserDTO creator = userService.findById(entry.getCreatorID());
 
         HabitDTO habitDTO = new HabitDTO();
-        habitDTO.id = entry.getId();
-        habitDTO.category = entry.getCategory();
-        habitDTO.frequency = entry.getFrequency();
+        habitDTO.setId(entry.getId());
+        habitDTO.setCategory(entry.getCategory());
+        habitDTO.setFrequency(entry.getFrequency());
 //        habitDTO.members = model.members;
-        habitDTO.startDate = entry.getHabitStartDate();
-        habitDTO.isPrivate = entry.getPrivate();
-        habitDTO.title = entry.getHabitTitle();
-        habitDTO.creatorID = entry.getCreatorID();
-        habitDTO.creatorLogin = creator.getLogin();
-        habitDTO.membersCount = memberService.countAllHabitMembers(entry.getId());
-        habitDTO.canUsersInvite = entry.getCanUsersInvite();
+        habitDTO.setStartDate(entry.getHabitStartDate());
+        habitDTO.setPrivate(entry.getPrivate());
+        habitDTO.setTitle(entry.getHabitTitle());
+        habitDTO.setCreatorID(entry.getCreatorID());
+        habitDTO.setCreatorLogin(creator.getLogin());
+        habitDTO.setMembersCount(memberService.countAllHabitMembers(entry.getId()));
+        habitDTO.setCanUsersInvite(entry.getCanUsersInvite());
 
         if (entry.getPointsToWIn() != 1001) {
-            habitDTO.pointsToWin = entry.getPointsToWIn();
+            habitDTO.setPointsToWin(entry.getPointsToWIn());
         } else {
-            habitDTO.pointsToWin = 0;
+            habitDTO.setPointsToWin(0);
         }
 
         if (!entry.getWinner().equals("NONE")) {
-            habitDTO.isFinished = true;
-            habitDTO.winner = entry.getWinner();
+            habitDTO.setFinished(true);
+            habitDTO.setWinner(entry.getWinner());
         } else {
-            habitDTO.isFinished = false;
-            habitDTO.winner = "NONE";
+            habitDTO.setFinished(false);
+            habitDTO.setWinner("NONE");
         }
 
         return habitDTO;
@@ -230,7 +232,7 @@ public class HabitServiceImpl implements HabitService {
 
         String ntfDesc = "The goal in the challenge \"" + habit.getHabitTitle() + "\" has been updated!";
         for (Member m : members) {
-            UserDto u = userService.findById(m.getUserID());
+            UserDTO u = userService.findById(m.getUserID());
             Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habitID, false);
             if (u.getNotifications()) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
@@ -267,10 +269,10 @@ public class HabitServiceImpl implements HabitService {
 
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
-                .parseClaimsJws(model.token).getBody();
+                .parseClaimsJws(model.getToken()).getBody();
 
-        UserDto inviter = userService.findById(Integer.parseInt(claims.getSubject()));
-        Habit habit = habitRepository.findById(model.habitID);
+        UserDTO inviter = userService.findById(Integer.parseInt(claims.getSubject()));
+        Habit habit = habitRepository.findById(model.getHabitID());
 
         if (!habit.getCanUsersInvite()) {
             if (!habit.getCreatorLogin().equals(inviter.getLogin())) {
@@ -278,11 +280,11 @@ public class HabitServiceImpl implements HabitService {
             }
         }
 
-        UserDto searchingUser = userService.findByLogin(model.userLogin);
+        UserDTO searchingUser = userService.findByLogin(model.getUserLogin());
 
         Member newMember = new Member();
         newMember.setUserID(searchingUser.getUserID());
-        newMember.setHabitID(model.habitID);
+        newMember.setHabitID(model.getHabitID());
         newMember.setImageCode(searchingUser.getImageCode());
         newMember.setUserLogin(searchingUser.getLogin());
         newMember.setPoints(0);
@@ -293,12 +295,12 @@ public class HabitServiceImpl implements HabitService {
 
 //        memberService.saveMember(newMember);
 
-        String ntfDesc = userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to challenge \"" + findById(model.habitID).title + "\"!";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(searchingUser.getUserID(), ntfDesc, (model.url.isEmpty() ? "EMPTY_URL" : model.url), true);
+        String ntfDesc = userService.findById(Integer.parseInt(claims.getSubject())).getLogin() + " invited you to challenge \"" + findById(model.getHabitID()).getTitle() + "\"!";
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(searchingUser.getUserID(), ntfDesc, (model.getUrl().isEmpty() ? "EMPTY_URL" : model.getUrl()), true);
         if (searchingUser.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
-                sender.sendInvitationNotification(searchingUser.getEmailAddress(), searchingUser.getLogin(), userService.findById(Integer.parseInt(claims.getSubject())).getLogin(), findById(model.habitID).title);
+                sender.sendInvitationNotification(searchingUser.getEmailAddress(), searchingUser.getLogin(), userService.findById(Integer.parseInt(claims.getSubject())).getLogin(), findById(model.getHabitID()).getTitle());
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
@@ -354,7 +356,7 @@ public class HabitServiceImpl implements HabitService {
 
         String ntfDesc = "Challenge \"" + toDelete.getHabitTitle() + "\" is no longer available!";
         for (Member m : membersList) {
-            UserDto u = userService.findById(m.getUserID());
+            UserDTO u = userService.findById(m.getUserID());
             Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, null, false);
             if (u.getNotifications()) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
@@ -438,9 +440,9 @@ public class HabitServiceImpl implements HabitService {
                 while (i.hasNext()) {
                     temp = 0;
                     for (HabitDTO h : list) {
-                        if (h.membersCount > temp) {
+                        if (h.getMembersCount() > temp) {
                             tempHabit = h;
-                            temp = h.membersCount;
+                            temp = h.getMembersCount();
                         }
                     }
                     resultList.add(tempHabit);
@@ -455,6 +457,64 @@ public class HabitServiceImpl implements HabitService {
             return convertManyToDTOs(habitRepository.findAllByOrderByHabitStartDateDesc());
         }
         return null;
+    }
+
+    @Override
+    public HabitDTO createNewHabit(HabitViewModel model) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(model.getToken()).getBody();
+
+        HabitDTO habitDTO = new HabitDTO();
+        habitDTO.setCategory(model.getCategory());
+        habitDTO.setFrequency(model.getFrequency());
+//        habitDTO.members = model.members;
+        habitDTO.setStartDate(model.getStartDate());
+        habitDTO.setPrivate(model.getPrivate());
+        habitDTO.setTitle(model.getTitle());
+        habitDTO.setCreatorID(Integer.parseInt(claims.getSubject()));
+        habitDTO.setCanUsersInvite(model.getCanUsersInvite());
+
+        Habit resHabit = new Habit();
+        resHabit = registerNewHabit(model, Integer.parseInt(claims.getSubject()));
+
+        if (resHabit.getWinner() != "NONE") {
+            habitDTO.setFinished(true);
+            habitDTO.setWinner(resHabit.getWinner());
+        } else {
+            habitDTO.setFinished(false);
+            habitDTO.setWinner("No one yet! :)");
+        }
+
+        return habitDTO;
+    }
+
+    @Override
+    public HttpStatus joinHabit(JoinHabitViewModel model) {
+        UserDTO tempUser = userService.findById(model.getUserID());
+        HabitDTO habit = findById(model.getHabitID());
+        UserDTO creator = userService.findById(habit.getCreatorID());
+
+        Member newMember = new Member();
+        newMember.setHabitID(model.getHabitID());
+        newMember.setUserID(model.getUserID());
+        newMember.setImageCode(tempUser.getImageCode());
+        newMember.setUserLogin(tempUser.getLogin());
+        newMember.setPoints(0);
+
+        String ntfDesc = newMember.getUserLogin() + " joined to your challenge \"" + habit.getTitle() + "\"";
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(habit.getCreatorID(), ntfDesc, "http://www.goaleaf.com/habit/" + model.getHabitID(), false);
+        if (creator.getNotifications()) {
+            EmailNotificationsSender sender = new EmailNotificationsSender();
+            try {
+                sender.newMemberJoined(creator.getEmailAddress(), creator.getLogin(), tempUser.getLogin(), habit);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        memberService.saveMember(newMember);
+        return HttpStatus.OK;
     }
 
 }

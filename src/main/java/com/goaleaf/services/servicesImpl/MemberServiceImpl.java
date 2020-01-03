@@ -1,12 +1,15 @@
 package com.goaleaf.services.servicesImpl;
 
+import com.goaleaf.entities.DTO.MemberDTO;
 import com.goaleaf.entities.Member;
 import com.goaleaf.repositories.HabitRepository;
 import com.goaleaf.repositories.MemberRepository;
 import com.goaleaf.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MemberServiceImpl implements MemberService {
@@ -17,13 +20,13 @@ public class MemberServiceImpl implements MemberService {
     private HabitRepository habitRepository;
 
     @Override
-    public Member getByUserID(Integer id) {
-        return memberRepository.findByUserID(id);
+    public MemberDTO getByUserID(Integer id) {
+        return convertOneToDTO(memberRepository.findByUserID(id));
     }
 
     @Override
-    public Member saveMember(Member member) {
-        return memberRepository.save(member);
+    public MemberDTO saveMember(Member member) {
+        return convertOneToDTO(memberRepository.save(member));
     }
 
     public Boolean checkIfExist(Member member) {
@@ -31,13 +34,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Iterable<Member> getAllByHabitID(Integer habitID) {
-        return memberRepository.findAllByHabitID(habitID);
+    public Iterable<MemberDTO> getAllByHabitID(Integer habitID) {
+        return convertManyToDTOs(memberRepository.findAllByHabitID(habitID));
     }
 
     @Override
-    public Iterable<Member> getAll() {
-        return memberRepository.findAll();
+    public Iterable<MemberDTO> getAll() {
+        return convertManyToDTOs(memberRepository.findAll());
     }
 
     @Override
@@ -49,17 +52,17 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.deleteByHabitIDAndUserID(habitID, userID);
     }
 
-    public Member findSpecifiedMember(Integer habitID, Integer userID) {
-        return memberRepository.findByHabitIDAndUserID(habitID, userID);
+    public MemberDTO findSpecifiedMember(Integer habitID, Integer userID) {
+        return convertOneToDTO(memberRepository.findByHabitIDAndUserID(habitID, userID));
     }
 
-    public Map<Integer, Member> getRank(Integer habitID) {
+    public Map<Integer, MemberDTO> getRank(Integer habitID) {
         Iterable<Member> data = memberRepository.getAllByHabitIDOrderByPointsDesc(habitID);
-        Map<Integer, Member> resultMap = new LinkedHashMap<>();
+        Map<Integer, MemberDTO> resultMap = new LinkedHashMap<>();
         Integer i = 1;
 
         for (Member m : data) {
-            resultMap.put(i, m);
+            resultMap.put(i, convertOneToDTO(m));
             i++;
         }
 
@@ -76,6 +79,29 @@ public class MemberServiceImpl implements MemberService {
     public Integer getLeaderPoints(Integer habitID) {
         Member member = memberRepository.getFirstByHabitIDOrderByPointsDesc(habitID);
         return member.getPoints();
+    }
+
+    private MemberDTO convertOneToDTO(Member member) {
+        MemberDTO memberDTO = new MemberDTO();
+
+        memberDTO.setHabitID(member.getHabitID());
+        memberDTO.setId(member.getId());
+        memberDTO.setImageCode(member.getImageCode());
+        memberDTO.setPoints(member.getPoints());
+        memberDTO.setUserID(member.getUserID());
+        memberDTO.setUserLogin(member.getUserLogin());
+
+        return memberDTO;
+    }
+
+    private Iterable<MemberDTO> convertManyToDTOs(Iterable<Member> input) {
+        List<MemberDTO> output = new ArrayList<>(0);
+
+        for (Member m : input) {
+            output.add(convertOneToDTO(m));
+        }
+
+        return output;
     }
 
 

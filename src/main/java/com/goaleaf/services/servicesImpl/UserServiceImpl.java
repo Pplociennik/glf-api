@@ -1,18 +1,17 @@
 package com.goaleaf.services.servicesImpl;
 
+import com.auth0.jwt.JWT;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.UserDto;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.repositories.CommentRepository;
 import com.goaleaf.repositories.MemberRepository;
 import com.goaleaf.repositories.PostRepository;
 import com.goaleaf.repositories.UserRepository;
 import com.goaleaf.security.EmailNotificationsSender;
-import com.goaleaf.services.HabitService;
-import com.goaleaf.services.MemberService;
-import com.goaleaf.services.StatsService;
-import com.goaleaf.services.UserService;
+import com.goaleaf.security.EmailSender;
+import com.goaleaf.services.*;
 import com.goaleaf.validators.FileConverter;
 import com.goaleaf.validators.UserCredentialsValidator;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -37,8 +36,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.goaleaf.security.SecurityConstants.PASSWORD_RECOVERY_SECRET;
-import static com.goaleaf.security.SecurityConstants.SECRET;
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
+import static com.goaleaf.security.SecurityConstants.*;
 
 
 @Service
@@ -58,6 +57,8 @@ public class UserServiceImpl implements UserService {
     private PostRepository postRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private JwtService jwtService;
 
     private UserCredentialsValidator userCredentialsValidator = new UserCredentialsValidator();
 
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public Iterable<UserDto> listAllUsers() {
+    public Iterable<UserDTO> listAllUsers() {
         return convertManyToDTOs(userRepository.findAll());
     }
 
@@ -97,7 +98,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto registerNewUserAccount(RegisterViewModel register)
+    public UserDTO registerNewUserAccount(RegisterViewModel register)
             throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException {
 
         if (!userCredentialsValidator.isValidEmail(register.emailAddress))
@@ -136,7 +137,7 @@ public class UserServiceImpl implements UserService {
         return convertToDTO(userRepository.save(user));
     }
 
-    public UserDto updateUser(EditUserViewModel model) throws BadCredentialsException {
+    public UserDTO updateUser(EditUserViewModel model) throws BadCredentialsException {
 
         User updated = new User();
 
@@ -182,17 +183,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findByLogin(String login) {
+    public UserDTO findByLogin(String login) {
         return convertToDTO(userRepository.findByLogin(login));
     }
 
     @Override
-    public UserDto findById(Integer id) {
+    public UserDTO findById(Integer id) {
         return convertToDTO(userRepository.findById(id));
     }
 
     @Override
-    public UserDto findByEmailAddress(String email) {
+    public UserDTO findByEmailAddress(String email) {
         return convertToDTO(userRepository.findByEmailAddress(email));
     }
 
@@ -278,7 +279,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto setEmailNotifications(SetEmailNotificationsViewModel model) {
+    public UserDTO setEmailNotifications(SetEmailNotificationsViewModel model) {
         User temp = userRepository.findById(model.userID);
         temp.setNotifications(model.newNotificationsStatus);
         return convertToDTO(userRepository.save(temp));
@@ -370,13 +371,38 @@ public class UserServiceImpl implements UserService {
         return user.getImageCode();
     }
 
-    private UserDto convertToDTO(User user) {
+    @Override
+    public void resetPassword(EmailViewModel model) throws AccountNotExistsException, MessagingException {
+        if (findByEmailAddress(model.emailAddress) == null)
+            throw new AccountNotExistsException("Account with this email address does not exist!");
+
+        String resetPasswordToken = JWT.create()
+                .withSubject(String.valueOf(findByEmailAddress(model.emailAddress).getUserID()))
+                .withClaim("Email", model.emailAddress)
+                .withExpiresAt(new Date(System.currentTimeMillis() + PASSWORD_RECOVERY_SECRET_EXPIRATION_TIME))
+                .sign(HMAC512(PASSWORD_RECOVERY_SECRET.getBytes()));
+        jwtService.Validate(resetPasswordToken, PASSWORD_RECOVERY_SECRET);
+
+        EmailSender sender = new EmailSender();
+        sender.setSender("goaleaf@gmail.com", "spaghettiCode");
+        sender.addRecipient(model.emailAddress);
+        sender.setSubject("GoaLeaf Password Reset Request");
+        sender.setBody("Hello " + findByEmailAddress(model.emailAddress).getLogin() + "!\n\n" +
+                "Here's your confirmation link: http://goaleaf.com/resetpassword/" + resetPasswordToken + "\n\n" +
+                "If you have not requested a password reset, ignore this message.\n\n" +
+                "Thank you and have a nice day! :)\n\n" +
+                "GoaLeaf group");
+//        sender.addAttachment("TestFile.txt");
+        sender.send();
+    }
+
+    private UserDTO convertToDTO(User user) {
 
         if (user == null) {
             return null;
         }
 
-        UserDto dto = new UserDto();
+        UserDTO dto = new UserDTO();
 
         dto.setEmailAddress(user.getEmailAddress());
         dto.setImageCode(user.getImageCode());
@@ -387,8 +413,8 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
-    private Iterable<UserDto> convertManyToDTOs(Iterable<User> input) {
-        List<UserDto> out = new ArrayList<>(0);
+    private Iterable<UserDTO> convertManyToDTOs(Iterable<User> input) {
+        List<UserDTO> out = new ArrayList<>(0);
 
         for (User u : input) {
             out.add(convertToDTO(u));

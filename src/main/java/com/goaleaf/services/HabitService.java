@@ -1,12 +1,13 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.MemberDTO;
 import com.goaleaf.entities.Habit;
-import com.goaleaf.entities.Member;
 import com.goaleaf.entities.enums.Category;
 import com.goaleaf.entities.enums.Sorting;
 import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
+import com.goaleaf.entities.viewModels.habitsManaging.JoinHabitViewModel;
 import com.goaleaf.validators.exceptions.habitsCreating.WrongTitleException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public interface HabitService {
 
     Iterable<Habit> findHabitsByCreatorID(Integer creatorID);
 
-    Map<Integer, Member> getRank(Integer habitID);
+    Map<Integer, MemberDTO> getRank(Integer habitID);
 
     HabitDTO setPointsToWin(Integer habitID, Integer pointsToWin);
 
@@ -55,4 +56,8 @@ public interface HabitService {
     Iterable<HabitDTO> getAllHabitsByCategory(Category category);
 
     Iterable<HabitDTO> getAllHabitsBySorting(Sorting sorting);
+
+    HabitDTO createNewHabit(HabitViewModel model);
+
+    HttpStatus joinHabit(JoinHabitViewModel model);
 }

@@ -36,7 +36,7 @@ public class MainController {
 //        habitService.saveHabit(habit);
 
 
-//        TaskDTO taskDTO = new TaskDTO("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiTG9naW4iOiJQc3plbWtvIiwiZXhwIjoxNTcyMTc2NTE1fQ.eByT27fDnGkAdMsUUswRTjF9NBqrvqDttd_W8h6-HrX6cFDu0mLgyWunMpG3GUQi0nbH8KWQRDI1hTTlyep4pQ"
+//        NewTaskViewModel taskDTO = new NewTaskViewModel("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiTG9naW4iOiJQc3plbWtvIiwiZXhwIjoxNTcyMTc2NTE1fQ.eByT27fDnGkAdMsUUswRTjF9NBqrvqDttd_W8h6-HrX6cFDu0mLgyWunMpG3GUQi0nbH8KWQRDI1hTTlyep4pQ"
 //        , 1, "Bieda jedzonko z kolonii", 5);
 //        taskService.saveTask(taskDTO);
         return "Generated default User!";
