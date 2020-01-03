@@ -95,6 +95,7 @@ public class CommentServiceImpl implements CommentService {
         commentDTO.setCreatorLogin(comment.getUserLogin());
         commentDTO.setCreationDate(comment.getCreationDate());
         commentDTO.setCreatorImage(comment.getCreatorImage());
+        commentDTO.setId(comment.getId());
 
         return commentDTO;
     }

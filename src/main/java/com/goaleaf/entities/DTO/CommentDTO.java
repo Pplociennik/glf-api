@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class CommentDTO {
 
+    private Integer id;
+
     private Integer postID;
 
     private Integer creatorID;
@@ -65,5 +67,13 @@ public class CommentDTO {
 
     public void setCreatorImage(String creatorImage) {
         this.creatorImage = creatorImage;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
