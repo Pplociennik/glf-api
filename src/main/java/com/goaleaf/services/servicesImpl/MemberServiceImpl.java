@@ -96,6 +96,9 @@ public class MemberServiceImpl implements MemberService {
 
         member.setBanned(true);
         Member result = memberRepository.save(member);
+
+        removeSpecifiedMember(habitID, userID);
+
         return convertOneToDTO(result);
     }
 
