@@ -40,7 +40,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationDTO findSpecifiedNtf(Integer userID, String url) {
-        return convertOneToDTO(notificationRepository.getByRecipientIDAndUrl(userID, url));
+        return convertOneToDTO(notificationRepository.findByRecipientIDAndUrl(userID, url));
     }
 
     @Override
@@ -49,6 +49,10 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private NotificationDTO convertOneToDTO(Notification notification) {
+        if (notification == null) {
+            return null;
+        }
+
         NotificationDTO dto = new NotificationDTO();
 
         dto.setDate(notification.getDate());
