@@ -2,7 +2,7 @@ package com.goaleaf.controllers;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.UsersDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.services.UserService;
 import com.goaleaf.services.servicesImpl.JwtServiceImpl;
@@ -29,12 +29,12 @@ public class UserController {
 
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Iterable<UserDTO> list() {
+    public Iterable<UsersDTO> list() {
         return userService.listAllUsers();
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public UserDTO getByPublicId(@PathVariable("id") Integer publicId) {
+    public UsersDTO getByPublicId(@PathVariable("id") Integer publicId) {
         return userService.findById(publicId);
     }
 
@@ -85,7 +85,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/setntf", method = RequestMethod.POST)
-    public UserDTO setEmailNotifications(@RequestBody SetEmailNotificationsViewModel model) throws AccountNotExistsException {
+    public UsersDTO setEmailNotifications(@RequestBody SetEmailNotificationsViewModel model) throws AccountNotExistsException {
         if (userService.findById(model.userID) == null)
             throw new AccountNotExistsException("User does not exist!");
         if (!jwtService.Validate(model.token, SECRET))

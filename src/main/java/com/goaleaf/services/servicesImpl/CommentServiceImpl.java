@@ -4,7 +4,7 @@ import com.goaleaf.entities.Comment;
 import com.goaleaf.entities.DTO.CommentDTO;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.PostDTO;
-import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.UsersDTO;
 import com.goaleaf.entities.Notification;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import com.goaleaf.repositories.CommentRepository;
@@ -46,9 +46,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO addNewComment(AddCommentViewModel model) {
 
-        UserDTO commenter = userService.findById(model.getCreatorID());
+        UsersDTO commenter = userService.findById(model.getCreatorID());
         PostDTO post = postService.findOneByID(model.getPostID());
-        UserDTO postCreator = userService.findByLogin(post.getCreatorLogin());
+        UsersDTO postCreator = userService.findByLogin(post.getCreatorLogin());
         HabitDTO habitDTO = habitService.findById(post.getHabitID());
 
         Comment comment = new Comment();

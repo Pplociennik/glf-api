@@ -141,7 +141,7 @@ public class PostServiceImpl implements PostService {
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
 
-        UserDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
+        UsersDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");
@@ -177,7 +177,7 @@ public class PostServiceImpl implements PostService {
 
         String ntfDesc = newPost.getCreatorLogin() + " added a new post in challenge \"" + habit.getTitle() + "\"";
         for (MemberDTO m : members) {
-            UserDTO u = userService.findById(m.getUserID());
+            UsersDTO u = userService.findById(m.getUserID());
             Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habit.getId(), false);
             if (u.getNotifications() && !u.getLogin().equals(tempUser.getLogin())) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
@@ -213,7 +213,7 @@ public class PostServiceImpl implements PostService {
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
 
-        UserDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
+        UsersDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");
@@ -242,12 +242,12 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(model.postID);
         String pastType = "";
         HabitDTO habit = habitService.findById(post.getHabitID());
-        UserDTO postCreator = userService.findByLogin(post.getCreatorLogin());
+        UsersDTO postCreator = userService.findByLogin(post.getCreatorLogin());
 
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
-        UserDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
+        UsersDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");

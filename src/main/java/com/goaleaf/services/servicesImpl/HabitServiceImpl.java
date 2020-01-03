@@ -3,7 +3,7 @@ package com.goaleaf.services.servicesImpl;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.MemberDTO;
-import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.UsersDTO;
 import com.goaleaf.entities.enums.Category;
 import com.goaleaf.entities.enums.Sorting;
 import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
@@ -106,7 +106,7 @@ public class HabitServiceImpl implements HabitService {
         Habit added = new Habit();
         added = habitRepository.save(newHabit);
 
-        UserDTO creatorUser = userService.findById(creatorID);
+        UsersDTO creatorUser = userService.findById(creatorID);
 
         Member creator = new Member();
         creator.setUserID(creatorID);
@@ -169,7 +169,7 @@ public class HabitServiceImpl implements HabitService {
             return null;
         }
 
-        UserDTO creator = userService.findById(entry.getCreatorID());
+        UsersDTO creator = userService.findById(entry.getCreatorID());
 
         HabitDTO habitDTO = new HabitDTO();
         habitDTO.setId(entry.getId());
@@ -232,7 +232,7 @@ public class HabitServiceImpl implements HabitService {
 
         String ntfDesc = "The goal in the challenge \"" + habit.getHabitTitle() + "\" has been updated!";
         for (Member m : members) {
-            UserDTO u = userService.findById(m.getUserID());
+            UsersDTO u = userService.findById(m.getUserID());
             Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habitID, false);
             if (u.getNotifications()) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
@@ -271,7 +271,7 @@ public class HabitServiceImpl implements HabitService {
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.getToken()).getBody();
 
-        UserDTO inviter = userService.findById(Integer.parseInt(claims.getSubject()));
+        UsersDTO inviter = userService.findById(Integer.parseInt(claims.getSubject()));
         Habit habit = habitRepository.findById(model.getHabitID());
 
         if (!habit.getCanUsersInvite()) {
@@ -280,7 +280,7 @@ public class HabitServiceImpl implements HabitService {
             }
         }
 
-        UserDTO searchingUser = userService.findByLogin(model.getUserLogin());
+        UsersDTO searchingUser = userService.findByLogin(model.getUserLogin());
 
         Member newMember = new Member();
         newMember.setUserID(searchingUser.getUserID());
@@ -356,7 +356,7 @@ public class HabitServiceImpl implements HabitService {
 
         String ntfDesc = "Challenge \"" + toDelete.getHabitTitle() + "\" is no longer available!";
         for (Member m : membersList) {
-            UserDTO u = userService.findById(m.getUserID());
+            UsersDTO u = userService.findById(m.getUserID());
             Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, null, false);
             if (u.getNotifications()) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
@@ -491,9 +491,9 @@ public class HabitServiceImpl implements HabitService {
 
     @Override
     public HttpStatus joinHabit(JoinHabitViewModel model) {
-        UserDTO tempUser = userService.findById(model.getUserID());
+        UsersDTO tempUser = userService.findById(model.getUserID());
         HabitDTO habit = findById(model.getHabitID());
-        UserDTO creator = userService.findById(habit.getCreatorID());
+        UsersDTO creator = userService.findById(habit.getCreatorID());
 
         Member newMember = new Member();
         newMember.setHabitID(model.getHabitID());

@@ -1,7 +1,7 @@
 package com.goaleaf.engine;
 
 import com.goaleaf.controllers.AuthController;
-import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.UsersDTO;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.PasswordViewModel;
@@ -64,7 +64,7 @@ public class UserServiceTests {
         model.password = "password";
         model.matchingPassword = "password";
 
-        UserDTO dto = userService.registerNewUserAccount(model);
+        UsersDTO dto = userService.registerNewUserAccount(model);
 
         this.toClean.add(userRepository.findByLogin(model.login));
 
@@ -85,11 +85,11 @@ public class UserServiceTests {
         model_new.password = "password";
         model_new.matchingPassword = "password";
 
-        UserDTO dto = userService.registerNewUserAccount(model);
+        UsersDTO dto = userService.registerNewUserAccount(model);
 
         this.toClean.add(userRepository.findByLogin(dto.getLogin()));
 
-        UserDTO dto_new = userService.registerNewUserAccount(model_new);
+        UsersDTO dto_new = userService.registerNewUserAccount(model_new);
 
     }
 
@@ -102,7 +102,7 @@ public class UserServiceTests {
         model.password = "password";
         model.matchingPassword = "password";
 
-        UserDTO dto = userService.registerNewUserAccount(model);
+        UsersDTO dto = userService.registerNewUserAccount(model);
 
         this.toClean.add(userRepository.findByLogin(model.login));
 

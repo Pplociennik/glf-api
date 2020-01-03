@@ -3,7 +3,7 @@ package com.goaleaf.services.servicesImpl;
 import com.auth0.jwt.JWT;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.UsersDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.repositories.CommentRepository;
 import com.goaleaf.repositories.MemberRepository;
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public Iterable<UserDTO> listAllUsers() {
+    public Iterable<UsersDTO> listAllUsers() {
         return convertManyToDTOs(userRepository.findAll());
     }
 
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDTO registerNewUserAccount(RegisterViewModel register)
+    public UsersDTO registerNewUserAccount(RegisterViewModel register)
             throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException {
 
         if (!userCredentialsValidator.isValidEmail(register.emailAddress))
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
         return convertToDTO(userRepository.save(user));
     }
 
-    public UserDTO updateUser(EditUserViewModel model) throws BadCredentialsException {
+    public UsersDTO updateUser(EditUserViewModel model) throws BadCredentialsException {
 
         User updated = new User();
 
@@ -183,17 +183,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findByLogin(String login) {
+    public UsersDTO findByLogin(String login) {
         return convertToDTO(userRepository.findByLogin(login));
     }
 
     @Override
-    public UserDTO findById(Integer id) {
+    public UsersDTO findById(Integer id) {
         return convertToDTO(userRepository.findById(id));
     }
 
     @Override
-    public UserDTO findByEmailAddress(String email) {
+    public UsersDTO findByEmailAddress(String email) {
         return convertToDTO(userRepository.findByEmailAddress(email));
     }
 
@@ -279,7 +279,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO setEmailNotifications(SetEmailNotificationsViewModel model) {
+    public UsersDTO setEmailNotifications(SetEmailNotificationsViewModel model) {
         User temp = userRepository.findById(model.userID);
         temp.setNotifications(model.newNotificationsStatus);
         return convertToDTO(userRepository.save(temp));
@@ -396,13 +396,13 @@ public class UserServiceImpl implements UserService {
         sender.send();
     }
 
-    private UserDTO convertToDTO(User user) {
+    private UsersDTO convertToDTO(User user) {
 
         if (user == null) {
             return null;
         }
 
-        UserDTO dto = new UserDTO();
+        UsersDTO dto = new UsersDTO();
 
         dto.setEmailAddress(user.getEmailAddress());
         dto.setImageCode(user.getImageCode());
@@ -413,8 +413,8 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
-    private Iterable<UserDTO> convertManyToDTOs(Iterable<User> input) {
-        List<UserDTO> out = new ArrayList<>(0);
+    private Iterable<UsersDTO> convertManyToDTOs(Iterable<User> input) {
+        List<UsersDTO> out = new ArrayList<>(0);
 
         for (User u : input) {
             out.add(convertToDTO(u));

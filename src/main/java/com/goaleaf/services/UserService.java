@@ -1,7 +1,7 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.UsersDTO;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -16,7 +16,7 @@ import java.io.File;
 
 public interface UserService {
 
-    Iterable<UserDTO> listAllUsers();
+    Iterable<UsersDTO> listAllUsers();
 
     User saveUser(User user);
 
@@ -24,17 +24,17 @@ public interface UserService {
 
     Boolean checkIfExists(Integer id);
 
-    UserDTO registerNewUserAccount(RegisterViewModel register) throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException;
+    UsersDTO registerNewUserAccount(RegisterViewModel register) throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException;
 
-    UserDTO findByLogin(String user);
+    UsersDTO findByLogin(String user);
 
-    UserDTO findById(Integer id);
+    UsersDTO findById(Integer id);
 
-    UserDTO updateUser(EditUserViewModel model) throws BadCredentialsException;
+    UsersDTO updateUser(EditUserViewModel model) throws BadCredentialsException;
 
     void updateUserImage(EditImageViewModel model);
 
-    UserDTO findByEmailAddress(String email);
+    UsersDTO findByEmailAddress(String email);
 
     Iterable<HabitDTO> getUserFinishedHabits(Integer userID);
 
@@ -46,7 +46,7 @@ public interface UserService {
 
     HttpStatus disableNotifications(ChangeNotificationsViewModel model) throws AccountNotExistsException;
 
-    UserDTO setEmailNotifications(SetEmailNotificationsViewModel model);
+    UsersDTO setEmailNotifications(SetEmailNotificationsViewModel model);
 
     void checkUserCredentials(LoginViewModel userModel) throws AccountNotExistsException, BadCredentialsException;
 
