@@ -107,7 +107,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByHabitIDAndUserID(habitID, userID);
 
         if (member == null) {
-            throw new RuntimeException("Member not found!");
+            return false;
         }
 
         return member.getBanned();

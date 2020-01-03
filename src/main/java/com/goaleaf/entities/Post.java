@@ -30,6 +30,7 @@ public class Post {
     @Lob
     private String imageCode;
 
+    @Lob
     private String creatorImage;
 
     private Integer counter_CLAPPING;
