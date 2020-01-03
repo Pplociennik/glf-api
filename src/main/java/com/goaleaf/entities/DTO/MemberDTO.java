@@ -15,6 +15,8 @@ public class MemberDTO {
 
     private Integer points;
 
+    private Boolean banned;
+
     public MemberDTO() {
     }
 
@@ -64,5 +66,13 @@ public class MemberDTO {
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public Boolean getBanned() {
+        return banned;
+    }
+
+    public void setBanned(Boolean banned) {
+        this.banned = banned;
     }
 }

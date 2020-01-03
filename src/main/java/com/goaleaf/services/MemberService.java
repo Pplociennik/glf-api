@@ -31,4 +31,10 @@ public interface MemberService {
 
     Integer getLeaderPoints(Integer habitID);
 
+    Boolean checkIfExist(Integer userID, Integer habitID);
+
+    MemberDTO banAMember(Integer userID, Integer habitID);
+
+    Boolean checkIfUserIsBanned(Integer userID, Integer habitID);
+
 }

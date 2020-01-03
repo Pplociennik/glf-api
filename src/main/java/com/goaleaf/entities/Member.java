@@ -21,17 +21,21 @@ public class Member {
 
     private Integer points;
 
+    private Boolean banned;
+
     public Member(Integer userID /*, Set<LeafDate> doneDates*/) {
         this.userID = userID;
 //        this.doneDates = doneDates;
     }
 
     public Member() {
+        this.banned = false;
     }
 
     public Member(Integer userID, Integer habitID) {
         this.userID = userID;
         this.habitID = habitID;
+        this.banned = false;
     }
 
     public Integer getId() {
@@ -101,5 +105,13 @@ public class Member {
 
     public void decreasePoints(Integer decreaseNr) {
         this.points -= decreaseNr;
+    }
+
+    public Boolean getBanned() {
+        return banned;
+    }
+
+    public void setBanned(Boolean banned) {
+        this.banned = banned;
     }
 }

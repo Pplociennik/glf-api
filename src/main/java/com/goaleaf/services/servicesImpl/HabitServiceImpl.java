@@ -289,8 +289,19 @@ public class HabitServiceImpl implements HabitService {
         newMember.setUserLogin(searchingUser.getLogin());
         newMember.setPoints(0);
 
-        if (memberService.checkIfExist(newMember)) {
+        Member invitingMember = memberRepository.findByHabitIDAndUserID(model.getHabitID(), searchingUser.getUserID());
+
+        if (invitingMember != null && !invitingMember.getBanned()) {
             throw new UserAlreadyInHabitException("User already participating!");
+        }
+
+        if (invitingMember != null && invitingMember.getBanned()) {
+            if (inviter.getUserID().compareTo(habit.getCreatorID()) != 0) {
+                throw new RuntimeException("User is banned in this challenge!");
+            } else {
+                invitingMember.setBanned(false);
+                memberService.saveMember(invitingMember);
+            }
         }
 
 //        memberService.saveMember(newMember);

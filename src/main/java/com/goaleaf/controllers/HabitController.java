@@ -199,4 +199,14 @@ public class HabitController {
         return habitService.getAllHabitsBySorting(sorting);
     }
 
+    @RequestMapping(value = "/ban", method = RequestMethod.POST)
+    public MemberDTO banAMember(@RequestParam Integer userID, Integer habitID) {
+        return memberService.banAMember(userID, habitID);
+    }
+
+    @RequestMapping(value = "/ban/check", method = RequestMethod.GET)
+    public Boolean checkIfMemberBanned(@RequestParam Integer userID, Integer habitID) {
+        return memberService.checkIfUserIsBanned(userID, habitID);
+    }
+
 }

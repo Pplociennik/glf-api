@@ -81,6 +81,35 @@ public class MemberServiceImpl implements MemberService {
         return member.getPoints();
     }
 
+    @Override
+    public Boolean checkIfExist(Integer userID, Integer habitID) {
+        return memberRepository.existsByHabitIDAndAndUserID(habitID, userID);
+    }
+
+    @Override
+    public MemberDTO banAMember(Integer userID, Integer habitID) {
+        Member member = memberRepository.findByHabitIDAndUserID(habitID, userID);
+
+        if (member.getBanned()) {
+            throw new RuntimeException("User already banned!");
+        }
+
+        member.setBanned(true);
+        Member result = memberRepository.save(member);
+        return convertOneToDTO(result);
+    }
+
+    @Override
+    public Boolean checkIfUserIsBanned(Integer userID, Integer habitID) {
+        Member member = memberRepository.findByHabitIDAndUserID(habitID, userID);
+
+        if (member == null) {
+            throw new RuntimeException("Member not found!");
+        }
+
+        return member.getBanned();
+    }
+
     private MemberDTO convertOneToDTO(Member member) {
         MemberDTO memberDTO = new MemberDTO();
 
@@ -90,6 +119,7 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setPoints(member.getPoints());
         memberDTO.setUserID(member.getUserID());
         memberDTO.setUserLogin(member.getUserLogin());
+        memberDTO.setBanned(member.getBanned());
 
         return memberDTO;
     }

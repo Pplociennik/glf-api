@@ -150,7 +150,7 @@ public class PostServiceImpl implements PostService {
         if (model.postText.trim().isEmpty())
             throw new EmptyPostException("Post cannot be empty!");
         if (model.postText.length() > 300) {
-            throw new RuntimeException("Post cannot be longer than 300 characters!");
+            throw new RuntimeException("Post cannot be longer than 600 characters!");
         }
 
         Post newPost = new Post();
@@ -239,36 +239,40 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostReactionsNrDTO addReaction(AddReactionViewModel model) {
-        Post post = postRepository.findById(model.postID);
+        Post post = postRepository.findById(model.getPostID());
         String pastType = "";
         HabitDTO habit = habitService.findById(post.getHabitID());
         UsersDTO postCreator = userService.findByLogin(post.getCreatorLogin());
 
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
-                .parseClaimsJws(model.token).getBody();
+                .parseClaimsJws(model.getToken()).getBody();
         UsersDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
-        if (!jwtService.Validate(model.token, SECRET))
+        if (!jwtService.Validate(model.getToken(), SECRET))
             throw new TokenExpiredException("You have to be logged in!");
         if (memberService.findSpecifiedMember(post.getHabitID(), Integer.parseInt(claims.getSubject())) == null)
             throw new MemberDoesNotExistException("You are not a member!");
-        if (postRepository.findById(model.postID) == null)
+        if (postRepository.findById(model.getPostID()) == null)
             throw new PostNotFoundException("Post not found");
 
+        Iterable<MemberDTO> members = memberService.getAllByHabitID(habit.getId());
         String ntfDesc = tempUser.getLogin() + " reacted to your post in challenge \"" + habit.getTitle() + "\"";
         Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
-        if (postCreator.getNotifications()) {
-            EmailNotificationsSender sender = new EmailNotificationsSender();
-            try {
-                sender.postReacted(postCreator.getEmailAddress(), postCreator.getLogin(), tempUser.getLogin(), post);
-            } catch (MessagingException e) {
-                e.printStackTrace();
+        for (MemberDTO m : members) {
+            UsersDTO u = userService.findById(m.getUserID());
+            if (u.getNotifications() && u.getUserID().compareTo(postCreator.getUserID()) != 0) {
+                EmailNotificationsSender sender = new EmailNotificationsSender();
+                try {
+                    sender.postReacted(postCreator.getEmailAddress(), postCreator.getLogin(), tempUser.getLogin(), post);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-        if (!(reactionService.getReactionByPostIdAndUserLogin(model.postID, tempUser.getLogin()) == null)) {
-            PostReaction reaction = reactionService.getReactionByPostIdAndUserLogin(model.postID, tempUser.getLogin());
+        if (!(reactionService.getReactionByPostIdAndUserLogin(model.getPostID(), tempUser.getLogin()) == null)) {
+            PostReaction reaction = reactionService.getReactionByPostIdAndUserLogin(model.getPostID(), tempUser.getLogin());
             pastType = String.valueOf(reaction.getType()).toUpperCase();
             reactionService.delete(reaction);
             if (Objects.equals(pastType, "CLAPPING"))
@@ -288,21 +292,21 @@ public class PostServiceImpl implements PostService {
         dataToReturn.setCounter_WOW(post.getCounter_WOW());
 
 
-        if (Objects.equals(model.type, pastType))
+        if (Objects.equals(model.getType(), pastType))
             return dataToReturn;
 
         PostReaction newReaction = new PostReaction();
-        newReaction.setPostID(model.postID);
-        newReaction.setType(model.type);
+        newReaction.setPostID(model.getPostID());
+        newReaction.setType(model.getType());
         newReaction.setUserLogin(tempUser.getLogin());
 
-        if (Objects.equals(model.type, "CLAPPING"))
+        if (Objects.equals(model.getType(), "CLAPPING"))
             post.setCounter_CLAPPING(post.getCounter_CLAPPING() + 1);
-        if (Objects.equals(model.type, "WOW"))
+        if (Objects.equals(model.getType(), "WOW"))
             post.setCounter_WOW(post.getCounter_WOW() + 1);
-        if (Objects.equals(model.type, "NOTHING_SPECIAL"))
+        if (Objects.equals(model.getType(), "NOTHING_SPECIAL"))
             post.setCounter_NS(post.getCounter_NS() + 1);
-        if (Objects.equals(model.type, "THERES_THE_DOOR"))
+        if (Objects.equals(model.getType(), "THERES_THE_DOOR"))
             post.setCounter_TTD(post.getCounter_TTD() + 1);
 
         reactionService.add(newReaction);
