@@ -15,5 +15,8 @@ public interface NotificationRepository extends CrudRepository<Notification, Int
 
     Notification findByDescription(String description);
 
-//    Notification save(Notification notification);
+    @Override
+    void delete(Iterable<? extends Notification> entities);
+
+    //    Notification save(Notification notification);
 }

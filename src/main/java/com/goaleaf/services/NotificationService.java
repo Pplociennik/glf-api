@@ -19,4 +19,6 @@ public interface NotificationService {
 
     NotificationDTO findByDescription(String description);
 
+    Iterable<NotificationDTO> clearNtf(Integer userID);
+
 }

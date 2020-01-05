@@ -48,6 +48,14 @@ public class NotificationServiceImpl implements NotificationService {
         return convertOneToDTO(notificationRepository.findByDescription(description));
     }
 
+    @Override
+    public Iterable<NotificationDTO> clearNtf(Integer userID) {
+        Iterable<Notification> ntf = notificationRepository.getAllByRecipientID(userID);
+        notificationRepository.delete(ntf);
+
+        return getAllByUserID(userID);
+    }
+
     private NotificationDTO convertOneToDTO(Notification notification) {
         if (notification == null) {
             return null;

@@ -3,9 +3,9 @@ package com.goaleaf.engine;
 import com.goaleaf.controllers.AuthController;
 import com.goaleaf.controllers.HabitController;
 import com.goaleaf.entities.DTO.CompleteTaskDTO;
-import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.TaskDTO;
 import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.enums.Category;
@@ -14,7 +14,9 @@ import com.goaleaf.entities.viewModels.NewTaskViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.LoginViewModel;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewModel;
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
+import com.goaleaf.repositories.HabitRepository;
 import com.goaleaf.repositories.UserRepository;
+import com.goaleaf.services.HabitService;
 import com.goaleaf.services.TaskService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -24,11 +26,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockRestServiceServer;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.MessagingException;
 import java.util.Date;
@@ -37,11 +36,8 @@ import java.util.Set;
 
 import static org.junit.Assert.assertNotNull;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
-@WebAppConfiguration
-@AutoConfigureMockMvc
-@AutoConfigureMockRestServiceServer
-@RunWith(SpringJUnit4ClassRunner.class)
 public class TaskServiceTests {
 
     @Autowired
@@ -54,6 +50,8 @@ public class TaskServiceTests {
     private HabitController habitController;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private HabitRepository habitRepository;
 
     private Set<User> toClean;
 
@@ -82,8 +80,8 @@ public class TaskServiceTests {
         this.toClean.add(userRepository.findByLogin(model.login));
 
         LoginViewModel loginViewModel = new LoginViewModel();
-        loginViewModel.login = model.login;
-        loginViewModel.password = model.password;
+        loginViewModel.login = "tester";
+        loginViewModel.password = "password";
 
         String token = authController.login(loginViewModel);
 
@@ -96,7 +94,8 @@ public class TaskServiceTests {
         habitViewModel.setCanUsersInvite(true);
         habitViewModel.setFrequency(Frequency.Once);
 
-        HabitDTO habitDTO = habitController.createNewHabit(habitViewModel);
+        habitController.createNewHabit(habitViewModel);
+        Habit habitDTO = habitRepository.findByHabitTitle(habitViewModel.getTitle());
 
         NewTaskViewModel newTaskViewModel = new NewTaskViewModel(token, habitDTO.getId(), "task", 4, Frequency.Once, null, 1);
         TaskDTO taskDTO = taskService.saveTask(newTaskViewModel);

@@ -36,4 +36,9 @@ public class NotificationController {
     public void deleteFromDatabase(@RequestParam Integer ntfID) {
         notificationService.removeFromDatabaseByID(ntfID);
     }
+
+    @RequestMapping(value = "/clear", method = RequestMethod.DELETE)
+    public Iterable<NotificationDTO> clearAllUserNotifications(@RequestParam Integer userID) {
+        return notificationService.clearNtf(userID);
+    }
 }

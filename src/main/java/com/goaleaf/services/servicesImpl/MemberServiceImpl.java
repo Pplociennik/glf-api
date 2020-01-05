@@ -123,7 +123,7 @@ public class MemberServiceImpl implements MemberService {
         member.setBanned(true);
         Member result = memberRepository.save(member);
 
-        String ntfDesc = "Tyou have been banned in the challenge \"" + habit.getHabitTitle() + "\"!";
+        String ntfDesc = "You have been kicked from the challenge \"" + habit.getHabitTitle() + "\"!";
         Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "EMPTY_URL", false);
         if (u.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();

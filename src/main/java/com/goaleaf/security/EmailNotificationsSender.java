@@ -214,7 +214,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject("You have been banned!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "Administrator of the challenge \"" + habit.getHabitTitle() + "\" has banned you!\n\n" +
+                "Administrator of the challenge \"" + habit.getHabitTitle() + "\" has kicked you!\n\n" +
                 "The challenge is no longer available to you.\n " +
                 "For more details, please, contact the challenge administrator.\n\n" +
                 "Your Sincerely\n" +
