@@ -4,7 +4,7 @@ package com.goaleaf.controllers;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.PostDTO;
 import com.goaleaf.entities.DTO.PostReactionsNrDTO;
-import com.goaleaf.entities.DTO.UsersDTO;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.PostReaction;
 import com.goaleaf.entities.viewModels.habitsManaging.postsCreating.NewPostViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.AddReactionViewModel;
@@ -72,7 +72,7 @@ public class PostController {
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(model.token).getBody();
 
-        UsersDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
+        UserDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");

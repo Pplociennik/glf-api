@@ -5,7 +5,7 @@ import com.goaleaf.controllers.HabitController;
 import com.goaleaf.entities.DTO.CompleteTaskDTO;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.TaskDTO;
-import com.goaleaf.entities.DTO.UsersDTO;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.enums.Category;
@@ -77,7 +77,7 @@ public class TaskServiceTests {
         model.password = "password";
         model.matchingPassword = "password";
 
-        UsersDTO dto = userService.registerNewUserAccount(model);
+        UserDTO dto = userService.registerNewUserAccount(model);
 
         this.toClean.add(userRepository.findByLogin(model.login));
 

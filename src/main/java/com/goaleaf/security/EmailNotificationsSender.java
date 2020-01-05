@@ -207,4 +207,19 @@ public class EmailNotificationsSender {
 //        sender.addAttachment("TestFile.txt");
         sender.send();
     }
+
+    public void userBanned(String recipientEmail, String recipientName, Habit habit) throws MessagingException {
+
+        sender.setSender(senderAddress, senderPassword);
+        sender.addRecipient(recipientEmail);
+        sender.setSubject("You have been banned!");
+        sender.setBody("Welcome " + recipientName + "!\n\n" +
+                "Administrator of the challenge \"" + habit.getHabitTitle() + "\" has banned you!\n\n" +
+                "The challenge is no longer available to you.\n " +
+                "For more details, please, contact the challenge administrator.\n\n" +
+                "Your Sincerely\n" +
+                "GoaLeaf group");
+//        sender.addAttachment("TestFile.txt");
+        sender.send();
+    }
 }

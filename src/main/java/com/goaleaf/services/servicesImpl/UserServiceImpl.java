@@ -3,7 +3,7 @@ package com.goaleaf.services.servicesImpl;
 import com.auth0.jwt.JWT;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.UsersDTO;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.repositories.CommentRepository;
 import com.goaleaf.repositories.MemberRepository;
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public Iterable<UsersDTO> listAllUsers() {
+    public Iterable<UserDTO> listAllUsers() {
         return convertManyToDTOs(userRepository.findAll());
     }
 
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UsersDTO registerNewUserAccount(RegisterViewModel register)
+    public UserDTO registerNewUserAccount(RegisterViewModel register)
             throws EmailExistsException, LoginExistsException, BadCredentialsException, MessagingException {
 
         if (!userCredentialsValidator.isValidEmail(register.emailAddress))
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
         return convertToDTO(userRepository.save(user));
     }
 
-    public UsersDTO updateUser(EditUserViewModel model) throws BadCredentialsException {
+    public UserDTO updateUser(EditUserViewModel model) throws BadCredentialsException {
 
         User updated = new User();
 
@@ -183,17 +183,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsersDTO findByLogin(String login) {
+    public UserDTO findByLogin(String login) {
         return convertToDTO(userRepository.findByLogin(login));
     }
 
     @Override
-    public UsersDTO findById(Integer id) {
+    public UserDTO findById(Integer id) {
         return convertToDTO(userRepository.findById(id));
     }
 
     @Override
-    public UsersDTO findByEmailAddress(String email) {
+    public UserDTO findByEmailAddress(String email) {
         return convertToDTO(userRepository.findByEmailAddress(email));
     }
 
@@ -204,9 +204,12 @@ public class UserServiceImpl implements UserService {
         List<Habit> habits = new ArrayList<>(0);
 
         for (Member m : memberList) {
+            if (m.getBanned()) {
+                continue;
+            }
             Habit h = new Habit();
             h = habitService.getHabitById(m.getHabitID());
-            if (h.getFinished() && h.getWinner().equals("NONE")) {
+            if (h.getFinished()) {
                 habits.add(h);
             }
         }
@@ -239,6 +242,9 @@ public class UserServiceImpl implements UserService {
         List<Habit> habits = new ArrayList<>(0);
 
         for (Member m : memberList) {
+            if (m.getBanned()) {
+                continue;
+            }
             Habit h = new Habit();
             h = habitService.getHabitById(m.getHabitID());
             if (!h.getFinished()) {
@@ -279,7 +285,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsersDTO setEmailNotifications(SetEmailNotificationsViewModel model) {
+    public UserDTO setEmailNotifications(SetEmailNotificationsViewModel model) {
         User temp = userRepository.findById(model.userID);
         temp.setNotifications(model.newNotificationsStatus);
         return convertToDTO(userRepository.save(temp));
@@ -396,13 +402,13 @@ public class UserServiceImpl implements UserService {
         sender.send();
     }
 
-    private UsersDTO convertToDTO(User user) {
+    private UserDTO convertToDTO(User user) {
 
         if (user == null) {
             return null;
         }
 
-        UsersDTO dto = new UsersDTO();
+        UserDTO dto = new UserDTO();
 
         dto.setEmailAddress(user.getEmailAddress());
         dto.setImageCode(user.getImageCode());
@@ -413,8 +419,8 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
-    private Iterable<UsersDTO> convertManyToDTOs(Iterable<User> input) {
-        List<UsersDTO> out = new ArrayList<>(0);
+    private Iterable<UserDTO> convertManyToDTOs(Iterable<User> input) {
+        List<UserDTO> out = new ArrayList<>(0);
 
         for (User u : input) {
             out.add(convertToDTO(u));
