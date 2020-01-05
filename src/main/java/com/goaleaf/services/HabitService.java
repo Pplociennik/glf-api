@@ -60,4 +60,6 @@ public interface HabitService {
     HabitDTO createNewHabit(HabitViewModel model);
 
     HttpStatus joinHabit(JoinHabitViewModel model);
+
+    Boolean changeHabitPrivacy(Integer habitID);
 }

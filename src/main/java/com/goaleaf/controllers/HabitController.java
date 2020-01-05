@@ -209,4 +209,9 @@ public class HabitController {
         return memberService.checkIfUserIsBanned(userID, habitID);
     }
 
+    @RequestMapping(value = "/privacy/change", method = RequestMethod.POST)
+    public Boolean changePrivacy(Integer habitID) {
+        return habitService.changeHabitPrivacy(habitID);
+    }
+
 }

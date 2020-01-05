@@ -528,4 +528,14 @@ public class HabitServiceImpl implements HabitService {
         return HttpStatus.OK;
     }
 
+    @Override
+    public Boolean changeHabitPrivacy(Integer habitID) {
+        Habit habit = habitRepository.findById(habitID);
+
+        habit.setPrivate(!habit.getPrivate());
+        habitRepository.save(habit);
+
+        return habitRepository.findById(habitID).getPrivate();
+    }
+
 }
