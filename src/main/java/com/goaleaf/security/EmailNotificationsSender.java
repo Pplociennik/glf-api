@@ -201,7 +201,7 @@ public class EmailNotificationsSender {
                 "Administrator of the challenge \"" + habit.getHabitTitle() + "\" has set a new goal!\n\n" +
                 "It seems you've got more work to do :)\n " +
                 "The challenge is available at:\n" +
-                "http://www.goaleaf.com.habit/" + habit.getId() + "\n\n" +
+                "http://www.goaleaf.com/habit/" + habit.getId() + "\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
 //        sender.addAttachment("TestFile.txt");

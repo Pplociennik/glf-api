@@ -259,17 +259,16 @@ public class PostServiceImpl implements PostService {
         Iterable<MemberDTO> members = memberService.getAllByHabitID(habit.getId());
         String ntfDesc = tempUser.getLogin() + " reacted to your post in challenge \"" + habit.getTitle() + "\"";
         Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
-        for (MemberDTO m : members) {
-            UsersDTO u = userService.findById(m.getUserID());
-            if (u.getNotifications() && u.getUserID().compareTo(postCreator.getUserID()) != 0) {
+            if (postCreator.getNotifications() && tempUser.getUserID().compareTo(postCreator.getUserID()) != 0) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
                 try {
                     sender.postReacted(postCreator.getEmailAddress(), postCreator.getLogin(), tempUser.getLogin(), post);
                 } catch (MessagingException e) {
+                    System.out.println("addReaction_method");
                     e.printStackTrace();
                 }
             }
-        }
+
 
         if (!(reactionService.getReactionByPostIdAndUserLogin(model.getPostID(), tempUser.getLogin()) == null)) {
             PostReaction reaction = reactionService.getReactionByPostIdAndUserLogin(model.getPostID(), tempUser.getLogin());
