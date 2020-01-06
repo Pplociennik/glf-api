@@ -2,6 +2,7 @@ package com.goaleaf.repositories;
 
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.enums.Category;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;

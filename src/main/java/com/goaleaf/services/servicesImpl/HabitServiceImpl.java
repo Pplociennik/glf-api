@@ -3,6 +3,7 @@ package com.goaleaf.services.servicesImpl;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.MemberDTO;
+import com.goaleaf.entities.DTO.SliceDTO;
 import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.enums.Category;
 import com.goaleaf.entities.enums.Sorting;
@@ -18,7 +19,9 @@ import com.goaleaf.validators.exceptions.habitsProcessing.UserAlreadyInHabitExce
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -82,8 +85,13 @@ public class HabitServiceImpl implements HabitService {
     }
 
     @Override
-    public Iterable<Habit> listAllHabitsPaging(Integer pageNr, Integer howManyOnPage) {
-        return habitRepository.findAll(new PageRequest(pageNr, howManyOnPage));
+    public SliceDTO listAllHabitsPaging(Integer pageNr, Integer howManyOnPage) {
+        Pageable pageable = new PageRequest(pageNr, howManyOnPage);
+        Page<Habit> page = habitRepository.findAll(pageable);
+        List<Habit> input = page.getContent();
+
+        Iterable<HabitDTO> output = convertManyToDTOs(input, false);
+        return new SliceDTO(output, page.getNumber());
     }
 
     @Override

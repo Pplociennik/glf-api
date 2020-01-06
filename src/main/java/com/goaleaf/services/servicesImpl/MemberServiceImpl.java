@@ -124,7 +124,7 @@ public class MemberServiceImpl implements MemberService {
         Member result = memberRepository.save(member);
 
         String ntfDesc = "You have been kicked from the challenge \"" + habit.getHabitTitle() + "\"!";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "EMPTY_URL", false);
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, null, false);
         if (u.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
