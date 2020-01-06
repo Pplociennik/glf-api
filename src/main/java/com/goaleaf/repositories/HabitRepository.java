@@ -32,6 +32,8 @@ public interface HabitRepository extends CrudRepository<Habit, Integer>, PagingA
 
     Page<Habit> findAllByFinished(Boolean finished, Pageable pageable);
 
+    Page<Habit> findAll(Pageable pageable);
+
     //    Habit findByUserName(String userName);
 
 //    Habit findByLogin(String login);
