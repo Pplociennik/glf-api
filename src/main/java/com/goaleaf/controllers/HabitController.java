@@ -129,8 +129,12 @@ public class HabitController {
         MemberDTO memberToCheck = memberService.findSpecifiedMember(habitID, userID);
         NotificationDTO notificationToCheck = notificationService.findSpecifiedNtf(userID, "*/habit/" + habitID);
 
-        if (!habitService.findById(habitID).getPrivate())
+        if (!habitService.findById(habitID).getPrivate()) {
+            if (memberToCheck != null && memberToCheck.getBanned()) {
+                return false;
+            }
             return true;
+        }
 
         return memberToCheck != null || notificationToCheck != null;
 

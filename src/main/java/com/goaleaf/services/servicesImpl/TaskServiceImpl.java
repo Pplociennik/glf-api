@@ -318,6 +318,14 @@ public class TaskServiceImpl implements TaskService {
         Boolean active = false;
         active = (tempHistoryEntity == null ? true : false);
 
+        if (task.getFrequency().equals(Frequency.Daily)) {
+            if (dateTimeComparator.compare(currentDate, refreshDate) > 0) {
+                active = true;
+            } else {
+                active = false;
+            }
+        }
+
         return new TaskDTO(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), task.getDaysInterval(), refreshDate, active, task.getExecutor());
     }
 
