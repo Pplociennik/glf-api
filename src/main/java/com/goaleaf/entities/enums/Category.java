@@ -1,7 +1,6 @@
 package com.goaleaf.entities.enums;
 
 public enum Category {
-    ALL(),
     NONE(),
     HEALTH(),
     DIET(),
@@ -10,5 +9,6 @@ public enum Category {
     SPORT(),
     SOCIAL(),
     FAMILY(),
-    MONEY()
+    MONEY(),
+    ALL()
 }

@@ -20,6 +20,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -87,28 +88,28 @@ public class HabitServiceImpl implements HabitService {
     @Override
     public HabitPageDTO listAllHabitsPaging(Integer pageNr, Integer howManyOnPage, Category category, Sorting sorting) {
         Pageable pageable = new PageRequest(pageNr, howManyOnPage);
-        Page<Habit> input = null;
+        Iterable<Habit> input = null;
 
         if (category.equals(Category.ALL)) {
-            input = habitRepository.findAll(pageable);
+            input = habitRepository.findAll();
         } else {
-            input = habitRepository.findAllByCategory(category, pageable);
+            input = habitRepository.findAllByCategory(category);
         }
 
-        Iterable<Habit> list = input.getContent();
+//        Iterable<Habit> list = input.getContent();
 
         List<Habit> sortedList = new ArrayList<>(0);
 
-        Iterable<HabitDTO> resultList = null;
+        List<HabitDTO> resultList = null;
 
         if (sorting.equals(Sorting.Popular)) {
-            Iterator<Habit> i = list.iterator();
+            Iterator<Habit> i = input.iterator();
             if (i.hasNext()) {
                 Integer temp;
                 Habit tempHabit = null;
                 while (i.hasNext()) {
                     temp = 0;
-                    for (Habit h : list) {
+                    for (Habit h : input) {
                         Integer count = memberService.countAllHabitMembers(h.getId());
                         if (count > temp) {
                             tempHabit = h;
@@ -119,34 +120,31 @@ public class HabitServiceImpl implements HabitService {
                     i.next();
                     i.remove();
                 }
-                resultList = convertManyToDTOs(sortedList, false);
+                resultList = (List<HabitDTO>) convertManyToDTOs(sortedList, false);
             }
         } else if (sorting.equals(Sorting.Newest)) {
-            Iterator<Habit> i = list.iterator();
-            if (i.hasNext()) {
-                Date tempDate;
-                Habit tempHabit = null;
-                while (i.hasNext()) {
-                    tempDate = new Date(Long.MIN_VALUE);
-                    for (Habit h : list) {
-                        Date d = h.getHabitStartDate();
-                        if (d.after(tempDate)) {
-                            tempHabit = h;
-                            tempDate = d;
-                        }
+            Iterable<HabitDTO> toFilter = convertManyToDTOs(habitRepository.findAllByOrderByHabitStartDateDesc(), false);
+            if (category.equals(Category.ALL)) {
+                resultList = (List<HabitDTO>) toFilter;
+            } else {
+                List<HabitDTO> filtered = new ArrayList<>(0);
+                for (HabitDTO h : toFilter) {
+                    if (h.getCategory().equals(category)) {
+                        filtered.add(h);
                     }
-                    sortedList.add(tempHabit);
-                    i.next();
-                    i.remove();
                 }
-                resultList = convertManyToDTOs(sortedList, false);
+                resultList = filtered;
             }
         } else {
             throw new RuntimeException("No such sorting!");
         }
 
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > resultList.size() ? resultList.size() : (start + pageable.getPageSize());
+        Page<HabitDTO> pages = new PageImpl<HabitDTO>(resultList.subList(start, end), pageable, resultList.size());
 
-        return new HabitPageDTO(resultList, input.getNumber(), input.hasPrevious(), input.hasNext(), input.getTotalPages());
+
+        return new HabitPageDTO(pages.getContent(), pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());
     }
 
     @Override

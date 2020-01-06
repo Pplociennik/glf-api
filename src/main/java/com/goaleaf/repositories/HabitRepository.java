@@ -9,6 +9,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 @Repository
 public interface HabitRepository extends CrudRepository<Habit, Integer>, PagingAndSortingRepository<Habit, Integer> {
 
@@ -33,6 +35,8 @@ public interface HabitRepository extends CrudRepository<Habit, Integer>, PagingA
     Page<Habit> findAllByFinished(Boolean finished, Pageable pageable);
 
     Page<Habit> findAll(Pageable pageable);
+
+    Page<Habit> findAllByOrderByHabitStartDateDesc(Pageable pageable);
 
     //    Habit findByUserName(String userName);
 
