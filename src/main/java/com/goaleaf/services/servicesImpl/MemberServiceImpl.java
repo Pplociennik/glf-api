@@ -160,7 +160,7 @@ public class MemberServiceImpl implements MemberService {
         Iterable<Member> input = list.getContent();
 
         Iterable<MemberDTO> output = convertManyToDTOs(input, true);
-        return new MemberPageDTO(output, list.getNumber());
+        return new MemberPageDTO(output, list.getNumber(), list.hasPrevious(), list.hasNext(), list.getTotalPages());
     }
 
     @Override
@@ -178,7 +178,7 @@ public class MemberServiceImpl implements MemberService {
             }
         }
 
-        return new RankPageDTO(page.getNumber(), result);
+        return new RankPageDTO(page.getNumber(), result, page.hasPrevious(), page.hasNext(), page.getTotalPages());
     }
 
     private MemberDTO convertOneToDTO(Member member) {

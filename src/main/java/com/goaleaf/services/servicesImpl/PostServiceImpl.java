@@ -331,7 +331,7 @@ public class PostServiceImpl implements PostService {
 
         Iterable<PostDTO> output = this.convertManyToDTOs(input);
 
-        return new PostPageDTO(output, list.getNumber());
+        return new PostPageDTO(output, list.getNumber(), list.hasPrevious(), list.hasNext(), list.getTotalPages());
     }
 
     private PostDTO convertOneToDTO(Post post) {

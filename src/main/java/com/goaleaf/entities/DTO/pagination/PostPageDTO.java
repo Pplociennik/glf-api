@@ -8,12 +8,26 @@ public class PostPageDTO {
 
     private Integer pageNr;
 
+    private Boolean hasPrevious;
+
+    private Boolean hasNext;
+
+    private Integer allPages;
+
     public PostPageDTO() {
     }
 
     public PostPageDTO(Iterable<PostDTO> list, Integer pageNr) {
         this.list = list;
         this.pageNr = pageNr;
+    }
+
+    public PostPageDTO(Iterable<PostDTO> list, Integer pageNr, Boolean hasPrevious, Boolean hasNext, Integer allPages) {
+        this.list = list;
+        this.pageNr = pageNr;
+        this.hasPrevious = hasPrevious;
+        this.hasNext = hasNext;
+        this.allPages = allPages;
     }
 
     public Iterable<PostDTO> getList() {

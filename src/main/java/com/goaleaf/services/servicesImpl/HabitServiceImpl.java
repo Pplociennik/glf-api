@@ -91,7 +91,7 @@ public class HabitServiceImpl implements HabitService {
         List<Habit> input = page.getContent();
 
         Iterable<HabitDTO> output = convertManyToDTOs(input, false);
-        return new HabitPageDTO(output, page.getNumber());
+        return new HabitPageDTO(output, page.getNumber(), page.hasPrevious(), page.hasNext(), page.getTotalPages());
     }
 
     @Override
@@ -566,7 +566,7 @@ public class HabitServiceImpl implements HabitService {
 
         Iterable<HabitDTO> output = convertManyToDTOs(input.getContent(), false);
 
-        return new HabitPageDTO(output, input.getNumber());
+        return new HabitPageDTO(output, input.getNumber(), input.hasPrevious(), input.hasNext(), input.getTotalPages());
     }
 
 }

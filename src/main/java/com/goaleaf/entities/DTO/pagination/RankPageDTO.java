@@ -10,12 +10,26 @@ public class RankPageDTO {
 
     private Map<Integer, MemberDTO> list;
 
+    private Boolean hasPrevious;
+
+    private Boolean hasNext;
+
+    private Integer allPages;
+
     public RankPageDTO() {
     }
 
     public RankPageDTO(Integer number, Map<Integer, MemberDTO> list) {
         this.number = number;
         this.list = list;
+    }
+
+    public RankPageDTO(Integer number, Map<Integer, MemberDTO> list, Boolean hasPrevious, Boolean hasNext, Integer allPages) {
+        this.number = number;
+        this.list = list;
+        this.hasPrevious = hasPrevious;
+        this.hasNext = hasNext;
+        this.allPages = allPages;
     }
 
     public Integer getNumber() {

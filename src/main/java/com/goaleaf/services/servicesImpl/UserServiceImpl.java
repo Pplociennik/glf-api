@@ -423,7 +423,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        return new HabitPageDTO(output, page.getNumber());
+        return new HabitPageDTO(output, page.getNumber(), page.hasPrevious(), page.hasNext(), page.getTotalPages());
     }
 
     @Override
@@ -444,7 +444,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        return new HabitPageDTO(output, page.getNumber());
+        return new HabitPageDTO(output, page.getNumber(), page.hasPrevious(), page.hasNext(), page.getTotalPages());
     }
 
     @Override
@@ -465,7 +465,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        return new HabitPageDTO(output, page.getNumber());
+        return new HabitPageDTO(output, page.getNumber(), page.hasPrevious(), page.hasNext(), page.getTotalPages());
     }
 
     private UserDTO convertToDTO(User user) {

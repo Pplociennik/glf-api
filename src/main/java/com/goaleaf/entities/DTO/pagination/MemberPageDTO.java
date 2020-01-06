@@ -8,12 +8,26 @@ public class MemberPageDTO {
 
     private Integer pageNr;
 
+    private Boolean hasPrevious;
+
+    private Boolean hasNext;
+
+    private Integer allPages;
+
     public MemberPageDTO() {
     }
 
     public MemberPageDTO(Iterable<MemberDTO> list, Integer pageNr) {
         this.list = list;
         this.pageNr = pageNr;
+    }
+
+    public MemberPageDTO(Iterable<MemberDTO> list, Integer pageNr, Boolean hasPrevious, Boolean hasNext, Integer allPages) {
+        this.list = list;
+        this.pageNr = pageNr;
+        this.hasPrevious = hasPrevious;
+        this.hasNext = hasNext;
+        this.allPages = allPages;
     }
 
     public Iterable<MemberDTO> getList() {

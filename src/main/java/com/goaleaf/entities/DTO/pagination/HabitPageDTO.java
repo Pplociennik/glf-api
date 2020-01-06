@@ -8,12 +8,26 @@ public class HabitPageDTO {
 
     private Integer pageNr;
 
+    private Boolean hasPrevious;
+
+    private Boolean hasNext;
+
+    private Integer allPages;
+
     public HabitPageDTO() {
     }
 
     public HabitPageDTO(Iterable<HabitDTO> list, Integer pageNr) {
         this.list = list;
         this.pageNr = pageNr;
+    }
+
+    public HabitPageDTO(Iterable<HabitDTO> list, Integer pageNr, Boolean hasPrevious, Boolean hasNext, Integer allPages) {
+        this.list = list;
+        this.pageNr = pageNr;
+        this.hasPrevious = hasPrevious;
+        this.hasNext = hasNext;
+        this.allPages = allPages;
     }
 
     public Iterable<HabitDTO> getList() {
