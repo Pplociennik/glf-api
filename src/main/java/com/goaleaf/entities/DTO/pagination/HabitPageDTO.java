@@ -45,4 +45,28 @@ public class HabitPageDTO {
     public void setPageNr(Integer pageNr) {
         this.pageNr = pageNr;
     }
+
+    public Boolean getHasPrevious() {
+        return hasPrevious;
+    }
+
+    public void setHasPrevious(Boolean hasPrevious) {
+        this.hasPrevious = hasPrevious;
+    }
+
+    public Boolean getHasNext() {
+        return hasNext;
+    }
+
+    public void setHasNext(Boolean hasNext) {
+        this.hasNext = hasNext;
+    }
+
+    public Integer getAllPages() {
+        return allPages;
+    }
+
+    public void setAllPages(Integer allPages) {
+        this.allPages = allPages;
+    }
 }
