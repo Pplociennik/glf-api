@@ -30,7 +30,7 @@ public interface HabitService {
 
     Boolean checkIfExists(Integer id);
 
-    HabitPageDTO listAllHabitsPaging(Integer pageNr, Integer howManyOnPage);
+    HabitPageDTO listAllHabitsPaging(Integer pageNr, Integer howManyOnPage, Category category, Sorting sorting);
 
     Habit registerNewHabit(HabitViewModel model, Integer id) throws WrongTitleException;
 

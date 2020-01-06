@@ -1,6 +1,7 @@
 package com.goaleaf.entities.enums;
 
 public enum Category {
+    ALL(),
     NONE(),
     HEALTH(),
     DIET(),

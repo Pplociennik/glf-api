@@ -3,8 +3,8 @@ package com.goaleaf.services.servicesImpl;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.MemberDTO;
-import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.enums.Category;
 import com.goaleaf.entities.enums.Sorting;
 import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
@@ -85,13 +85,68 @@ public class HabitServiceImpl implements HabitService {
     }
 
     @Override
-    public HabitPageDTO listAllHabitsPaging(Integer pageNr, Integer howManyOnPage) {
+    public HabitPageDTO listAllHabitsPaging(Integer pageNr, Integer howManyOnPage, Category category, Sorting sorting) {
         Pageable pageable = new PageRequest(pageNr, howManyOnPage);
-        Page<Habit> page = habitRepository.findAll(pageable);
-        List<Habit> input = page.getContent();
+        Page<Habit> input = null;
 
-        Iterable<HabitDTO> output = convertManyToDTOs(input, false);
-        return new HabitPageDTO(output, page.getNumber(), page.hasPrevious(), page.hasNext(), page.getTotalPages());
+        if (category.equals(Category.ALL)) {
+            input = habitRepository.findAll(pageable);
+        } else {
+            input = habitRepository.findAllByCategory(category, pageable);
+        }
+
+        Iterable<Habit> list = input.getContent();
+
+        List<Habit> sortedList = new ArrayList<>(0);
+
+        Iterable<HabitDTO> resultList = null;
+
+        if (sorting.equals(Sorting.Popular)) {
+            Iterator<Habit> i = list.iterator();
+            if (i.hasNext()) {
+                Integer temp;
+                Habit tempHabit = null;
+                while (i.hasNext()) {
+                    temp = 0;
+                    for (Habit h : list) {
+                        Integer count = memberService.countAllHabitMembers(h.getId());
+                        if (count > temp) {
+                            tempHabit = h;
+                            temp = count;
+                        }
+                    }
+                    sortedList.add(tempHabit);
+                    i.next();
+                    i.remove();
+                }
+                resultList = convertManyToDTOs(sortedList, false);
+            }
+        } else if (sorting.equals(Sorting.Newest)) {
+            Iterator<Habit> i = list.iterator();
+            if (i.hasNext()) {
+                Date tempDate;
+                Habit tempHabit = null;
+                while (i.hasNext()) {
+                    tempDate = new Date(Long.MIN_VALUE);
+                    for (Habit h : list) {
+                        Date d = h.getHabitStartDate();
+                        if (d.after(tempDate)) {
+                            tempHabit = h;
+                            tempDate = d;
+                        }
+                    }
+                    sortedList.add(tempHabit);
+                    i.next();
+                    i.remove();
+                }
+                resultList = convertManyToDTOs(sortedList, false);
+            }
+        } else {
+            throw new RuntimeException("No such sorting!");
+        }
+
+
+        return new HabitPageDTO(resultList, input.getNumber(), input.hasPrevious(), input.hasNext(), input.getTotalPages());
     }
 
     @Override

@@ -226,8 +226,8 @@ public class HabitController {
     }
 
     @GetMapping(value = "/all/paging")
-    public HabitPageDTO getAllHabitsPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr) {
-        return habitService.listAllHabitsPaging(pageNr, objectsNr);
+    public HabitPageDTO getAllHabitsPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr, @RequestParam Category category, @RequestParam Sorting sorting) {
+        return habitService.listAllHabitsPaging(pageNr, objectsNr, category, sorting);
     }
 
     @GetMapping(value = "/category/paging")
