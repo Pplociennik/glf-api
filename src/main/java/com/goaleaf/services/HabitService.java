@@ -62,4 +62,6 @@ public interface HabitService {
     HttpStatus joinHabit(JoinHabitViewModel model);
 
     Boolean changeHabitPrivacy(Integer habitID);
+
+    Category changeHabitCategory(Integer habitID, Category category);
 }

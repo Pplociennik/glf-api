@@ -538,4 +538,14 @@ public class HabitServiceImpl implements HabitService {
         return habitRepository.findById(habitID).getPrivate();
     }
 
+    @Override
+    public Category changeHabitCategory(Integer habitID, Category category) {
+        Habit habit = habitRepository.findById(habitID);
+
+        habit.setCategory(category);
+        habitRepository.save(habit);
+
+        return habitRepository.findById(habitID).getCategory();
+    }
+
 }

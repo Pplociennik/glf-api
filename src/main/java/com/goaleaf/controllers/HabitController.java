@@ -214,4 +214,9 @@ public class HabitController {
         return habitService.changeHabitPrivacy(habitID);
     }
 
+    @PostMapping(value = "/category/change")
+    public Category changeHabitCategory(@RequestParam Integer habitID, Category category) {
+        return habitService.changeHabitCategory(habitID, category);
+    }
+
 }
