@@ -2,6 +2,7 @@ package com.goaleaf.controllers;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.services.UserService;
@@ -109,4 +110,18 @@ public class UserController {
         return userService.getAllMyUnfinishedHabits(userID);
     }
 
+    @GetMapping(value = "/finished/paging")
+    public HabitPageDTO getFinishedPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr, @RequestParam String token) {
+        return userService.getFinishedHabitsPaging(pageNr, objectsNr, token);
+    }
+
+    @GetMapping(value = "/won/paging")
+    public HabitPageDTO getWonPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr, @RequestParam String token) {
+        return userService.getWonHabitsPaging(pageNr, objectsNr, token);
+    }
+
+    @GetMapping(value = "/unfinished/paging")
+    public HabitPageDTO getUnfinishedPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr, @RequestParam String token) {
+        return userService.getUnFinishedHabitsPaging(pageNr, objectsNr, token);
+    }
 }

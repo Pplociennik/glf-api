@@ -1,6 +1,8 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.MemberDTO;
+import com.goaleaf.entities.DTO.pagination.MemberPageDTO;
+import com.goaleaf.entities.DTO.pagination.RankPageDTO;
 import com.goaleaf.entities.Member;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +38,9 @@ public interface MemberService {
     MemberDTO banAMember(Integer userID, Integer habitID);
 
     Boolean checkIfUserIsBanned(Integer userID, Integer habitID);
+
+    MemberPageDTO getAllHabitMembersPaging(Integer pageNr, Integer objectsNr, Integer habitID);
+
+    RankPageDTO getHabitRankingPaging(Integer pageNr, Integer objectsNr, Integer habitID);
 
 }

@@ -2,6 +2,8 @@ package com.goaleaf.services.servicesImpl;
 
 import com.goaleaf.entities.DTO.MemberDTO;
 import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.pagination.MemberPageDTO;
+import com.goaleaf.entities.DTO.pagination.RankPageDTO;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Member;
 import com.goaleaf.entities.Notification;
@@ -11,6 +13,9 @@ import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.services.MemberService;
 import com.goaleaf.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.mail.MessagingException;
 import java.util.ArrayList;
@@ -146,6 +151,34 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return member.getBanned();
+    }
+
+    @Override
+    public MemberPageDTO getAllHabitMembersPaging(Integer pageNr, Integer objectsNr, Integer habitID) {
+        Pageable pageable = new PageRequest(pageNr, objectsNr);
+        Page<Member> list = memberRepository.findAllByHabitID(habitID, pageable);
+        Iterable<Member> input = list.getContent();
+
+        Iterable<MemberDTO> output = convertManyToDTOs(input, true);
+        return new MemberPageDTO(output, list.getNumber());
+    }
+
+    @Override
+    public RankPageDTO getHabitRankingPaging(Integer pageNr, Integer objectsNr, Integer habitID) {
+        Pageable pageable = new PageRequest(pageNr, objectsNr);
+        Page<Member> page = memberRepository.findAllByHabitIDOrderByPointsDesc(habitID, pageable);
+        Iterable<Member> list = page.getContent();
+        Map<Integer, MemberDTO> result = new LinkedHashMap<>(0);
+        Integer i = 1;
+
+        for (Member m : list) {
+            if (!m.getBanned()) {
+                result.put(i, convertOneToDTO(m));
+                i++;
+            }
+        }
+
+        return new RankPageDTO(page.getNumber(), result);
     }
 
     private MemberDTO convertOneToDTO(Member member) {

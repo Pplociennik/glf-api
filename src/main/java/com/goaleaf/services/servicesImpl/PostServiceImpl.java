@@ -3,6 +3,7 @@ package com.goaleaf.services.servicesImpl;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.*;
+import com.goaleaf.entities.DTO.pagination.PostPageDTO;
 import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.entities.viewModels.habitsManaging.postsCreating.NewPostViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.AddReactionViewModel;
@@ -21,6 +22,9 @@ import com.goaleaf.validators.exceptions.habitsProcessing.postsProcessing.UserIs
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import javax.mail.MessagingException;
@@ -317,6 +321,17 @@ public class PostServiceImpl implements PostService {
         dataToReturn.setCounter_WOW(post.getCounter_WOW());
 
         return dataToReturn;
+    }
+
+    @Override
+    public PostPageDTO getAllByTypePaging(Integer pageNr, Integer objectsNr, Integer habitID, PostTypes type) {
+        Pageable pageable = new PageRequest(pageNr, objectsNr);
+        Page<Post> list = postRepository.findAllByHabitIDAndPostType(habitID, type, pageable);
+        Iterable<Post> input = list.getContent();
+
+        Iterable<PostDTO> output = this.convertManyToDTOs(input);
+
+        return new PostPageDTO(output, list.getNumber());
     }
 
     private PostDTO convertOneToDTO(Post post) {

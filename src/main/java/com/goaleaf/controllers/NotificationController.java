@@ -1,14 +1,12 @@
 package com.goaleaf.controllers;
 
 import com.goaleaf.entities.DTO.NotificationDTO;
+import com.goaleaf.entities.DTO.pagination.NotificationPageDTO;
 import com.goaleaf.services.NotificationService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/notifications")
@@ -40,5 +38,10 @@ public class NotificationController {
     @RequestMapping(value = "/clear", method = RequestMethod.DELETE)
     public Iterable<NotificationDTO> clearAllUserNotifications(@RequestParam Integer userID) {
         return notificationService.clearNtf(userID);
+    }
+
+    @GetMapping(value = "/user/paging")
+    public NotificationPageDTO getUserNtfPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr, @RequestParam String token) {
+        return notificationService.getUserNtfPaging(pageNr, objectsNr, token);
     }
 }

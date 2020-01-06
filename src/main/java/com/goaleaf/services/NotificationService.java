@@ -1,6 +1,7 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.NotificationDTO;
+import com.goaleaf.entities.DTO.pagination.NotificationPageDTO;
 import com.goaleaf.entities.Notification;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,7 @@ public interface NotificationService {
     NotificationDTO findByDescription(String description);
 
     Iterable<NotificationDTO> clearNtf(Integer userID);
+
+    NotificationPageDTO getUserNtfPaging(Integer pageNr, Integer objectsNr, String token);
 
 }

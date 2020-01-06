@@ -3,6 +3,7 @@ package com.goaleaf.repositories;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.enums.Category;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -26,6 +27,10 @@ public interface HabitRepository extends CrudRepository<Habit, Integer>, PagingA
     Iterable<Habit> findAllByCategory(Category category);
 
     Iterable<Habit> findAllByOrderByHabitStartDateDesc();
+
+    Page<Habit> findAllByCategory(Category category, Pageable pageable);
+
+    Page<Habit> findAllByFinished(Boolean finished, Pageable pageable);
 
     //    Habit findByUserName(String userName);
 

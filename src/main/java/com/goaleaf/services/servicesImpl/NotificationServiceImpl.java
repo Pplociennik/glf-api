@@ -1,13 +1,22 @@
 package com.goaleaf.services.servicesImpl;
 
 import com.goaleaf.entities.DTO.NotificationDTO;
+import com.goaleaf.entities.DTO.pagination.NotificationPageDTO;
 import com.goaleaf.entities.Notification;
 import com.goaleaf.repositories.NotificationRepository;
 import com.goaleaf.services.NotificationService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.goaleaf.security.SecurityConstants.SECRET;
 
 public class NotificationServiceImpl implements NotificationService {
 
@@ -54,6 +63,21 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.delete(ntf);
 
         return getAllByUserID(userID);
+    }
+
+    @Override
+    public NotificationPageDTO getUserNtfPaging(Integer pageNr, Integer objectsNr, String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(token).getBody();
+
+        Pageable pageable = new PageRequest(pageNr, objectsNr);
+        Page<Notification> page = notificationRepository.findAllByRecipientID(Integer.parseInt(claims.getSubject()), pageable);
+        Iterable<Notification> list = page.getContent();
+
+        Iterable<NotificationDTO> output = convertManyToDTOs(list);
+
+        return new NotificationPageDTO(output, page.getNumber());
     }
 
     private NotificationDTO convertOneToDTO(Notification notification) {
