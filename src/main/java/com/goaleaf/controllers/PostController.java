@@ -2,6 +2,7 @@ package com.goaleaf.controllers;
 
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.PostDTO;
 import com.goaleaf.entities.DTO.PostReactionsNrDTO;
 import com.goaleaf.entities.DTO.UserDTO;
@@ -73,13 +74,15 @@ public class PostController {
                 .parseClaimsJws(model.token).getBody();
 
         UserDTO tempUser = userService.findById(Integer.parseInt(claims.getSubject()));
+        HabitDTO habitDTO = habitService.findById(model.habitID);
+        PostDTO postDTO = postService.findOneByID(model.postID);
 
         if (!jwtService.Validate(model.token, SECRET))
             throw new TokenExpiredException("You have to be logged in!");
         if (memberService.findSpecifiedMember(model.habitID, Integer.parseInt(claims.getSubject())) == null)
             throw new MemberDoesNotExistException("You are not a member!");
-        if (!postService.findOneByID(model.postID).getCreatorLogin().equals(tempUser.getLogin()))
-            throw new UserIsNotCreatorException("You cannot delete posts which were not posted by you");
+        if (!postDTO.getCreatorLogin().equals(tempUser.getLogin()) || habitDTO.getCreatorID().compareTo(Integer.parseInt(claims.getSubject())) != 0)
+            throw new UserIsNotCreatorException("You cannot delete posts which were not posted by you!");
 
         postService.removePostFromDatabase(model.postID);
         return HttpStatus.OK;

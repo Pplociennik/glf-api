@@ -58,7 +58,7 @@ public class HabitServiceImpl implements HabitService {
     @Override
     public Iterable<HabitDTO> listAllHabits() {
         Iterable<Habit> input = habitRepository.findAll();
-        return convertManyToDTOs(input);
+        return convertManyToDTOs(input, true);
     }
 
     @Override
@@ -201,10 +201,13 @@ public class HabitServiceImpl implements HabitService {
         return habitDTO;
     }
 
-    public Iterable<HabitDTO> convertManyToDTOs(Iterable<Habit> habits) {
+    public Iterable<HabitDTO> convertManyToDTOs(Iterable<Habit> habits, boolean filterPrivacy) {
         List<HabitDTO> resultList = new ArrayList<>(0);
 
         for (Habit h : habits) {
+            if (filterPrivacy && h.getPrivate()) {
+                continue;
+            }
             HabitDTO dto = new HabitDTO();
             dto = convertToDTO(h);
             resultList.add(dto);
@@ -435,7 +438,7 @@ public class HabitServiceImpl implements HabitService {
 
     @Override
     public Iterable<HabitDTO> getAllHabitsByCategory(Category category) {
-        return convertManyToDTOs(habitRepository.findAllByCategory(category));
+        return convertManyToDTOs(habitRepository.findAllByCategory(category), true);
     }
 
     @Override
@@ -465,7 +468,7 @@ public class HabitServiceImpl implements HabitService {
             }
             return null;
         } else if (sorting.equals(Sorting.Newest)) {
-            return convertManyToDTOs(habitRepository.findAllByOrderByHabitStartDateDesc());
+            return convertManyToDTOs(habitRepository.findAllByOrderByHabitStartDateDesc(), true);
         }
         return null;
     }

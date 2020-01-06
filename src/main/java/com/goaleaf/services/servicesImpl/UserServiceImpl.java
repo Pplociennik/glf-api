@@ -214,7 +214,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        Iterable<HabitDTO> result = habitService.convertManyToDTOs(habits);
+        Iterable<HabitDTO> result = habitService.convertManyToDTOs(habits, false);
         return result;
     }
 
@@ -232,7 +232,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        Iterable<HabitDTO> result = habitService.convertManyToDTOs(habits);
+        Iterable<HabitDTO> result = habitService.convertManyToDTOs(habits, false);
         return result;
     }
 
@@ -252,7 +252,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        Iterable<HabitDTO> result = habitService.convertManyToDTOs(habits);
+        Iterable<HabitDTO> result = habitService.convertManyToDTOs(habits, false);
         return result;
     }
 

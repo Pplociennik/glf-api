@@ -16,7 +16,6 @@ import com.goaleaf.entities.viewModels.accountsAndAuthorization.RegisterViewMode
 import com.goaleaf.entities.viewModels.habitsCreating.HabitViewModel;
 import com.goaleaf.repositories.HabitRepository;
 import com.goaleaf.repositories.UserRepository;
-import com.goaleaf.services.HabitService;
 import com.goaleaf.services.TaskService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
