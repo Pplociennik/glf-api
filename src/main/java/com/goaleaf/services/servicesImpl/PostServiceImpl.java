@@ -327,7 +327,11 @@ public class PostServiceImpl implements PostService {
     public PostPageDTO getAllByTypePaging(Integer pageNr, Integer objectsNr, Integer habitID, PostTypes type) {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
         Page<Post> list = postRepository.findAllByHabitIDAndPostType(habitID, type, pageable);
-        Iterable<Post> input = list.getContent();
+        List<Post> input = new ArrayList<>(0);
+
+        for (int i = list.getContent().size(); i >= 0; i--) {
+            input.add(list.getContent().get(i));
+        }
 
         Iterable<PostDTO> output = this.convertManyToDTOs(input);
 
