@@ -2,6 +2,7 @@ package com.goaleaf.services;
 
 import com.goaleaf.entities.Comment;
 import com.goaleaf.entities.DTO.CommentDTO;
+import com.goaleaf.entities.DTO.pagination.CommentPageDto;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,6 @@ public interface CommentService {
     void removeById(Integer id);
 
     void updateComment(Comment comment);
+
+    CommentPageDto getAllPostCommentsPaging(Integer pageNr, Integer objectsNr, Integer postID);
 }

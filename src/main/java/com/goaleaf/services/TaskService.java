@@ -2,6 +2,7 @@ package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.CompleteTaskDTO;
 import com.goaleaf.entities.DTO.TaskDTO;
+import com.goaleaf.entities.DTO.pagination.TaskPageDTO;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.viewModels.NewTaskViewModel;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,7 @@ public interface TaskService {
     HttpStatus pushBachTaskCompletion(Integer taskID);
 
     HttpStatus justRemoveTaskFromDatabase(Integer taskID);
+
+    TaskPageDTO getAvailableTasksPaging(Integer pageNr, Integer objectsNr, Integer habitID, Integer userID);
 
 }

@@ -454,7 +454,7 @@ public class UserServiceImpl implements UserService {
                 .parseClaimsJws(token).getBody();
 
         Pageable pageable = new PageRequest(pageNr, objectsNr);
-        Page<Habit> page = habitRepository.findAllByFinished(true, pageable);
+        Page<Habit> page = habitRepository.findAllByFinished(false, pageable);
         Iterable<Habit> list = page.getContent();
 
         List<HabitDTO> output = new ArrayList<>(0);

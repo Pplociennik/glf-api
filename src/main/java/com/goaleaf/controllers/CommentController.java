@@ -2,6 +2,7 @@ package com.goaleaf.controllers;
 
 import com.goaleaf.entities.Comment;
 import com.goaleaf.entities.DTO.CommentDTO;
+import com.goaleaf.entities.DTO.pagination.CommentPageDto;
 import com.goaleaf.entities.Stats;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsManaging.EditCommentViewModel;
@@ -69,5 +70,10 @@ public class CommentController {
 
         comment.setCommentText(model.text);
         commentService.updateComment(comment);
+    }
+
+    @GetMapping(value = "/post/paging")
+    public CommentPageDto getAllPostCommentsPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr, @RequestParam Integer postID) {
+        return commentService.getAllPostCommentsPaging(pageNr, objectsNr, postID);
     }
 }

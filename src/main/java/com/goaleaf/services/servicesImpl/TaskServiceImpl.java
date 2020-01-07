@@ -2,6 +2,7 @@ package com.goaleaf.services.servicesImpl;
 
 import com.goaleaf.entities.DTO.CompleteTaskDTO;
 import com.goaleaf.entities.DTO.TaskDTO;
+import com.goaleaf.entities.DTO.pagination.TaskPageDTO;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.enums.Frequency;
 import com.goaleaf.entities.enums.PostTypes;
@@ -17,6 +18,10 @@ import io.jsonwebtoken.Jwts;
 import javassist.NotFoundException;
 import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -113,6 +118,19 @@ public class TaskServiceImpl implements TaskService {
         }
         Iterable<TaskDTO> result = output;
         return result;
+    }
+
+    @Override
+    public TaskPageDTO getAvailableTasksPaging(Integer pageNr, Integer objectsNr, Integer habitID, Integer userID) {
+        Pageable pageable = new PageRequest(pageNr, objectsNr);
+
+        List<TaskDTO> list = (List<TaskDTO>) getAvailableTasks(habitID, userID);
+
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > list.size() ? list.size() : (start + pageable.getPageSize());
+        Page<TaskDTO> pages = new PageImpl<TaskDTO>(list.subList(start, end), pageable, list.size());
+
+        return new TaskPageDTO(pages.getContent(), pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());
     }
 
     @Override

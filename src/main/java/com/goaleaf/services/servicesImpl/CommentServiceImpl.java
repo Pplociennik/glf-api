@@ -5,6 +5,7 @@ import com.goaleaf.entities.DTO.CommentDTO;
 import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.PostDTO;
 import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.pagination.CommentPageDto;
 import com.goaleaf.entities.Notification;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import com.goaleaf.repositories.CommentRepository;
@@ -14,6 +15,10 @@ import com.goaleaf.services.HabitService;
 import com.goaleaf.services.PostService;
 import com.goaleaf.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -36,6 +41,18 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Iterable<CommentDTO> listAllByPostID(Integer postID) {
         return convertManyToDTOs(commentRepository.getAllByPostIDOrderByCreationDateDesc(postID));
+    }
+
+    @Override
+    public CommentPageDto getAllPostCommentsPaging(Integer pageNr, Integer objectsNr, Integer postID) {
+        Pageable pageable = new PageRequest(pageNr, objectsNr);
+        List<CommentDTO> list = (List<CommentDTO>) listAllByPostID(postID);
+
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > list.size() ? list.size() : (start + pageable.getPageSize());
+        Page<CommentDTO> pages = new PageImpl<CommentDTO>(list.subList(start, end), pageable, list.size());
+
+        return new CommentPageDto(pages.getContent(), pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());
     }
 
     @Override

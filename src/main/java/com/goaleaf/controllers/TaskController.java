@@ -2,6 +2,7 @@ package com.goaleaf.controllers;
 
 import com.goaleaf.entities.DTO.CompleteTaskDTO;
 import com.goaleaf.entities.DTO.TaskDTO;
+import com.goaleaf.entities.DTO.pagination.TaskPageDTO;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.TasksHistoryEntity;
 import com.goaleaf.entities.viewModels.NewTaskViewModel;
@@ -94,6 +95,11 @@ public class TaskController {
     @RequestMapping(value = "/task/remove", method = RequestMethod.DELETE)
     public HttpStatus justRemoveTask(@RequestParam Integer taskID) {
         return taskService.justRemoveTaskFromDatabase(taskID);
+    }
+
+    @GetMapping(value = "/available/paging")
+    public TaskPageDTO getUserAvailableTasksPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr, @RequestParam Integer habitID, @RequestParam Integer userID) {
+        return taskService.getAvailableTasksPaging(pageNr, objectsNr, habitID, userID);
     }
 
 }
