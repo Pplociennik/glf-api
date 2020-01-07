@@ -329,7 +329,7 @@ public class PostServiceImpl implements PostService {
         Page<Post> list = postRepository.findAllByHabitIDAndPostType(habitID, type, pageable);
         List<Post> input = new ArrayList<>(0);
 
-        for (int i = list.getContent().size(); i >= 0; i--) {
+        for (int i = list.getContent().size() - 1; i >= 0; i--) {
             input.add(list.getContent().get(i));
         }
 
