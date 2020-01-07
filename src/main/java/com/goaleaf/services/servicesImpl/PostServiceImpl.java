@@ -327,11 +327,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostPageDTO getAllByTypePaging(Integer pageNr, Integer objectsNr, Integer habitID, PostTypes type) {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
-        Page<Post> list = postRepository.findAllByHabitIDAndPostType(habitID, type);
+        List<Post> list = (List<Post>) postRepository.findAllByHabitIDAndPostType(habitID, type);
         List<Post> input = new ArrayList<>(0);
 
-        for (int i = list.getContent().size() - 1; i >= 0; i--) {
-            input.add(list.getContent().get(i));
+        for (int i = list.size() - 1; i >= 0; i--) {
+            input.add(list.get(i));
         }
 
         List<PostDTO> output = (List<PostDTO>) this.convertManyToDTOs(input);
@@ -340,7 +340,7 @@ public class PostServiceImpl implements PostService {
         int end = (start + pageable.getPageSize()) > output.size() ? output.size() : (start + pageable.getPageSize());
         Page<PostDTO> pages = new PageImpl<PostDTO>(output.subList(start, end), pageable, output.size());
 
-        return new PostPageDTO(output, list.getNumber(), list.hasPrevious(), list.hasNext(), list.getTotalPages());
+        return new PostPageDTO(output, pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());
     }
 
     private PostDTO convertOneToDTO(Post post) {

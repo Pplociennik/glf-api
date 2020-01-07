@@ -24,6 +24,6 @@ public interface PostRepository extends CrudRepository<Post, Integer>, PagingAnd
 
     Page<Post> findAllByHabitIDAndPostType(Integer habitID, PostTypes type, Pageable pageable);
 
-    Page<Post> findAllByHabitIDAndPostType(Integer habitID, PostTypes type);
+    Iterable<Post> findAllByHabitIDAndPostType(Integer habitID, PostTypes type);
 
 }
