@@ -23,6 +23,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -326,14 +327,18 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostPageDTO getAllByTypePaging(Integer pageNr, Integer objectsNr, Integer habitID, PostTypes type) {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
-        Page<Post> list = postRepository.findAllByHabitIDAndPostType(habitID, type, pageable);
+        Page<Post> list = postRepository.findAllByHabitIDAndPostType(habitID, type);
         List<Post> input = new ArrayList<>(0);
 
         for (int i = list.getContent().size() - 1; i >= 0; i--) {
             input.add(list.getContent().get(i));
         }
 
-        Iterable<PostDTO> output = this.convertManyToDTOs(input);
+        List<PostDTO> output = (List<PostDTO>) this.convertManyToDTOs(input);
+
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > output.size() ? output.size() : (start + pageable.getPageSize());
+        Page<PostDTO> pages = new PageImpl<PostDTO>(output.subList(start, end), pageable, output.size());
 
         return new PostPageDTO(output, list.getNumber(), list.hasPrevious(), list.hasNext(), list.getTotalPages());
     }

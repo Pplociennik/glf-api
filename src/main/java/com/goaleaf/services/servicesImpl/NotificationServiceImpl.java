@@ -77,7 +77,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         Iterable<NotificationDTO> output = convertManyToDTOs(list);
 
-        return new NotificationPageDTO(output, page.getNumber());
+        return new NotificationPageDTO(output, page.getNumber(), page.hasPrevious(), page.hasNext(), page.getTotalPages());
     }
 
     private NotificationDTO convertOneToDTO(Notification notification) {

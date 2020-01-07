@@ -23,4 +23,7 @@ public interface PostRepository extends CrudRepository<Post, Integer>, PagingAnd
     Iterable<Post> findAllByCreatorLogin(String creatorLogin);
 
     Page<Post> findAllByHabitIDAndPostType(Integer habitID, PostTypes type, Pageable pageable);
+
+    Page<Post> findAllByHabitIDAndPostType(Integer habitID, PostTypes type);
+
 }
