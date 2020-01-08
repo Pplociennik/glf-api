@@ -342,16 +342,17 @@ public class TaskServiceImpl implements TaskService {
 
         c.setTime(task.getLastDone());
         c.add(Calendar.DAY_OF_MONTH, task.getDaysInterval());
-        Date refreshDate = c.getTime();
+        Date refreshDate = tempHistoryEntity != null ? c.getTime() : new Date();
 
         Boolean active = false;
         active = (tempHistoryEntity == null ? true : false);
 
         if (task.getFrequency().equals(Frequency.Daily)) {
-            if ((dateTimeComparator.compare(currentDate, refreshDate) > 0) && tempHistoryEntity == null) {
-                active = true;
-            } else {
+            if (dateTimeComparator.compare(currentDate, refreshDate) < 0) {
                 active = false;
+            }
+            else {
+                active = true;
             }
         }
 
