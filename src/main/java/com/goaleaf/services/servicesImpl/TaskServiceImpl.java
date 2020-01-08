@@ -134,6 +134,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public TaskPageDTO getAllHabitTasksPaging(Integer pageNr, Integer objectsNr, Integer habitID) {
+        Pageable pageable = new PageRequest(pageNr, objectsNr);
+        Page<Task> list = taskRepository.findAllByHabitIDOrderByCreationDateDesc(habitID, pageable);
+
+        Iterable<Task> input = list.getContent();
+        Iterable<TaskDTO> output = convertToViewModel(input);
+
+        return new TaskPageDTO(output, list.getNumber(), list.hasPrevious(), list.hasNext(), list.getTotalPages());
+    }
+
+    @Override
     public Integer countUserTasks(Integer userID) {
         return taskRepository.countAllByCreatorID(userID);
     }

@@ -23,5 +23,5 @@ public interface NotificationRepository extends CrudRepository<Notification, Int
 
     //    Notification save(Notification notification);
 
-    Page<Notification> findAllByRecipientID(Integer recipientID, Pageable pageable);
+    Page<Notification> findAllByRecipientIDOrderByDateDesc(Integer recipientID, Pageable pageable);
 }

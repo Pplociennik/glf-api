@@ -72,7 +72,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .parseClaimsJws(token).getBody();
 
         Pageable pageable = new PageRequest(pageNr, objectsNr);
-        Page<Notification> page = notificationRepository.findAllByRecipientID(Integer.parseInt(claims.getSubject()), pageable);
+        Page<Notification> page = notificationRepository.findAllByRecipientIDOrderByDateDesc(Integer.parseInt(claims.getSubject()), pageable);
         Iterable<Notification> list = page.getContent();
 
         Iterable<NotificationDTO> output = convertManyToDTOs(list);

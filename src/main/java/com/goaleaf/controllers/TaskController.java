@@ -102,4 +102,9 @@ public class TaskController {
         return taskService.getAvailableTasksPaging(pageNr, objectsNr, habitID, userID);
     }
 
+    @GetMapping(value = "/habit/paging")
+    public TaskPageDTO getAllHabitTasksPaging(@RequestParam Integer pageNr, @RequestParam Integer objectsNr, @RequestParam Integer habitID) {
+        return taskService.getAllHabitTasksPaging(pageNr, objectsNr, habitID);
+    }
+
 }
