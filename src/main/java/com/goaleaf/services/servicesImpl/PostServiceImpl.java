@@ -334,13 +334,13 @@ public class PostServiceImpl implements PostService {
             input.add(list.get(i));
         }
 
-        List<PostDTO> output = (List<PostDTO>) this.convertManyToDTOs(input);
+        List<PostDTO> output = (List<PostDTO>) convertManyToDTOs(input);
 
         int start = pageable.getOffset();
         int end = (start + pageable.getPageSize()) > output.size() ? output.size() : (start + pageable.getPageSize());
         Page<PostDTO> pages = new PageImpl<PostDTO>(output.subList(start, end), pageable, output.size());
 
-        return new PostPageDTO(output, pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());
+        return new PostPageDTO(pages.getContent(), pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());
     }
 
     private PostDTO convertOneToDTO(Post post) {

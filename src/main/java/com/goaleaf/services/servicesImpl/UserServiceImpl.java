@@ -3,8 +3,8 @@ package com.goaleaf.services.servicesImpl;
 import com.auth0.jwt.JWT;
 import com.goaleaf.entities.*;
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.repositories.*;
 import com.goaleaf.security.EmailNotificationsSender;
@@ -21,6 +21,7 @@ import io.jsonwebtoken.Jwts;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -454,18 +455,21 @@ public class UserServiceImpl implements UserService {
                 .parseClaimsJws(token).getBody();
 
         Pageable pageable = new PageRequest(pageNr, objectsNr);
-        Page<Habit> page = habitRepository.findAllByFinished(false, pageable);
-        Iterable<Habit> list = page.getContent();
+        Iterable<Habit> input = habitRepository.findAllByFinished(false);
 
         List<HabitDTO> output = new ArrayList<>(0);
-        for (Habit h : list) {
+        for (Habit h : input) {
             Member member = memberRepository.findByHabitIDAndUserID(h.getId(), Integer.parseInt(claims.getSubject()));
             if (member != null && !h.getFinished()) {
                 output.add(habitService.convertToDTO(h));
             }
         }
 
-        return new HabitPageDTO(output, page.getNumber(), page.hasPrevious(), page.hasNext(), page.getTotalPages());
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > output.size() ? output.size() : (start + pageable.getPageSize());
+        Page<HabitDTO> pages = new PageImpl<HabitDTO>(output.subList(start, end), pageable, output.size());
+
+        return new HabitPageDTO(pages.getContent(), pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());
     }
 
     private UserDTO convertToDTO(User user) {
