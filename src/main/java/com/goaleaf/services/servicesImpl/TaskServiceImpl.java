@@ -348,7 +348,7 @@ public class TaskServiceImpl implements TaskService {
         active = (tempHistoryEntity == null ? true : false);
 
         if (task.getFrequency().equals(Frequency.Daily)) {
-            if (dateTimeComparator.compare(currentDate, refreshDate) > 0) {
+            if ((dateTimeComparator.compare(currentDate, refreshDate) > 0) && tempHistoryEntity == null) {
                 active = true;
             } else {
                 active = false;
