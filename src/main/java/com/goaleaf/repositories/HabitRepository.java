@@ -28,6 +28,8 @@ public interface HabitRepository extends CrudRepository<Habit, Integer>, PagingA
 
     Iterable<Habit> findAllByCategory(Category category);
 
+    Iterable<Habit> findAllByCategoryOrderByHabitStartDateDesc(Category category);
+
     Iterable<Habit> findAllByOrderByHabitStartDateDesc();
 
     Page<Habit> findAllByCategory(Category category, Pageable pageable);

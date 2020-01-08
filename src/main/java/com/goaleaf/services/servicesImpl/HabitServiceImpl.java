@@ -88,29 +88,24 @@ public class HabitServiceImpl implements HabitService {
     @Override
     public HabitPageDTO listAllHabitsPaging(Integer pageNr, Integer howManyOnPage, Category category, Sorting sorting) {
         Pageable pageable = new PageRequest(pageNr, howManyOnPage);
-        Iterable<Habit> input = null;
-
+        Iterable<Habit> input = habitRepository.findAllByCategoryOrderByHabitStartDateDesc(category);
         if (category.equals(Category.ALL)) {
             input = habitRepository.findAll();
-        } else {
-            input = habitRepository.findAllByCategory(category);
         }
 
-//        Iterable<Habit> list = input.getContent();
+        Iterable<HabitDTO> dtos = (List<HabitDTO>) convertManyToDTOs(input, false);
 
-        List<Habit> sortedList = new ArrayList<>(0);
-
-        List<HabitDTO> resultList = null;
+        List<HabitDTO> sortedList = new ArrayList<>(0);
 
         if (sorting.equals(Sorting.Popular)) {
-            Iterator<Habit> i = input.iterator();
+            Iterator<HabitDTO> i = dtos.iterator();
             if (i.hasNext()) {
                 Integer temp;
-                Habit tempHabit = null;
+                HabitDTO tempHabit = null;
                 while (i.hasNext()) {
                     temp = 0;
-                    for (Habit h : input) {
-                        Integer count = memberService.countAllHabitMembers(h.getId());
+                    for (HabitDTO h : dtos) {
+                        Integer count = h.getMembersCount();
                         if (count > temp) {
                             tempHabit = h;
                             temp = count;
@@ -120,28 +115,14 @@ public class HabitServiceImpl implements HabitService {
                     i.next();
                     i.remove();
                 }
-                resultList = (List<HabitDTO>) convertManyToDTOs(sortedList, false);
-            }
-        } else if (sorting.equals(Sorting.Newest)) {
-            Iterable<HabitDTO> toFilter = convertManyToDTOs(habitRepository.findAllByOrderByHabitStartDateDesc(), false);
-            if (category.equals(Category.ALL)) {
-                resultList = (List<HabitDTO>) toFilter;
-            } else {
-                List<HabitDTO> filtered = new ArrayList<>(0);
-                for (HabitDTO h : toFilter) {
-                    if (h.getCategory().equals(category)) {
-                        filtered.add(h);
-                    }
-                }
-                resultList = filtered;
             }
         } else {
-            throw new RuntimeException("No such sorting!");
+            sortedList = (List<HabitDTO>) dtos;
         }
 
         int start = pageable.getOffset();
-        int end = (start + pageable.getPageSize()) > resultList.size() ? resultList.size() : (start + pageable.getPageSize());
-        Page<HabitDTO> pages = new PageImpl<HabitDTO>(resultList.subList(start, end), pageable, resultList.size());
+        int end = (start + pageable.getPageSize()) > sortedList.size() ? sortedList.size() : (start + pageable.getPageSize());
+        Page<HabitDTO> pages = new PageImpl<HabitDTO>(sortedList.subList(start, end), pageable, sortedList.size());
 
 
         return new HabitPageDTO(pages.getContent(), pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());

@@ -298,10 +298,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void checkUserCredentials(LoginViewModel userModel) throws AccountNotExistsException, BadCredentialsException {
         if (userRepository.findByLogin(userModel.login) == null) {
-            throw new AccountNotExistsException("Account with this login not exists!");
+            throw new AccountNotExistsException("Account with this login does not exists");
         }
         if (!bCryptPasswordEncoder.matches(userModel.password, userRepository.findByLogin(userModel.login).getPassword())) {
-            throw new BadCredentialsException("Wrong Password!!");
+            throw new BadCredentialsException("Wrong password");
         }
     }
 
@@ -460,7 +460,7 @@ public class UserServiceImpl implements UserService {
         List<HabitDTO> output = new ArrayList<>(0);
         for (Habit h : input) {
             Member member = memberRepository.findByHabitIDAndUserID(h.getId(), Integer.parseInt(claims.getSubject()));
-            if (member != null && !h.getFinished()) {
+            if (member != null) {
                 output.add(habitService.convertToDTO(h));
             }
         }

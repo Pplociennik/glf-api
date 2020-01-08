@@ -46,7 +46,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentPageDto getAllPostCommentsPaging(Integer pageNr, Integer objectsNr, Integer postID) {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
-        List<Comment> input = (List<Comment>) commentRepository.findAllByPostIDOrderByCreationDateDesc(postID);
+        List<Comment> input = (List<Comment>) commentRepository.findAllByPostIDOrderByCreationDateAsc(postID);
         List<CommentDTO> list = (List<CommentDTO>) convertManyToDTOs(input);
 
         int start = pageable.getOffset();
