@@ -87,14 +87,16 @@ public class CommentServiceImpl implements CommentService {
 
         CommentDTO commentDTO = convertOneToDTO(comment);
 
-        String ntfDesc = commenter.getLogin() + " commented on your post in challenge \"" + habitDTO.getTitle() + "\"";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
-        if (postCreator.getNotifications() && postCreator.getUserID() != returned.getUserID()) {
-            EmailNotificationsSender sender = new EmailNotificationsSender();
-            try {
-                sender.postCommented(postCreator.getEmailAddress(), postCreator.getLogin(), comment.getUserLogin(), post, comment);
-            } catch (MessagingException e) {
-                e.printStackTrace();
+        if (postCreator.getUserID() != returned.getUserID()) {
+            String ntfDesc = commenter.getLogin() + " commented on your post in challenge \"" + habitDTO.getTitle() + "\"";
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
+            if (postCreator.getNotifications() && postCreator.getUserID() != returned.getUserID()) {
+                EmailNotificationsSender sender = new EmailNotificationsSender();
+                try {
+                    sender.postCommented(postCreator.getEmailAddress(), postCreator.getLogin(), comment.getUserLogin(), post, comment);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return commentDTO;
