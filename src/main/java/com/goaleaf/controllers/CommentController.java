@@ -60,7 +60,7 @@ public class CommentController {
         commentService.removeById(id);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public void updateComment(@RequestBody EditCommentViewModel model) {
 
         if (commentService.getOneByID(model.commentID) == null)

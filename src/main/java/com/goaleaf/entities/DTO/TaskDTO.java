@@ -24,7 +24,9 @@ public class TaskDTO {
 
     private String executor;
 
-    public TaskDTO(Integer id, String creator, String description, Integer points, Frequency frequency, Integer daysInterval, Date refreshDate, Boolean active, String executor) {
+    private Date CreationDate;
+
+    public TaskDTO(Integer id, String creator, String description, Integer points, Frequency frequency, Integer daysInterval, Date refreshDate, Boolean active, String executor, Date creationDate) {
         this.id = id;
         this.creator = creator;
         this.description = description;
@@ -34,6 +36,7 @@ public class TaskDTO {
         this.refreshDate = refreshDate;
         this.active = active;
         this.executor = executor;
+        this.CreationDate = creationDate;
     }
 
     public Integer getId() {
@@ -106,5 +109,13 @@ public class TaskDTO {
 
     public void setExecutor(String executor) {
         this.executor = executor;
+    }
+
+    public Date getCreationDate() {
+        return CreationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        CreationDate = creationDate;
     }
 }

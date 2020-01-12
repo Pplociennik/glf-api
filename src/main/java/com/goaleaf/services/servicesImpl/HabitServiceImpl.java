@@ -93,31 +93,30 @@ public class HabitServiceImpl implements HabitService {
             input = habitRepository.findAll();
         }
 
-        Iterable<HabitDTO> dtos = (List<HabitDTO>) convertManyToDTOs(input, false);
+        Iterable<HabitDTO> dtos = (List<HabitDTO>) convertManyToDTOs(input, true);
 
         List<HabitDTO> sortedList = new ArrayList<>(0);
 
         if (sorting.equals(Sorting.Popular)) {
-            Iterator<HabitDTO> i = dtos.iterator();
-            if (i.hasNext()) {
-                Integer temp;
-                HabitDTO tempHabit = null;
-                while (i.hasNext()) {
-                    temp = 0;
-                    for (HabitDTO h : dtos) {
-                        Integer count = h.getMembersCount();
-                        if (count > temp) {
-                            tempHabit = h;
-                            temp = count;
-                        }
-                    }
-                    sortedList.add(tempHabit);
-                    i.next();
-                    i.remove();
-                }
+            for (HabitDTO h : dtos) {
+                sortedList.add(h);
             }
+            Collections.sort(sortedList, new Comparator<HabitDTO>() {
+                @Override
+                public int compare(HabitDTO a, HabitDTO b) {
+                    return b.getMembersCount().compareTo(a.getMembersCount());
+                }
+            });
         } else {
-            sortedList = (List<HabitDTO>) dtos;
+            for (HabitDTO h : dtos) {
+                sortedList.add(h);
+            }
+            Collections.sort(sortedList, new Comparator<HabitDTO>() {
+                @Override
+                public int compare(HabitDTO a, HabitDTO b) {
+                    return b.getStartDate().compareTo(a.getStartDate());
+                }
+            });
         }
 
         int start = pageable.getOffset();

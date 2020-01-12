@@ -27,10 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.goaleaf.security.SecurityConstants.SECRET;
 
@@ -64,7 +61,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Iterable<TaskDTO> getAllTasks() {
-        return convertToViewModel(taskRepository.findAll());
+        return convertToDTO(taskRepository.findAll());
     }
 
     @Override
@@ -76,7 +73,7 @@ public class TaskServiceImpl implements TaskService {
                 e.printStackTrace();
             }
         }
-        return convertToViewModel(taskRepository.getAllByCreatorID(creatorID));
+        return convertToDTO(taskRepository.getAllByCreatorID(creatorID));
     }
 
     @Override
@@ -88,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
                 e.printStackTrace();
             }
         }
-        return convertToViewModel(taskRepository.getAllByHabitID(habitID));
+        return convertToDTO(taskRepository.getAllByHabitID(habitID));
     }
 
     @Override
@@ -100,7 +97,7 @@ public class TaskServiceImpl implements TaskService {
                 e.printStackTrace();
             }
         }
-        return convertToViewModel(taskRepository.getAllByCreatorIDAndHabitID(creatorID, habitID));
+        return convertToDTO(taskRepository.getAllByCreatorIDAndHabitID(creatorID, habitID));
     }
 
     @Override
@@ -110,7 +107,7 @@ public class TaskServiceImpl implements TaskService {
 
         for (Task t : input) {
             if (!t.getCompleted()) {
-                TaskDTO model = convertToViewModel(t, userID);
+                TaskDTO model = convertToDTO(t, userID);
                 if (model != null) {
                     output.add(model);
                 }
@@ -126,6 +123,13 @@ public class TaskServiceImpl implements TaskService {
 
         List<TaskDTO> list = (List<TaskDTO>) getAvailableTasks(habitID, userID);
 
+        Collections.sort(list, new Comparator<TaskDTO>() {
+            @Override
+            public int compare(TaskDTO a, TaskDTO b) {
+                return b.getCreationDate().compareTo(a.getCreationDate());
+            }
+        });
+
         int start = pageable.getOffset();
         int end = (start + pageable.getPageSize()) > list.size() ? list.size() : (start + pageable.getPageSize());
         Page<TaskDTO> pages = new PageImpl<TaskDTO>(list.subList(start, end), pageable, list.size());
@@ -138,8 +142,16 @@ public class TaskServiceImpl implements TaskService {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
         Page<Task> list = taskRepository.findAllByHabitIDOrderByCreationDateDesc(habitID, pageable);
 
-        Iterable<Task> input = list.getContent();
-        Iterable<TaskDTO> output = convertToViewModel(input);
+        List<Task> input = list.getContent();
+
+        Collections.sort(input, new Comparator<Task>() {
+            @Override
+            public int compare(Task a, Task b) {
+                return b.getCreationDate().compareTo(a.getCreationDate());
+            }
+        });
+
+        Iterable<TaskDTO> output = convertToDTO(input);
 
         return new TaskPageDTO(output, list.getNumber(), list.hasPrevious(), list.hasNext(), list.getTotalPages());
     }
@@ -189,7 +201,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
 
-        return convertToViewModel(returned, null);
+        return convertToDTO(returned, null);
 
     }
 
@@ -302,13 +314,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDTO getTaskByID(Integer taskID) {
-        return convertToViewModel(taskRepository.getById(taskID), null);
+        return convertToDTO(taskRepository.getById(taskID), null);
     }
 
-    Iterable<TaskDTO> convertToViewModel(Iterable<Task> input) {
+    Iterable<TaskDTO> convertToDTO(Iterable<Task> input) {
         List resultList = new ArrayList<TaskDTO>(0);
         for (Task t : input) {
-            TaskDTO model = convertToViewModel(t, null);
+            TaskDTO model = convertToDTO(t, null);
             //TaskDTO model = new TaskDTO(t.getId(), u.getLogin(), t.getDescription(), t.getPoints(), t.getFrequency(), t.getDaysInterval(), refreshDate, active, t.getExecutor());
             resultList.add(model);
         }
@@ -316,7 +328,7 @@ public class TaskServiceImpl implements TaskService {
         return outputList;
     }
 
-    public TaskDTO convertToViewModel(Task task, Integer id) {
+    public TaskDTO convertToDTO(Task task, Integer id) {
 
         User u = userRepository.findById(task.getCreatorID());
         TasksHistoryEntity tempHistoryEntity = null;
@@ -326,7 +338,7 @@ public class TaskServiceImpl implements TaskService {
 
         if (task.getFrequency().equals(Frequency.Once4All)) {
             if (!historyList.iterator().hasNext()) {
-                return new TaskDTO(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), null, null, true, null);
+                return new TaskDTO(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), null, null, true, null, task.getCreationDate());
             } else {
                 return null;
             }
@@ -350,27 +362,35 @@ public class TaskServiceImpl implements TaskService {
         if (task.getFrequency().equals(Frequency.Daily)) {
             if (dateTimeComparator.compare(currentDate, refreshDate) < 0) {
                 active = false;
-            }
-            else {
+            } else {
                 active = true;
             }
         }
 
-        return new TaskDTO(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), task.getDaysInterval(), refreshDate, active, task.getExecutor());
+        return new TaskDTO(task.getId(), u.getLogin(), task.getDescription(), task.getPoints(), task.getFrequency(), task.getDaysInterval(), refreshDate, active, task.getExecutor(), task.getCreationDate());
     }
 
     @Override
-    public HttpStatus pushBachTaskCompletion(Integer taskID) {
-        Task task = taskRepository.getById(taskID);
+    public HttpStatus pushBachTaskCompletion(Integer postID) {
+
+        Post post = postRepository.findById(postID);
+
+        if (!post.getPostType().equals(PostTypes.Task)) {
+            throw new RuntimeException("This post is not a type of \"Task\"!");
+        }
+
+        Task task = taskRepository.getById(post.getTaskID());
         Member member = memberRepository.getByUserID(task.getExecutorID());
 
         member.decreasePoints(task.getPoints());
 
         memberRepository.save(member);
 
-        taskRepository.delete(taskID);
+        taskRepository.delete(task.getId());
 
-        if (taskRepository.getById(taskID) == null) {
+        postRepository.delete(postID);
+
+        if (taskRepository.getById(task.getId()) == null) {
             return HttpStatus.OK;
         }
         return HttpStatus.EXPECTATION_FAILED;

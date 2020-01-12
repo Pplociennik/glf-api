@@ -22,9 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -47,6 +45,14 @@ public class CommentServiceImpl implements CommentService {
     public CommentPageDto getAllPostCommentsPaging(Integer pageNr, Integer objectsNr, Integer postID) {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
         List<Comment> input = (List<Comment>) commentRepository.findAllByPostIDOrderByCreationDateAsc(postID);
+
+        Collections.sort(input, new Comparator<Comment>() {
+            @Override
+            public int compare(Comment a, Comment b) {
+                return a.getCreationDate().compareTo(b.getCreationDate());
+            }
+        });
+
         List<CommentDTO> list = (List<CommentDTO>) convertManyToDTOs(input);
 
         int start = pageable.getOffset();
