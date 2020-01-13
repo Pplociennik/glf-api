@@ -140,20 +140,22 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskPageDTO getAllHabitTasksPaging(Integer pageNr, Integer objectsNr, Integer habitID) {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
-        Page<Task> list = taskRepository.findAllByHabitIDOrderByCreationDateDesc(habitID, pageable);
+        List<Task> entry = (List<Task>) taskRepository.getAllByHabitID(habitID);
 
-        List<Task> input = list.getContent();
-
-        Collections.sort(input, new Comparator<Task>() {
+        Collections.sort(entry, new Comparator<Task>() {
             @Override
             public int compare(Task a, Task b) {
                 return b.getCreationDate().compareTo(a.getCreationDate());
             }
         });
 
-        Iterable<TaskDTO> output = convertToDTO(input);
+        List<TaskDTO> output = (List<TaskDTO>) convertToDTO(entry);
 
-        return new TaskPageDTO(output, list.getNumber(), list.hasPrevious(), list.hasNext(), list.getTotalPages());
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > output.size() ? output.size() : (start + pageable.getPageSize());
+        Page<TaskDTO> pages = new PageImpl<TaskDTO>(output.subList(start, end), pageable, output.size());
+
+        return new TaskPageDTO(pages.getContent(), pages.getNumber(), pages.hasPrevious(), pages.hasNext(), pages.getTotalPages());
     }
 
     @Override
@@ -191,12 +193,8 @@ public class TaskServiceImpl implements TaskService {
         for (Member m : members) {
             User user = userRepository.findById(m.getUserID());
             if (user.getNotifications() && user.getId() != returned.getCreatorID()) {
-                try {
-                    Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + newTask.getHabitID(), false);
-                    sender.taskCreated(user.getEmailAddress(), user.getLogin(), habit);
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
+                Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + newTask.getHabitID(), false);
+                //sender.taskCreated(user.getEmailAddress(), user.getLogin(), habit);
             }
         }
 
@@ -252,7 +250,7 @@ public class TaskServiceImpl implements TaskService {
             Iterable<Member> members = memberRepository.findAllByHabitID(habit.getId());
             for (Member m : members) {
                 User u = userRepository.findById(m.getUserID());
-                Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habit.getId(), false);
+                Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + habit.getId(), false);
                 if (u.getNotifications()) {
                     EmailNotificationsSender sender = new EmailNotificationsSender();
                     try {

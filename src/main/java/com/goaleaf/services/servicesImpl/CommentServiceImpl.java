@@ -89,7 +89,7 @@ public class CommentServiceImpl implements CommentService {
 
         if (postCreator.getUserID() != returned.getUserID()) {
             String ntfDesc = commenter.getLogin() + " commented on your post in challenge \"" + habitDTO.getTitle() + "\"";
-            Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + post.getHabitID(), false);
             if (postCreator.getNotifications() && postCreator.getUserID() != returned.getUserID()) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
                 try {

@@ -94,7 +94,7 @@ public class EmailNotificationsSender {
 
         sender.setSender(senderAddress, senderPassword);
         sender.addRecipient(recipientEmail);
-        sender.setSubject("New task has been added in habit: " + newHabit.getHabitTitle() + "!");
+        sender.setSubject("New task has been added in challenge: " + newHabit.getHabitTitle() + "!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
                 "There are new tasks available in challenge \"" + newHabit.getHabitTitle() + "\"\n\n" +
                 "If you don't want to get messages like this just uncheck this option in you profile.\n\n" +
@@ -110,7 +110,7 @@ public class EmailNotificationsSender {
         sender.addRecipient(recipientEmail);
         sender.setSubject("New member joined to your challenge!");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
-                "User " + userName + " joined to your habit \"" + newHabit.getTitle() + "\"!\n\n" +
+                "User " + userName + " joined to your challenge \"" + newHabit.getTitle() + "\"!\n\n" +
                 "If you don't want to get messages like this just uncheck this option in you profile.\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
@@ -201,7 +201,7 @@ public class EmailNotificationsSender {
                 "Administrator of the challenge \"" + habit.getHabitTitle() + "\" has set a new goal!\n\n" +
                 "It seems you've got more work to do :)\n " +
                 "The challenge is available at:\n" +
-                "http://www.goaleaf.com/habit/" + habit.getId() + "\n\n" +
+                "http://www.goaleaf.com/challenge/" + habit.getId() + "\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
 //        sender.addAttachment("TestFile.txt");

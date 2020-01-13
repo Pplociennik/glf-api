@@ -157,7 +157,7 @@ public class HabitServiceImpl implements HabitService {
         creator.setPoints(0);
 
         String ntfDesc = "Challenge: \"" + newHabit.getHabitTitle() + "\" has been created";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(creatorID, ntfDesc, "http://www.goaleaf.com/habit/" + added.getId(), false);
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(creatorID, ntfDesc, "http://www.goaleaf.com/challenge/" + added.getId(), false);
         if (creatorUser.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
@@ -242,6 +242,13 @@ public class HabitServiceImpl implements HabitService {
         return habitDTO;
     }
 
+    @Override
+    public HabitDTO updateHabitName(Integer habitID, String newName) {
+        Habit habit = habitRepository.findById(habitID);
+        habit.setHabitTitle(newName);
+        return convertToDTO(habitRepository.save(habit));
+    }
+
     public Iterable<HabitDTO> convertManyToDTOs(Iterable<Habit> habits, boolean filterPrivacy) {
         List<HabitDTO> resultList = new ArrayList<>(0);
 
@@ -277,14 +284,10 @@ public class HabitServiceImpl implements HabitService {
         String ntfDesc = "The goal in the challenge \"" + habit.getHabitTitle() + "\" has been updated!";
         for (Member m : members) {
             UserDTO u = userService.findById(m.getUserID());
-            Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habitID, false);
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + habitID, false);
             if (u.getNotifications()) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
-                try {
-                    sender.goalUpdated(u.getEmailAddress(), u.getLogin(), habit);
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
+                //sender.goalUpdated(u.getEmailAddress(), u.getLogin(), habit);
             }
         }
 
@@ -558,7 +561,7 @@ public class HabitServiceImpl implements HabitService {
         newMember.setPoints(0);
 
         String ntfDesc = newMember.getUserLogin() + " joined to your challenge \"" + habit.getTitle() + "\"";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(habit.getCreatorID(), ntfDesc, "http://www.goaleaf.com/habit/" + model.getHabitID(), false);
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(habit.getCreatorID(), ntfDesc, "http://www.goaleaf.com/challenge/" + model.getHabitID(), false);
         if (creator.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {

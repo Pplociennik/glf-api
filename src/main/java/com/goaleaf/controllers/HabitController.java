@@ -240,4 +240,9 @@ public class HabitController {
         return memberService.getHabitRankingPaging(pageNr, objectsNr, habitID);
     }
 
+    @PutMapping("/name/change")
+    public HabitDTO changeHabitName(@RequestParam Integer habitID, @RequestParam String newName) {
+        return habitService.updateHabitName(habitID, newName);
+    }
+
 }

@@ -88,8 +88,8 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/task/pushback", method = RequestMethod.DELETE)
-    public HttpStatus removeTaskFromDatabase(@RequestParam Integer taskID) {
-        return taskService.pushBachTaskCompletion(taskID);
+    public HttpStatus removeTaskFromDatabase(@RequestParam Integer postID) {
+        return taskService.pushBachTaskCompletion(postID);
     }
 
     @RequestMapping(value = "/task/remove", method = RequestMethod.DELETE)

@@ -69,4 +69,6 @@ public interface HabitService {
     HabitPageDTO getAllByCategoryPaging(Integer pageNr, Integer objectsNr, Category category);
 
     HabitDTO convertToDTO(Habit entry);
+
+    HabitDTO updateHabitName(Integer habitID, String newName);
 }

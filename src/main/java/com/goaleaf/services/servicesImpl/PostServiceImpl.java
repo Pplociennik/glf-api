@@ -31,10 +31,7 @@ import org.springframework.http.HttpStatus;
 import javax.mail.MessagingException;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.goaleaf.security.SecurityConstants.SECRET;
 
@@ -183,15 +180,10 @@ public class PostServiceImpl implements PostService {
         String ntfDesc = newPost.getCreatorLogin() + " added a new post in challenge \"" + habit.getTitle() + "\"";
         for (MemberDTO m : members) {
             UserDTO u = userService.findById(m.getUserID());
-            Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + habit.getId(), false);
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + habit.getId(), false);
             if (u.getNotifications() && !u.getLogin().equals(tempUser.getLogin())) {
                 EmailNotificationsSender sender = new EmailNotificationsSender();
-                try {
-                    sender.postAdded(u.getEmailAddress(), u.getLogin(), newPost.getCreatorLogin(), habit, newPost);
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-
+                //sender.postAdded(u.getEmailAddress(), u.getLogin(), newPost.getCreatorLogin(), habit, newPost);
             }
         }
 
@@ -263,7 +255,7 @@ public class PostServiceImpl implements PostService {
 
         Iterable<MemberDTO> members = memberService.getAllByHabitID(habit.getId());
         String ntfDesc = tempUser.getLogin() + " reacted to your post in challenge \"" + habit.getTitle() + "\"";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/habit/" + post.getHabitID(), false);
+        Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + post.getHabitID(), false);
         if (postCreator.getNotifications() && tempUser.getUserID().compareTo(postCreator.getUserID()) != 0) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
@@ -328,13 +320,15 @@ public class PostServiceImpl implements PostService {
     public PostPageDTO getAllByTypePaging(Integer pageNr, Integer objectsNr, Integer habitID, PostTypes type) {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
         List<Post> list = (List<Post>) postRepository.findAllByHabitIDAndPostType(habitID, type);
-        List<Post> input = new ArrayList<>(0);
 
-        for (int i = list.size() - 1; i >= 0; i--) {
-            input.add(list.get(i));
-        }
+        Collections.sort(list, new Comparator<Post>() {
+            @Override
+            public int compare(Post a, Post b) {
+                return b.getDateOfAddition().compareTo(a.getDateOfAddition());
+            }
+        });
 
-        List<PostDTO> output = (List<PostDTO>) convertManyToDTOs(input);
+        List<PostDTO> output = (List<PostDTO>) convertManyToDTOs(list);
 
         int start = pageable.getOffset();
         int end = (start + pageable.getPageSize()) > output.size() ? output.size() : (start + pageable.getPageSize());
