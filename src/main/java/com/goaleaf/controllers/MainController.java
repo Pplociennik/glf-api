@@ -45,6 +45,8 @@ public class MainController {
     private PostService postService;
     @Autowired
     private UserRepository userRepository;
+	@Autowired
+	private HabitRepository habitRepository;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String generateModel() {
