@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
 
         User result = userRepository.save(user);
 
-        if (userRepository.findById(1) != null && !userRepository.findById(1).getLogin().equals(user.getLogin())) {
+        if (userRepository.findByLogin("GLFAdministrator") != null) {
 
             Habit h = habitRepository.findByHabitTitle("Let's meet Goaleaf! 🙆‍♂");
 
