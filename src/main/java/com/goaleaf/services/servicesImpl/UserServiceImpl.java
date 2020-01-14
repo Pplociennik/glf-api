@@ -143,12 +143,14 @@ public class UserServiceImpl implements UserService {
 
         User result = userRepository.save(user);
 
-        if (userRepository.findByLogin("GLFAdministrator") != null) {
+        List<User> users = (List<User>) userRepository.findAll();
+
+        if (users.size() > 1) {
 
             Habit h = habitRepository.findByHabitTitle("Let's meet Goaleaf!");
 
             EmailNotificationsSender esender = new EmailNotificationsSender();
-            esender.createInAppNotification(result.getId(), "GLFAdministrator invited you to challenge \"" + h.getHabitTitle() + "\"!", "http://www.goaleaf.com/challenge/" + h.getId(), true);
+            esender.createInAppNotification(result.getId(), "GLFAdministrator invited you to challenge \"" + h.getHabitTitle() + "\"!", "http://www.goaleaf.com/challenge/" + h.getId(), false);
         }
 
         return convertToDTO(result);
