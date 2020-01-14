@@ -121,7 +121,7 @@ public class MainController {
         newHabit.setPrivate(true);
         newHabit.setFrequency(Frequency.Once);
         newHabit.setCategory(Category.STUDY);
-        newHabit.setTitle("Let's meet Goaleaf! 🙆‍♂");
+        newHabit.setTitle("Let's meet Goaleaf!");
         createdHabit = habitService.createNewHabit(newHabit);
 
         FIRST_HABIT_ID = habitRepository.findByHabitStartDate(newHabit.getStartDate()).getId();

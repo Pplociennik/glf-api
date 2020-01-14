@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
 
         if (userRepository.findByLogin("GLFAdministrator") != null) {
 
-            Habit h = habitRepository.findByHabitTitle("Let's meet Goaleaf! 🙆‍♂");
+            Habit h = habitRepository.findByHabitTitle("Let's meet Goaleaf!");
 
             EmailNotificationsSender esender = new EmailNotificationsSender();
             esender.createInAppNotification(result.getId(), "GLFAdministrator invited you to challenge \"" + h.getHabitTitle() + "\"!", "http://www.goaleaf.com/challenge/" + h.getId(), true);
