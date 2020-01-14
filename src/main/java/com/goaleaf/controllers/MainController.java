@@ -135,7 +135,7 @@ public class MainController {
         newPost.habitID = FIRST_HABIT_ID;
         newPost.token = FIRST_USER_TOKEN;
         newPost.postText = "Hello friend! It is our pleasure to introduce you our project! We hope you'll love it, like we love working on it! Invite your friends and just have fun! Remember! Competition breaks the limits 😉 So, what are you waiting for, huh? Just do it!\n" +
-                "\n\nBest wishes and great results," +
+                "\n\nBest wishes and great results,\n" +
                 "Goaleaf Developer Team";
         createdPost = postService.addNewPost(newPost);
 
