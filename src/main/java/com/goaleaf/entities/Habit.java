@@ -14,34 +14,24 @@ public class Habit {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column
     private String habitTitle;
 
-    @Column
     private Date habitStartDate;
 
-    @Column
     private Category category;
 
-    @Column
     private Frequency frequency;
 
-    @Column
     private Boolean isPrivate;
 
-    @Column
     private Integer creatorID;
 
-    @Column
     private String creatorLogin;
 
-    @Column
     private Integer pointsToWIn;
 
-    @Column
     private String winner;
 
-    @Column
     private Boolean finished;
 
     private Boolean canUsersInvite;

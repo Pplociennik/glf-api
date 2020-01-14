@@ -67,13 +67,14 @@ public class MainController {
         PostDTO createdPost;
 
         NewTaskViewModel newTask;
-        String[] tasksDescriptions = new String[6];
+        String[] tasksDescriptions = new String[7];
         tasksDescriptions[0] = "Check discussion panel";
         tasksDescriptions[1] = "Comment a post";
         tasksDescriptions[2] = "Add reaction to the post";
         tasksDescriptions[3] = "Invite a friend";
         tasksDescriptions[4] = "Create your own challenge";
-        tasksDescriptions[5] = "Have fun! 😊";
+        tasksDescriptions[5] = "Check help page";
+        tasksDescriptions[6] = "Have fun! 😊";
 
         User stephen = userRepository.findByLogin("GLFAdministrator");
 
@@ -127,7 +128,7 @@ public class MainController {
         FIRST_HABIT_ID = habitRepository.findByHabitStartDate(newHabit.getStartDate()).getId();
 
         habitService.changeDiscussionPermissions(FIRST_HABIT_ID);
-        habitService.setPointsToWin(FIRST_HABIT_ID, 7);
+        habitService.setPointsToWin(FIRST_HABIT_ID, 8);
 
 
         newPost = new NewPostViewModel();
@@ -136,7 +137,7 @@ public class MainController {
         newPost.token = FIRST_USER_TOKEN;
         newPost.postText = "Hello friend! It is our pleasure to introduce you our project! We hope you'll love it, like we love working on it! Invite your friends and just have fun! Remember! Competition breaks the limits 😉 So, what are you waiting for, huh? Just do it!\n" +
                 "\n\nBest wishes and great results,\n" +
-                "Goaleaf Developer Team";
+                "Goaleaf Development Team";
         createdPost = postService.addNewPost(newPost);
 
         newTask = new NewTaskViewModel();
@@ -145,7 +146,7 @@ public class MainController {
         newTask.setDaysInterval(0);
         newTask.setPoints(1);
         newTask.setToken(FIRST_USER_TOKEN);
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             newTask.setDescription(tasksDescriptions[i]);
             taskService.saveTask(newTask);
         }

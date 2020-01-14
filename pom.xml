@@ -12,7 +12,7 @@
     </parent>
     <groupId>com.goaleaf.engine</groupId>
     <artifactId>GoaLeaf</artifactId>
-    <version>0.13.0_7</version>
+    <version>0.13.0_8</version>
     <name>GoaLeaf</name>
     <description>GoaLeaf</description>
     <packaging>jar</packaging>
@@ -53,12 +53,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
-        <!--<dependency>-->
-        <!--<groupId>javax.mail</groupId>-->
-        <!--<artifactId>javax.mail-api</artifactId>-->
-        <!--<version>1.6.2</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
@@ -223,45 +217,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-jar-plugin</artifactId>-->
-            <!--                <version>3.0.0</version>-->
-            <!--                <dependencies>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>org.codehaus.plexus</groupId>-->
-            <!--                        <artifactId>plexus-archiver</artifactId>-->
-            <!--                        <version>2.4.4</version>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-            <!--            </plugin>-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-war-plugin</artifactId>-->
-            <!--                <configuration>-->
-            <!--                    <attachClasses>true</attachClasses>-->
-            <!--                    &lt;!&ndash;                    <webXml>target/web.xml</webXml>&ndash;&gt;-->
-            <!--                    <webResources>-->
-            <!--                        <resource>-->
-            <!--                            <directory>src/main/java/com/goaleaf</directory>-->
-            <!--                            <filtering>true</filtering>-->
-            <!--                        </resource>-->
-            <!--                    </webResources>-->
-            <!--                    <archive>-->
-            <!--                        <manifest>-->
-            <!--                            <mainClass>com.goaleaf.GoaLeafApplication</mainClass>-->
-            <!--                        </manifest>-->
-            <!--                    </archive>-->
-            <!--                </configuration>-->
-            <!--                <version>2.4</version>-->
-            <!--                <dependencies>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>org.codehaus.plexus</groupId>-->
-            <!--                        <artifactId>plexus-archiver</artifactId>-->
-            <!--                        <version>2.4.4</version>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-            <!--            </plugin>-->
         </plugins>
         <resources>
             <resource>
