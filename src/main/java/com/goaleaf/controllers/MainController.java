@@ -121,7 +121,7 @@ public class MainController {
         newHabit.setTitle("Let's meet Goaleaf! 🙆‍♂️");
         createdHabit = habitService.createNewHabit(newHabit);
 
-        FIRST_HABIT_ID = habitService.findByTitle(createdHabit.getTitle()).getId();
+        FIRST_HABIT_ID = habitRepository.findByHabitStartDate(newHabit.getStartDate()).getId();
 
         habitService.changeDiscussionPermissions(FIRST_HABIT_ID);
         habitService.setPointsToWin(FIRST_HABIT_ID, 7);
