@@ -135,12 +135,12 @@ public class MainController {
         newPost.habitID = FIRST_HABIT_ID;
         newPost.token = FIRST_USER_TOKEN;
         newPost.postText = "Hello friend! It is our pleasure to introduce you our project! We hope you'll love it, like we love working on it! Invite your friends and just have fun! Remember! Competition breaks the limits 😉 So, what are you waiting for, huh? Just do it!\n" +
-                "Best wishes and great results,\n\n" +
+                "\n\nBest wishes and great results," +
                 "Goaleaf Developer Team";
         createdPost = postService.addNewPost(newPost);
 
         newTask = new NewTaskViewModel();
-        newTask.setFrequency(Frequency.Once);
+        newTask.setFrequency(Frequency.Once4All);
         newTask.setHabitID(FIRST_HABIT_ID);
         newTask.setDaysInterval(0);
         newTask.setPoints(1);
