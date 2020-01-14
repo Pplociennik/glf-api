@@ -46,6 +46,8 @@ public class Habit {
 
     private Boolean canUsersInvite;
 
+    private Boolean allowDiscussion;
+
     public Habit() {
     }
 
@@ -156,5 +158,13 @@ public class Habit {
 
     public void setCanUsersInvite(Boolean canUsersInvite) {
         this.canUsersInvite = canUsersInvite;
+    }
+
+    public Boolean getAllowDiscussion() {
+        return allowDiscussion;
+    }
+
+    public void setAllowDiscussion(Boolean allowDiscussion) {
+        this.allowDiscussion = allowDiscussion;
     }
 }

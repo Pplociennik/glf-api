@@ -71,4 +71,6 @@ public interface HabitService {
     HabitDTO convertToDTO(Habit entry);
 
     HabitDTO updateHabitName(Integer habitID, String newName);
+
+    Boolean changeDiscussionPermissions(Integer habitID);
 }

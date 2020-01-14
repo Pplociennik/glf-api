@@ -35,6 +35,8 @@ public class HabitDTO {
 
     private Boolean canUsersInvite;
 
+    private Boolean allowDiscussion;
+
     public HabitDTO() {
     }
 
@@ -140,5 +142,13 @@ public class HabitDTO {
 
     public void setCanUsersInvite(Boolean canUsersInvite) {
         this.canUsersInvite = canUsersInvite;
+    }
+
+    public Boolean getAllowDiscussion() {
+        return allowDiscussion;
+    }
+
+    public void setAllowDiscussion(Boolean allowDiscussion) {
+        this.allowDiscussion = allowDiscussion;
     }
 }

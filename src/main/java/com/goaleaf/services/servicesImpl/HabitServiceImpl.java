@@ -93,7 +93,7 @@ public class HabitServiceImpl implements HabitService {
             input = habitRepository.findAll();
         }
 
-        Iterable<HabitDTO> dtos = (List<HabitDTO>) convertManyToDTOs(input, true);
+        Iterable<HabitDTO> dtos = convertManyToDTOs(input, true);
 
         List<HabitDTO> sortedList = new ArrayList<>(0);
 
@@ -143,6 +143,7 @@ public class HabitServiceImpl implements HabitService {
         newHabit.setPointsToWIn(1001);
         newHabit.setCanUsersInvite(model.getCanUsersInvite() == null ? true : model.getCanUsersInvite());
         newHabit.setFinished(false);
+        newHabit.setAllowDiscussion(true);
 
         Habit added = new Habit();
         added = habitRepository.save(newHabit);
@@ -224,6 +225,7 @@ public class HabitServiceImpl implements HabitService {
         habitDTO.setCreatorLogin(creator.getLogin());
         habitDTO.setMembersCount(memberService.countAllHabitMembers(entry.getId()));
         habitDTO.setCanUsersInvite(entry.getCanUsersInvite());
+        habitDTO.setAllowDiscussion(entry.getAllowDiscussion());
 
         if (entry.getPointsToWIn() != 1001) {
             habitDTO.setPointsToWin(entry.getPointsToWIn());
@@ -247,6 +249,15 @@ public class HabitServiceImpl implements HabitService {
         Habit habit = habitRepository.findById(habitID);
         habit.setHabitTitle(newName);
         return convertToDTO(habitRepository.save(habit));
+    }
+
+    @Override
+    public Boolean changeDiscussionPermissions(Integer habitID) {
+        Habit habit = habitRepository.findById(habitID);
+        habit.setAllowDiscussion(!habit.getAllowDiscussion());
+
+        Habit result = habitRepository.save(habit);
+        return result.getAllowDiscussion();
     }
 
     public Iterable<HabitDTO> convertManyToDTOs(Iterable<Habit> habits, boolean filterPrivacy) {
@@ -543,6 +554,8 @@ public class HabitServiceImpl implements HabitService {
             habitDTO.setFinished(false);
             habitDTO.setWinner("No one yet! :)");
         }
+
+        habitDTO.setAllowDiscussion(resHabit.getAllowDiscussion());
 
         return habitDTO;
     }

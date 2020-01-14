@@ -60,4 +60,32 @@ public class NewTaskViewModel {
     public Integer getDaysInterval() {
         return daysInterval;
     }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setHabitID(Integer habitID) {
+        this.habitID = habitID;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    public void setFrequency(Frequency frequency) {
+        this.frequency = frequency;
+    }
+
+    public void setLastDone(Date lastDone) {
+        this.lastDone = lastDone;
+    }
+
+    public void setDaysInterval(Integer daysInterval) {
+        this.daysInterval = daysInterval;
+    }
 }
