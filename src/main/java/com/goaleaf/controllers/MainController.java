@@ -75,7 +75,7 @@ public class MainController {
         tasksDescriptions[4] = "Create your own challenge";
         tasksDescriptions[5] = "Have fun! 😊";
 
-        UserDTO stephen = userService.findById(FIRST_USER_ID);
+        User stephen = userRepository.findByLogin("GLFAdministrator");
 
         if (stephen != null) {
             System.out.println("Default data already generated.");
@@ -121,7 +121,7 @@ public class MainController {
         newHabit.setPrivate(true);
         newHabit.setFrequency(Frequency.Once);
         newHabit.setCategory(Category.STUDY);
-        newHabit.setTitle("Let's meet Goaleaf! 🙆‍♂️");
+        newHabit.setTitle("Let's meet Goaleaf! 🙆‍♂");
         createdHabit = habitService.createNewHabit(newHabit);
 
         FIRST_HABIT_ID = habitRepository.findByHabitStartDate(newHabit.getStartDate()).getId();

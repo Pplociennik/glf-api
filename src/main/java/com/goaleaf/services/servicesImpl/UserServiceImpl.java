@@ -7,7 +7,6 @@ import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
-import com.goaleaf.entities.viewModels.habitsCreating.AddMemberViewModel;
 import com.goaleaf.repositories.*;
 import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.security.EmailSender;
@@ -146,22 +145,10 @@ public class UserServiceImpl implements UserService {
 
         if (userRepository.findById(1) != null && !userRepository.findById(1).getLogin().equals(user.getLogin())) {
 
-            LoginViewModel loginViewModel = new LoginViewModel();
-            loginViewModel.login = "GLFAdministrator";
-            loginViewModel.password = "IchBinSt3ph3nFunnyAdmin";
-            String adminToken = "";
-            try {
-                adminToken = authController.login(loginViewModel);
-            } catch (AccountNotExistsException e) {
-                e.printStackTrace();
-            }
+            Habit h = habitRepository.findByHabitTitle("Let's meet Goaleaf! 🙆‍♂");
 
-            AddMemberViewModel inv = new AddMemberViewModel();
-            inv.setHabitID(1);
-            inv.setUrl("http://www.goaleaf.com/challenge/1");
-            inv.setUserLogin(user.getLogin());
-            inv.setToken(adminToken);
-            habitService.inviteNewMember(inv);
+            EmailNotificationsSender esender = new EmailNotificationsSender();
+            esender.createInAppNotification(result.getId(), "GLFAdministrator invited you to challenge \"" + h.getHabitTitle() + "\"!", "http://www.goaleaf.com/challenge/" + h.getId(), true);
         }
 
         return convertToDTO(result);
