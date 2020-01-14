@@ -12,7 +12,7 @@
     </parent>
     <groupId>com.goaleaf.engine</groupId>
     <artifactId>GoaLeaf</artifactId>
-    <version>0.13.0_8</version>
+    <version>0.13.0_9</version>
     <name>GoaLeaf</name>
     <description>GoaLeaf</description>
     <packaging>jar</packaging>

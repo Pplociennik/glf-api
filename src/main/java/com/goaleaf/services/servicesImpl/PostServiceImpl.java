@@ -151,8 +151,8 @@ public class PostServiceImpl implements PostService {
             throw new MemberDoesNotExistException("You are not a member!");
         if (model.postText.trim().isEmpty())
             throw new EmptyPostException("Post cannot be empty!");
-        if (model.postText.length() > 300) {
-            throw new RuntimeException("Post cannot be longer than 600 characters!");
+        if (model.postText.length() > 400) {
+            throw new RuntimeException("Post cannot be longer than 400 characters!");
         }
 
         Post newPost = new Post();
