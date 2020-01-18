@@ -36,9 +36,9 @@ public class UserCredentialsValidator {
 
 //    public boolean isEmailFormatValid(RegisterViewModel model) {
 //        Pattern passwordPattern = Pattern.compile("([\\w\\.\\-]+)@([\\w\\-]+)((\\.(\\w){2,3})+)$");
-//        Matcher matcher = passwordPattern.matcher(model.emailAddress);
+//        Matcher matches = passwordPattern.matches(model.emailAddress);
 //
-//        if (!matcher.matches())
+//        if (!matches.matches())
 //            return false;
 //
 //        return true;
