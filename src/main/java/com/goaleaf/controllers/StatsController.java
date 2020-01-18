@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/stats")
-@CrossOrigin(value = "*", maxAge = 3600)
+@CrossOrigin(value = "/**", maxAge = 3600)
 public class StatsController {
 
     @Autowired

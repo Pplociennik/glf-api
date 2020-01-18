@@ -41,6 +41,7 @@ import static com.goaleaf.security.SecurityConstants.SECRET;
 
 @RestController
 @RequestMapping("/api/habits")
+@CrossOrigin(value = "https://goaleaf.com", maxAge = 3600)
 public class HabitController {
 
     @Autowired

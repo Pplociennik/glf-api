@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import static com.goaleaf.security.SecurityConstants.SECRET;
 
 @RestController
+@CrossOrigin(value = "https://goaleaf.com", maxAge = 3600)
 public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);

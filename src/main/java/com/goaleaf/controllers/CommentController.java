@@ -19,6 +19,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping(value = "/api/comments")
+@CrossOrigin(value = "https://goaleaf.com", maxAge = 3600)
 public class CommentController {
 
     @Autowired

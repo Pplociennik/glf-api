@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/notifications")
+@CrossOrigin(value = "https://goaleaf.com", maxAge = 3600)
 public class NotificationController {
 
     @Autowired
