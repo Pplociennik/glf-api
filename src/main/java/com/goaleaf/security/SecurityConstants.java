@@ -9,4 +9,5 @@ public class SecurityConstants {
 //    public static final String HEADER_STRING = "Authorization";
     public static final String SIGN_UP_URL = "/register";
     public static final String SWAGGER_URL = "/swagger-ui.html#/";
+    public static final String CLIENT_URL = "https://www.goaleaf.com";
 }

@@ -16,14 +16,14 @@ public class DevConfig {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/").allowedOrigins("https://www.goaleaf.com");
-                registry.addMapping("/api/comments").allowedOrigins("https://www.goaleaf.com");
-                registry.addMapping("/api/habits").allowedOrigins("https://www.goaleaf.com");
-                registry.addMapping("/api/members").allowedOrigins("https://www.goaleaf.com");
-                registry.addMapping("/api/notifications").allowedOrigins("https://www.goaleaf.com");
-                registry.addMapping("/api/posts").allowedOrigins("https://www.goaleaf.com");
-                registry.addMapping("/api/tasks").allowedOrigins("https://www.goaleaf.com");
-                registry.addMapping("/api/users").allowedOrigins("https://www.goaleaf.com");
+                registry.addMapping("/").allowedOrigins(SecurityConstants.CLIENT_URL);
+                registry.addMapping("/api/comments").allowedOrigins(SecurityConstants.CLIENT_URL);
+                registry.addMapping("/api/habits").allowedOrigins(SecurityConstants.CLIENT_URL);
+                registry.addMapping("/api/members").allowedOrigins(SecurityConstants.CLIENT_URL);
+                registry.addMapping("/api/notifications").allowedOrigins(SecurityConstants.CLIENT_URL);
+                registry.addMapping("/api/posts").allowedOrigins(SecurityConstants.CLIENT_URL);
+                registry.addMapping("/api/tasks").allowedOrigins(SecurityConstants.CLIENT_URL);
+                registry.addMapping("/api/users").allowedOrigins(SecurityConstants.CLIENT_URL);
                 registry.addMapping("/api/stats").allowedOrigins("*");
 
             }
