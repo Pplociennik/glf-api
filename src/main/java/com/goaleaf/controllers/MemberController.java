@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/members")
-@CrossOrigin(value = "https://goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
 public class MemberController {
 
     @Autowired

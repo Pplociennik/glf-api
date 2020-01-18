@@ -28,7 +28,7 @@ import static com.goaleaf.security.SecurityConstants.SECRET;
 
 @RestController
 @RequestMapping(value = "/api/posts")
-@CrossOrigin(value = "https://goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
 public class PostController {
 
     @Autowired

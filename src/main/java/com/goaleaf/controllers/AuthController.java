@@ -29,7 +29,7 @@ import static com.goaleaf.security.SecurityConstants.EXPIRATION_TIME;
 import static com.goaleaf.security.SecurityConstants.SECRET;
 
 @RestController
-@CrossOrigin(value = "https://goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
 public class AuthController {
 
     @Autowired
