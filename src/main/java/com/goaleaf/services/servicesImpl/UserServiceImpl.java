@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
             Habit h = habitRepository.findByHabitTitle("Let's meet Goaleaf!");
 
             EmailNotificationsSender esender = new EmailNotificationsSender();
-            esender.createInAppNotification(result.getId(), "GLFAdministrator invited you to challenge \"" + h.getHabitTitle() + "\"", "http://www.goaleaf.com/challenge/" + h.getId(), false);
+            esender.createInAppNotification(result.getId(), "GoaleafAdmin invited you to challenge \"" + h.getHabitTitle() + "\"", "http://www.goaleaf.com/challenge/" + h.getId(), false);
         }
 
         return convertToDTO(result);
