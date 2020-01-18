@@ -22,7 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -44,14 +46,14 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentPageDto getAllPostCommentsPaging(Integer pageNr, Integer objectsNr, Integer postID) {
         Pageable pageable = new PageRequest(pageNr, objectsNr);
-        List<Comment> input = (List<Comment>) commentRepository.findAllByPostIDOrderByCreationDateAsc(postID);
+        List<Comment> input = (List<Comment>) commentRepository.findAllByPostID(postID);
 
-        Collections.sort(input, new Comparator<Comment>() {
-            @Override
-            public int compare(Comment a, Comment b) {
-                return a.getCreationDate().compareTo(b.getCreationDate());
-            }
-        });
+//        Collections.sort(input, new Comparator<Comment>() {
+//            @Override
+//            public int compare(Comment a, Comment b) {
+//                return a.getCreationDate().compareTo(b.getCreationDate());
+//            }
+//        });
 
         List<CommentDTO> list = (List<CommentDTO>) convertManyToDTOs(input);
 
@@ -88,9 +90,10 @@ public class CommentServiceImpl implements CommentService {
         CommentDTO commentDTO = convertOneToDTO(comment);
 
         if (postCreator.getUserID() != returned.getUserID()) {
-            String ntfDesc = commenter.getLogin() + " commented on your post in challenge \"" + habitDTO.getTitle() + "\"";
-            Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + post.getHabitID(), false);
             if (postCreator.getNotifications() && postCreator.getUserID() != returned.getUserID()) {
+
+                String ntfDesc = commenter.getLogin() + " commented on your post in challenge \"" + habitDTO.getTitle() + "\"";
+                Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + post.getHabitID(), false);
                 EmailNotificationsSender sender = new EmailNotificationsSender();
                 try {
                     sender.postCommented(postCreator.getEmailAddress(), postCreator.getLogin(), comment.getUserLogin(), post, comment);

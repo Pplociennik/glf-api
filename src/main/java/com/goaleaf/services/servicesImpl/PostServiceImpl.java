@@ -180,8 +180,9 @@ public class PostServiceImpl implements PostService {
         String ntfDesc = newPost.getCreatorLogin() + " added a new post in challenge \"" + habit.getTitle() + "\"";
         for (MemberDTO m : members) {
             UserDTO u = userService.findById(m.getUserID());
-            Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + habit.getId(), false);
             if (u.getNotifications() && !u.getLogin().equals(tempUser.getLogin())) {
+
+                Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + habit.getId(), false);
                 EmailNotificationsSender sender = new EmailNotificationsSender();
                 //sender.postAdded(u.getEmailAddress(), u.getLogin(), newPost.getCreatorLogin(), habit, newPost);
             }
@@ -253,10 +254,11 @@ public class PostServiceImpl implements PostService {
         if (postRepository.findById(model.getPostID()) == null)
             throw new PostNotFoundException("Post not found");
 
-        Iterable<MemberDTO> members = memberService.getAllByHabitID(habit.getId());
-        String ntfDesc = tempUser.getLogin() + " reacted to your post in challenge \"" + habit.getTitle() + "\"";
-        Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + post.getHabitID(), false);
         if (postCreator.getNotifications() && tempUser.getUserID().compareTo(postCreator.getUserID()) != 0) {
+
+            Iterable<MemberDTO> members = memberService.getAllByHabitID(habit.getId());
+            String ntfDesc = tempUser.getLogin() + " reacted to your post in challenge \"" + habit.getTitle() + "\"";
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + post.getHabitID(), false);
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
                 sender.postReacted(postCreator.getEmailAddress(), postCreator.getLogin(), tempUser.getLogin(), post);

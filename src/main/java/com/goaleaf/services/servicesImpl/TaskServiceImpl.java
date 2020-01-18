@@ -391,6 +391,7 @@ public class TaskServiceImpl implements TaskService {
         if (taskRepository.getById(task.getId()) == null) {
             return HttpStatus.OK;
         }
+
         return HttpStatus.EXPECTATION_FAILED;
     }
 

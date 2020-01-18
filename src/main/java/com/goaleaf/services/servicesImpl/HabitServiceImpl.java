@@ -99,7 +99,9 @@ public class HabitServiceImpl implements HabitService {
 
         if (sorting.equals(Sorting.Popular)) {
             for (HabitDTO h : dtos) {
-                sortedList.add(h);
+                if (!h.getFinished()) {
+                    sortedList.add(h);
+                }
             }
             Collections.sort(sortedList, new Comparator<HabitDTO>() {
                 @Override
@@ -109,7 +111,9 @@ public class HabitServiceImpl implements HabitService {
             });
         } else {
             for (HabitDTO h : dtos) {
-                sortedList.add(h);
+                if (!h.getFinished()) {
+                    sortedList.add(h);
+                }
             }
             Collections.sort(sortedList, new Comparator<HabitDTO>() {
                 @Override
@@ -369,7 +373,7 @@ public class HabitServiceImpl implements HabitService {
         if (searchingUser.getNotifications()) {
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
-                sender.sendInvitationNotification(searchingUser.getEmailAddress(), searchingUser.getLogin(), userService.findById(Integer.parseInt(claims.getSubject())).getLogin(), findById(model.getHabitID()).getTitle());
+                sender.sendInvitationNotification(searchingUser.getEmailAddress(), searchingUser.getLogin(), userService.findById(Integer.parseInt(claims.getSubject())).getLogin(), findById(model.getHabitID()));
             } catch (MessagingException e) {
                 e.printStackTrace();
             }

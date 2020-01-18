@@ -43,14 +43,14 @@ public class EmailNotificationsSender {
         return ntf;
     }
 
-    public void sendInvitationNotification(String recipientEmail, String recipientName, String inviterName, String habitTitle) throws MessagingException {
+    public void sendInvitationNotification(String recipientEmail, String recipientName, String inviterName, HabitDTO habitDTO) throws MessagingException {
 
         sender.setSender(senderAddress, senderPassword);
         sender.addRecipient(recipientEmail);
         sender.setSubject("You have a new invitation!");
         sender.setBody("Hello " + recipientName + "!\n\n" +
-                "User " + inviterName + " invited you to joining a new contest \"" + habitTitle + "\" \n\n" +
-                "If you want to take a challenge just log in to your GoaLeaf account: " + "http://www.goaleaf.com/login" + "\n\n" +
+                "User " + inviterName + " invited you to joining a new contest \"" + habitDTO.getTitle() + "\" \n\n" +
+                "If you want to take a challenge just log in to your GoaLeaf account: " + "http://www.goaleaf.com/challenge/" + habitDTO.getId() + "\n\n" +
                 "We wish you great results! :)\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
@@ -62,14 +62,14 @@ public class EmailNotificationsSender {
 
         sender.setSender(senderAddress, senderPassword);
         sender.addRecipient(recipientEmail);
-        sender.setSubject("GoaLeaf says hello! :)");
+        sender.setSubject("Goaleaf says hello! :)");
         sender.setBody("Welcome " + recipientName + "!\n\n" +
                 "We are excited to introduce you our challenge portal!" + "\n\n" +
                 "Just log in, join our incredible community, work, support and just have fun! :)\n" +
                 "And remember! You are the chosen one to change the look of your world!\n\n" +
                 "We wish you great results! :)\n\n" +
                 "Your Sincerely\n" +
-                "GoaLeaf group");
+                "Goaleaf Group");
 //        sender.addAttachment("TestFile.txt");
         sender.send();
     }

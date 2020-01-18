@@ -21,5 +21,7 @@ public interface CommentRepository extends CrudRepository<Comment, Integer> {
 
     Iterable<Comment> findAllByPostIDOrderByCreationDateAsc(Integer postID);
 
+    Iterable<Comment> findAllByPostID(Integer postID);
+
     //    Comment save(Comment comment);
 }
