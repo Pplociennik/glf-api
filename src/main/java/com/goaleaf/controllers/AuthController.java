@@ -16,6 +16,7 @@ import com.goaleaf.validators.exceptions.accountsAndAuthorization.EmailExistsExc
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.LoginExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -33,6 +34,8 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private UserCredentialsValidator userCredentialsValidator;
     @Autowired
