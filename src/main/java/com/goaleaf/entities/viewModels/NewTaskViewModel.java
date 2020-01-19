@@ -37,52 +37,52 @@ public class NewTaskViewModel {
         return token;
     }
 
-    public Integer getHabitID() {
-        return habitID;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Integer getPoints() {
-        return points;
-    }
-
-    public Frequency getFrequency() {
-        return frequency;
-    }
-
-    public Date getLastDone() {
-        return lastDone;
-    }
-
-    public Integer getDaysInterval() {
-        return daysInterval;
-    }
-
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Integer getHabitID() {
+        return habitID;
     }
 
     public void setHabitID(Integer habitID) {
         this.habitID = habitID;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getPoints() {
+        return points;
     }
 
     public void setPoints(Integer points) {
         this.points = points;
     }
 
+    public Frequency getFrequency() {
+        return frequency;
+    }
+
     public void setFrequency(Frequency frequency) {
         this.frequency = frequency;
     }
 
+    public Date getLastDone() {
+        return lastDone;
+    }
+
     public void setLastDone(Date lastDone) {
         this.lastDone = lastDone;
+    }
+
+    public Integer getDaysInterval() {
+        return daysInterval;
     }
 
     public void setDaysInterval(Integer daysInterval) {

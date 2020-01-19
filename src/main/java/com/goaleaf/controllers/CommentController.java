@@ -6,6 +6,7 @@ import com.goaleaf.entities.DTO.pagination.CommentPageDto;
 import com.goaleaf.entities.Stats;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsCreating.AddCommentViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.commentsManaging.EditCommentViewModel;
+import com.goaleaf.security.SecurityConstants;
 import com.goaleaf.services.CommentService;
 import com.goaleaf.services.PostService;
 import com.goaleaf.services.StatsService;
@@ -19,7 +20,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping(value = "/api/comments")
-@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = SecurityConstants.CLIENT_URL, maxAge = 3600)
 public class CommentController {
 
     @Autowired

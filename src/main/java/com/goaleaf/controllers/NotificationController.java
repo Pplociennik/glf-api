@@ -2,6 +2,7 @@ package com.goaleaf.controllers;
 
 import com.goaleaf.entities.DTO.NotificationDTO;
 import com.goaleaf.entities.DTO.pagination.NotificationPageDTO;
+import com.goaleaf.security.SecurityConstants;
 import com.goaleaf.services.NotificationService;
 import com.goaleaf.services.UserService;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/notifications")
-@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = SecurityConstants.CLIENT_URL, maxAge = 3600)
 public class NotificationController {
 
     @Autowired

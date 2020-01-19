@@ -1,8 +1,8 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.User;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;

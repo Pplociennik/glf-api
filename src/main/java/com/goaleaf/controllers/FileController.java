@@ -1,9 +1,9 @@
 package com.goaleaf.controllers;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.EditImageViewModel;
+import com.goaleaf.security.SecurityConstants;
 import com.goaleaf.security.uploadingFiles.FileStorageProperties;
 import com.goaleaf.services.JwtService;
 import com.goaleaf.services.PostService;
@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import static com.goaleaf.security.SecurityConstants.SECRET;
 
 @RestController
-@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = SecurityConstants.CLIENT_URL, maxAge = 3600)
 public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);

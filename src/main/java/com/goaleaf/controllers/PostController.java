@@ -2,7 +2,10 @@ package com.goaleaf.controllers;
 
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.goaleaf.entities.DTO.*;
+import com.goaleaf.entities.DTO.HabitDTO;
+import com.goaleaf.entities.DTO.PostDTO;
+import com.goaleaf.entities.DTO.PostReactionsNrDTO;
+import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.DTO.pagination.PostPageDTO;
 import com.goaleaf.entities.PostReaction;
 import com.goaleaf.entities.enums.PostTypes;
@@ -10,6 +13,7 @@ import com.goaleaf.entities.viewModels.habitsManaging.postsCreating.NewPostViewM
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.AddReactionViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.EditPostViewModel;
 import com.goaleaf.entities.viewModels.habitsManaging.postsManaging.RemovePostViewModel;
+import com.goaleaf.security.SecurityConstants;
 import com.goaleaf.services.*;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
 import com.goaleaf.validators.exceptions.habitsProcessing.MemberDoesNotExistException;
@@ -28,7 +32,7 @@ import static com.goaleaf.security.SecurityConstants.SECRET;
 
 @RestController
 @RequestMapping(value = "/api/posts")
-@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = SecurityConstants.CLIENT_URL, maxAge = 3600)
 public class PostController {
 
     @Autowired

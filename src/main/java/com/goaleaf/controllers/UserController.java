@@ -2,9 +2,10 @@ package com.goaleaf.controllers;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.goaleaf.entities.DTO.HabitDTO;
-import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.DTO.UserDTO;
+import com.goaleaf.entities.DTO.pagination.HabitPageDTO;
 import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
+import com.goaleaf.security.SecurityConstants;
 import com.goaleaf.services.UserService;
 import com.goaleaf.services.servicesImpl.JwtServiceImpl;
 import com.goaleaf.validators.exceptions.accountsAndAuthorization.AccountNotExistsException;
@@ -21,7 +22,7 @@ import static com.goaleaf.security.SecurityConstants.SECRET;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = SecurityConstants.CLIENT_URL, maxAge = 3600)
 public class UserController {
 
     @Autowired

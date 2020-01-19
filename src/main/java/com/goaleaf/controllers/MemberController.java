@@ -2,13 +2,14 @@ package com.goaleaf.controllers;
 
 import com.goaleaf.entities.DTO.MemberDTO;
 import com.goaleaf.entities.DTO.pagination.MemberPageDTO;
+import com.goaleaf.security.SecurityConstants;
 import com.goaleaf.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/members")
-@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = SecurityConstants.CLIENT_URL, maxAge = 3600)
 public class MemberController {
 
     @Autowired

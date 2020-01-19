@@ -6,6 +6,7 @@ import com.goaleaf.entities.DTO.pagination.TaskPageDTO;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.TasksHistoryEntity;
 import com.goaleaf.entities.viewModels.NewTaskViewModel;
+import com.goaleaf.security.SecurityConstants;
 import com.goaleaf.services.TaskService;
 import com.goaleaf.services.TasksHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/tasks")
-@CrossOrigin(value = "https://www.goaleaf.com", maxAge = 3600)
+@CrossOrigin(value = SecurityConstants.CLIENT_URL, maxAge = 3600)
 public class TaskController {
 
     @Autowired

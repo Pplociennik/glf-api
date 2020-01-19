@@ -1,8 +1,8 @@
 package com.goaleaf.services;
 
 import com.goaleaf.entities.DTO.PostDTO;
-import com.goaleaf.entities.DTO.pagination.PostPageDTO;
 import com.goaleaf.entities.DTO.PostReactionsNrDTO;
+import com.goaleaf.entities.DTO.pagination.PostPageDTO;
 import com.goaleaf.entities.Post;
 import com.goaleaf.entities.enums.PostTypes;
 import com.goaleaf.entities.viewModels.habitsManaging.postsCreating.NewPostViewModel;
