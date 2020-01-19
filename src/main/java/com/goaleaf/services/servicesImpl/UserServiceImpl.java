@@ -10,7 +10,6 @@ import com.goaleaf.entities.viewModels.accountsAndAuthorization.*;
 import com.goaleaf.repositories.*;
 import com.goaleaf.security.EmailNotificationsSender;
 import com.goaleaf.security.EmailSender;
-import com.goaleaf.security.PBKDF2WithHmacSHA1Encrypter;
 import com.goaleaf.services.*;
 import com.goaleaf.validators.FileConverter;
 import com.goaleaf.validators.UserCredentialsValidator;
@@ -27,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,6 +68,9 @@ public class UserServiceImpl implements UserService {
     private HabitRepository habitRepository;
 
     private UserCredentialsValidator userCredentialsValidator = new UserCredentialsValidator();
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public Iterable<UserDTO> listAllUsers() {
@@ -139,7 +142,7 @@ public class UserServiceImpl implements UserService {
         if (!userCredentialsValidator.arePasswordsEquals(register))
             throw new BadCredentialsException("Passwords are not equal!");
 
-        register.password = PBKDF2WithHmacSHA1Encrypter.hash(register.password);
+        register.password = (bCryptPasswordEncoder.encode(register.password));
 
         EmailNotificationsSender sender = new EmailNotificationsSender();
 
@@ -186,7 +189,7 @@ public class UserServiceImpl implements UserService {
             User updatingUser = userRepository.findById(Integer.parseInt(claims.getSubject()));
 
 
-            if (PBKDF2WithHmacSHA1Encrypter.matches(model.oldPassword, userRepository.findById(Integer.parseInt(claims.getSubject())).getPassword())) {
+            if (bCryptPasswordEncoder.matches(model.oldPassword, userRepository.findById(Integer.parseInt(claims.getSubject())).getPassword())) {
 //                if (!model.emailAddress.isEmpty()) {
 //                    if (!userCredentialsValidator.isValidEmail(model.emailAddress)) {
 //                        throw new BadCredentialsException("Wrong email format!");
@@ -198,7 +201,7 @@ public class UserServiceImpl implements UserService {
                     if (!userCredentialsValidator.isPasswordFormatValid(model.newPassword)) {
                         throw new BadCredentialsException("Password must be at least 6 characters long and cannot contain spaces!");
                     } else {
-                        updatingUser.setPassword(PBKDF2WithHmacSHA1Encrypter.hash(model.newPassword));
+                        updatingUser.setPassword(bCryptPasswordEncoder.encode(model.newPassword));
                     }
                 } else
                     throw new BadCredentialsException("Passwords are not equal!");
@@ -307,7 +310,7 @@ public class UserServiceImpl implements UserService {
         if (!(newPasswords.password.equals(newPasswords.matchingPassword)))
             throw new BadCredentialsException("Passwords are not equal!");
 
-        user.setPassword(PBKDF2WithHmacSHA1Encrypter.hash(newPasswords.password));
+        user.setPassword(bCryptPasswordEncoder.encode(newPasswords.password));
         saveUser(user);
     }
 
@@ -333,7 +336,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByLogin(userModel.login) == null) {
             throw new AccountNotExistsException("Account with this login does not exists");
         }
-        if (!PBKDF2WithHmacSHA1Encrypter.matches(userModel.password, userRepository.findByLogin(userModel.login).getPassword())) {
+        if (!bCryptPasswordEncoder.matches(userModel.password, userRepository.findByLogin(userModel.login).getPassword())) {
             throw new BadCredentialsException("Wrong password");
         }
     }
