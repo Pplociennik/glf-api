@@ -10,13 +10,18 @@
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
+
+    <developers>
+        <developer>
+            <name>Pplociennik</name>
+            <email>pplociennik097@gmail.com</email>
+            <url>https://github.com/Pplociennik</url>
+        </developer>
+    </developers>
+
     <groupId>com.goaleaf.engine</groupId>
     <artifactId>GoaLeaf</artifactId>
-<<<<<<< HEAD
-    <version>1.1.1_1</version>
-=======
-    <version>1.1.0_3</version>
->>>>>>> parent of cc4bc1b... Release 1.1.1
+    <version>1.1.1_2</version>
     <name>GoaLeaf</name>
     <description>GoaLeaf</description>
     <packaging>jar</packaging>
@@ -27,8 +32,6 @@
         <version.com.sun.mail.javax.mail>1.5.5</version.com.sun.mail.javax.mail>
         <version.com.microsoft.sqlserver.mssql-jdbc>6.1.0.jre8</version.com.microsoft.sqlserver.mssql-jdbc>
         <version.mysql.mysql-connector-java>8.0.15</version.mysql.mysql-connector-java>
-        <version.org.springframework.boot.spring-boot-starter-security>2.1.3.RELEASE
-        </version.org.springframework.boot.spring-boot-starter-security>
         <version.org.springframework.boot.spring-boot-starter-data-jdbc>2.1.4.RELEASE
         </version.org.springframework.boot.spring-boot-starter-data-jdbc>
         <version.com.auth0.java-jwt>3.8.0</version.com.auth0.java-jwt>
@@ -42,10 +45,6 @@
         <version.org.codehaus.plexus.plexus-archiver>2.4.4</version.org.codehaus.plexus.plexus-archiver>
         <version.io.springfox.springfox-swagger2>2.6.1</version.io.springfox.springfox-swagger2>
         <version.io.springfox.springfox-swagger-ui>2.6.1</version.io.springfox.springfox-swagger-ui>
-        <version.org.springframework.security.spring-security-crypto>5.2.0.M1
-        </version.org.springframework.security.spring-security-crypto>
-        <version.org.springframework.security.spring-security-oauth2-core>5.0.0.M5
-        </version.org.springframework.security.spring-security-oauth2-core>
         <version.com.microsoft.azure-webapp-maven-plugin>1.7.0</version.com.microsoft.azure-webapp-maven-plugin>
         <version.org.apache.maven.plugin.maven-assembly-plugin>2.4.1
         </version.org.apache.maven.plugin.maven-assembly-plugin>
@@ -71,11 +70,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${version.mysql.mysql-connector-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>${version.org.springframework.boot.spring-boot-starter-security}</version>
         </dependency>
         <dependency>
             <groupId>com.auth0</groupId>
@@ -166,16 +160,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
-            <version>${version.org.springframework.security.spring-security-crypto}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-core</artifactId>
-            <version>${version.org.springframework.security.spring-security-oauth2-core}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
