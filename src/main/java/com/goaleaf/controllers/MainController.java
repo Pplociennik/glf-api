@@ -47,7 +47,7 @@ public class MainController {
     @Autowired
     private HabitRepository habitRepository;
 
-    @CrossOrigin(origins = "https://www.goaleaf.com")
+    //@CrossOrigin(origins = "https://www.goaleaf.com")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String generateModel() {
 
