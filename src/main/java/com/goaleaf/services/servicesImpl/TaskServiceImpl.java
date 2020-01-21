@@ -384,7 +384,8 @@ public class TaskServiceImpl implements TaskService {
 
         memberRepository.save(member);
 
-        taskRepository.delete(task.getId());
+        //taskRepository.delete(task.getId());
+        //should delete TaskHistoryEntity but Post has not id included
 
         postRepository.delete(postID);
 
