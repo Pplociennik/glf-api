@@ -8,10 +8,13 @@ public class CountsDTO {
 
     private Integer publicHabits;
 
-    public CountsDTO(StatsDTO stats, Integer privateHabits, Integer publicHabits) {
+    private Integer users;
+
+    public CountsDTO(StatsDTO stats, Integer privateHabits, Integer publicHabits, Integer users) {
         this.stats = stats;
         this.privateHabits = privateHabits;
         this.publicHabits = publicHabits;
+        this.users = users;
     }
 
     public CountsDTO() {
@@ -39,5 +42,13 @@ public class CountsDTO {
 
     public void setPublicHabits(Integer publicHabits) {
         this.publicHabits = publicHabits;
+    }
+
+    public Integer getUsers() {
+        return users;
+    }
+
+    public void setUsers(Integer users) {
+        this.users = users;
     }
 }

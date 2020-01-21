@@ -21,7 +21,7 @@
 
     <groupId>com.goaleaf.engine</groupId>
     <artifactId>GoaLeaf</artifactId>
-    <version>1.1.1_6</version>
+    <version>1.1.1_7</version>
     <name>GoaLeaf</name>
     <description>GoaLeaf</description>
     <packaging>jar</packaging>

@@ -4,8 +4,10 @@ import com.goaleaf.entities.DTO.CountsDTO;
 import com.goaleaf.entities.DTO.StatsDTO;
 import com.goaleaf.entities.Habit;
 import com.goaleaf.entities.Stats;
+import com.goaleaf.entities.User;
 import com.goaleaf.repositories.HabitRepository;
 import com.goaleaf.repositories.StatsRepository;
+import com.goaleaf.repositories.UserRepository;
 import com.goaleaf.services.StatsService;
 import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,10 @@ public class StatsServiceImpl implements StatsService {
 
     @Autowired
     private StatsRepository statsRepository;
-
     @Autowired
     private HabitRepository habitRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Stats findStatsByDate(Date date) {
@@ -87,6 +90,7 @@ public class StatsServiceImpl implements StatsService {
         Integer privateNr = 0;
 
         Iterable<Habit> habits = habitRepository.findAll();
+        List<User> users = (List<User>) userRepository.findAll();
 
         for (Habit h : habits) {
             if (h.getPrivate()) {
@@ -96,7 +100,7 @@ public class StatsServiceImpl implements StatsService {
             }
         }
 
-        return new CountsDTO(statsDTO, privateNr, publicNr);
+        return new CountsDTO(statsDTO, privateNr, publicNr, users.size());
     }
 
     private StatsDTO convertToDTO(Stats stats) {
