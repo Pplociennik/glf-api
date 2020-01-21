@@ -86,6 +86,19 @@ public class StatsDTO {
         return finishedChallenges;
     }
 
+    public void add(StatsDTO secondDTO) {
+        this.createdAccounts += secondDTO.createdAccounts;
+        this.loggedUsers += secondDTO.loggedUsers;
+        this.createdChallenges += secondDTO.createdChallenges;
+        this.setGoals += secondDTO.setGoals;
+        this.createdTasks += secondDTO.createdTasks;
+        this.completedTasks += secondDTO.completedTasks;
+        this.createdPosts += secondDTO.createdPosts;
+        this.commentedPosts += secondDTO.commentedPosts;
+        this.invitedMembers += secondDTO.invitedMembers;
+        this.finishedChallenges += secondDTO.finishedChallenges;
+    }
+
     public static class StatsBuilder {
         private String day;
         private Integer createdAccounts;

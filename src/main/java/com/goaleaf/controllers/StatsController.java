@@ -1,5 +1,6 @@
 package com.goaleaf.controllers;
 
+import com.goaleaf.entities.DTO.CountsDTO;
 import com.goaleaf.entities.DTO.StatsDTO;
 import com.goaleaf.services.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,5 +20,15 @@ public class StatsController {
     @GetMapping("/all")
     public Iterable<StatsDTO> getAllStats() {
         return statsService.findAllStats();
+    }
+
+    @GetMapping("/sum")
+    public StatsDTO sumAllStats() {
+        return statsService.sumAllStats();
+    }
+
+    @GetMapping("/counts")
+    public CountsDTO getCounts() {
+        return statsService.getAllCounts();
     }
 }
