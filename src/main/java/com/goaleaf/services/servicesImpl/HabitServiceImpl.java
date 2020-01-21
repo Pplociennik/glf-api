@@ -401,8 +401,10 @@ public class HabitServiceImpl implements HabitService {
                 .setSigningKey(SECRET.getBytes(StandardCharsets.UTF_8))
                 .parseClaimsJws(token).getBody();
 
-        if (toDelete.getCreatorID() != Integer.parseInt(claims.getSubject())) {
-            throw new RuntimeException("Deleting of a challenge may only be performed by its creator!");
+        if (!userService.findById(Integer.parseInt(claims.getSubject())).getLogin().equals("GoaleafAdmin")) {
+            if (toDelete.getCreatorID() != Integer.parseInt(claims.getSubject())) {
+                throw new RuntimeException("Deleting of a challenge may only be performed by its creator!");
+            }
         }
 
         Iterable<Post> postsList = postRepository.getAllByHabitIDOrderByDateOfAdditionDesc(habitID);
