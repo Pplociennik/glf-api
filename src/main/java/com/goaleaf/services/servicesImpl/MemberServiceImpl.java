@@ -1,5 +1,6 @@
 package com.goaleaf.services.servicesImpl;
 
+import com.goaleaf.entities.DTO.HabitDTO;
 import com.goaleaf.entities.DTO.MemberDTO;
 import com.goaleaf.entities.DTO.UserDTO;
 import com.goaleaf.entities.DTO.pagination.MemberPageDTO;
@@ -10,6 +11,7 @@ import com.goaleaf.entities.Notification;
 import com.goaleaf.repositories.HabitRepository;
 import com.goaleaf.repositories.MemberRepository;
 import com.goaleaf.security.EmailNotificationsSender;
+import com.goaleaf.services.HabitService;
 import com.goaleaf.services.MemberService;
 import com.goaleaf.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,7 +167,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public RankPageDTO getHabitRankingPaging(Integer pageNr, Integer objectsNr, Integer habitID) {
-        Pageable pageable = new PageRequest(pageNr, objectsNr);
+        Integer membersNr = memberRepository.countAllByHabitID(habitID);
+
+        Pageable pageable = new PageRequest(0, membersNr);
         Page<Member> page = memberRepository.findAllByHabitIDOrderByPointsDesc(habitID, pageable);
         Iterable<Member> list = page.getContent();
         Map<Integer, MemberDTO> result = new LinkedHashMap<>(0);
