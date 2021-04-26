@@ -35,7 +35,7 @@
         <version.org.springframework.boot.spring-boot-starter-data-jdbc>2.1.4.RELEASE
         </version.org.springframework.boot.spring-boot-starter-data-jdbc>
         <version.com.auth0.java-jwt>3.8.0</version.com.auth0.java-jwt>
-        <version.commons-io.commons-io>2.6</version.commons-io.commons-io>
+        <version.commons-io.commons-io>2.7</version.commons-io.commons-io>
         <version.com.fasterxml.jackson.dataformat.jackson-dataformat-yaml>2.9.8
         </version.com.fasterxml.jackson.dataformat.jackson-dataformat-yaml>
         <version.org.postgresql.postgresql>42.2.5</version.org.postgresql.postgresql>
