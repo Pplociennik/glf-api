@@ -276,6 +276,23 @@
                 <value.database.platform>org.hibernate.dialect.PostgreSQL82Dialect</value.database.platform>
             </properties>
             <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>deploy-rpi</id>
+            <properties>
+                <value.spring.datasource.url>jdbc:sqlserver://localhost:1433;databaseName=COM_GLF_SERVER
+                </value.spring.datasource.url>
+                <value.spring.datasource.username>sa</value.spring.datasource.username>
+                <value.spring.datasource.password>Test1234!</value.spring.datasource.password>
+                <value.spring.datasource.driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver
+                </value.spring.datasource.driverClassName>
+                <value.spring.jpa.database-platform>org.hibernate.dialect.SQLServer2012Dialect
+                </value.spring.jpa.database-platform>
+                <value.spring.jpa.hibernate.ddl-auto>update</value.spring.jpa.hibernate.ddl-auto>
+            </properties>
+            <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
