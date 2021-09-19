@@ -290,7 +290,7 @@
                 </value.database.driver>
                 <value.database.platform>org.hibernate.dialect.SQLServer2012Dialect
                 </value.database.platform>
-                <value.hibernate.hbm2ddl.auto>create</value.hibernate.hbm2ddl.auto>
+                <value.hibernate.hbm2ddl.auto>update</value.hibernate.hbm2ddl.auto>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
