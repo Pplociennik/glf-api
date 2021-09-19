@@ -77,6 +77,7 @@ public class EmailSender {
     }
 
     private Properties getMailServerProperties() {
+        System.setProperty( "mail.smtp.ssl.protocols", "TLSv1.2" );
         Properties properties = System.getProperties();
         properties.put( "mail.smtp.starttls.enable", "true" );
         properties.put( "mail.smtp.host", protocol + ".gmail.com" );
