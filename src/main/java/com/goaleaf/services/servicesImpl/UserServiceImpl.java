@@ -431,7 +431,7 @@ public class UserServiceImpl implements UserService {
         sender.addRecipient(model.emailAddress);
         sender.setSubject("GoaLeaf Password Reset Request");
         sender.setBody("Hello " + findByEmailAddress(model.emailAddress).getLogin() + "!\n\n" +
-                "Here's your confirmation link: https://www.goaleaf.com/resetpassword/" + resetPasswordToken + "\n\n" +
+                "Here's your confirmation link:http://95.108.36.173:3000/resetpassword/" + resetPasswordToken + "\n\n" +
                 "If you have not requested a password reset, ignore this message.\n\n" +
                 "Thank you and have a nice day! :)\n\n" +
                 "GoaLeaf group");
