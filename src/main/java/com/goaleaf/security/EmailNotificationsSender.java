@@ -50,7 +50,7 @@ public class EmailNotificationsSender {
         sender.setSubject("You have a new invitation!");
         sender.setBody("Hello " + recipientName + "!\n\n" +
                 "User " + inviterName + " invited you to joining a new contest \"" + habitDTO.getTitle() + "\" \n\n" +
-                "If you want to take a challenge just log in to your GoaLeaf account: " + "http://www.goaleaf.com/challenge/" + habitDTO.getId() + "\n\n" +
+                "If you want to take a challenge just log in to your GoaLeaf account: " + "http://95.108.36.173:3000/challenge/" + habitDTO.getId() + "\n\n" +
                 "We wish you great results! :)\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
@@ -201,7 +201,7 @@ public class EmailNotificationsSender {
                 "Administrator of the challenge \"" + habit.getHabitTitle() + "\" has set a new goal!\n\n" +
                 "It seems you've got more work to do :)\n " +
                 "The challenge is available at:\n" +
-                "http://www.goaleaf.com/challenge/" + habit.getId() + "\n\n" +
+                "http://95.108.36.173:3000/challenge/" + habit.getId() + "\n\n" +
                 "Your Sincerely\n" +
                 "GoaLeaf group");
 //        sender.addAttachment("TestFile.txt");

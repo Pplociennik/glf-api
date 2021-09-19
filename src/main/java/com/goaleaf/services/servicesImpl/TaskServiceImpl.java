@@ -193,7 +193,7 @@ public class TaskServiceImpl implements TaskService {
         for (Member m : members) {
             User user = userRepository.findById(m.getUserID());
             if (user.getNotifications() && user.getId() != returned.getCreatorID()) {
-                Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + newTask.getHabitID(), false);
+                Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://95.108.36.173:3000/challenge/" + newTask.getHabitID(), false);
                 //sender.taskCreated(user.getEmailAddress(), user.getLogin(), habit);
             }
         }
@@ -250,7 +250,7 @@ public class TaskServiceImpl implements TaskService {
             Iterable<Member> members = memberRepository.findAllByHabitID(habit.getId());
             for (Member m : members) {
                 User u = userRepository.findById(m.getUserID());
-                Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + habit.getId(), false);
+                Notification ntf = new EmailNotificationsSender().createInAppNotification(m.getUserID(), ntfDesc, "http://95.108.36.173:3000/challenge/" + habit.getId(), false);
                 if (u.getNotifications()) {
                     EmailNotificationsSender sender = new EmailNotificationsSender();
                     try {

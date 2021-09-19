@@ -182,7 +182,7 @@ public class PostServiceImpl implements PostService {
             UserDTO u = userService.findById(m.getUserID());
             if (u.getNotifications() && !u.getLogin().equals(tempUser.getLogin())) {
 
-                Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + habit.getId(), false);
+                Notification ntf = new EmailNotificationsSender().createInAppNotification(u.getUserID(), ntfDesc, "http://95.108.36.173:3000/challenge/" + habit.getId(), false);
                 EmailNotificationsSender sender = new EmailNotificationsSender();
                 //sender.postAdded(u.getEmailAddress(), u.getLogin(), newPost.getCreatorLogin(), habit, newPost);
             }
@@ -258,7 +258,7 @@ public class PostServiceImpl implements PostService {
 
             Iterable<MemberDTO> members = memberService.getAllByHabitID(habit.getId());
             String ntfDesc = tempUser.getLogin() + " reacted to your post in challenge \"" + habit.getTitle() + "\"";
-            Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://www.goaleaf.com/challenge/" + post.getHabitID(), false);
+            Notification ntf = new EmailNotificationsSender().createInAppNotification(postCreator.getUserID(), ntfDesc, "http://95.108.36.173:3000/challenge/" + post.getHabitID(), false);
             EmailNotificationsSender sender = new EmailNotificationsSender();
             try {
                 sender.postReacted(postCreator.getEmailAddress(), postCreator.getLogin(), tempUser.getLogin(), post);
