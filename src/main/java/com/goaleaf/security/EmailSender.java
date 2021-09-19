@@ -84,7 +84,7 @@ public class EmailSender {
         properties.put( "mail.smtp.password", password );
         properties.put( "mail.smtp.port", "587" );
         properties.put( "mail.smtp.auth", "true" );
-        properties.put( "mail.smtp.ssl.trust", "smtp.gmail.com" );
+        properties.put( "mail.smtp.ssl.trust", "*" );
 
         return properties;
     }
