@@ -42,7 +42,7 @@
         <version.io.jsonwebtoken.jjwt>0.6.0</version.io.jsonwebtoken.jjwt>
         <version.javax.xml.bind.jaxb-api>2.3.0</version.javax.xml.bind.jaxb-api>
         <version.javax.transaction.javax.transaction-api>1.2</version.javax.transaction.javax.transaction-api>
-        <version.org.codehaus.plexus.plexus-archiver>2.4.4</version.org.codehaus.plexus.plexus-archiver>
+        <version.org.codehaus.plexus.plexus-archiver>3.6.0</version.org.codehaus.plexus.plexus-archiver>
         <version.io.springfox.springfox-swagger2>2.6.1</version.io.springfox.springfox-swagger2>
         <version.io.springfox.springfox-swagger-ui>2.6.1</version.io.springfox.springfox-swagger-ui>
         <version.com.microsoft.azure-webapp-maven-plugin>1.7.0</version.com.microsoft.azure-webapp-maven-plugin>
