@@ -38,7 +38,7 @@
         <version.commons-io.commons-io>2.6</version.commons-io.commons-io>
         <version.com.fasterxml.jackson.dataformat.jackson-dataformat-yaml>2.9.8
         </version.com.fasterxml.jackson.dataformat.jackson-dataformat-yaml>
-        <version.org.postgresql.postgresql>42.2.5</version.org.postgresql.postgresql>
+        <version.org.postgresql.postgresql>42.3.7</version.org.postgresql.postgresql>
         <version.io.jsonwebtoken.jjwt>0.6.0</version.io.jsonwebtoken.jjwt>
         <version.javax.xml.bind.jaxb-api>2.3.0</version.javax.xml.bind.jaxb-api>
         <version.javax.transaction.javax.transaction-api>1.2</version.javax.transaction.javax.transaction-api>
